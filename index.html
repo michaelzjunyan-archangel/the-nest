@@ -436,7 +436,6 @@ footer p{font-size:.75rem;color:var(--muted)}
     <li><a href="#" onclick="go('writing');return false;" id="nl-writing">Writing</a></li>
     <li><a href="#" onclick="go('music');return false;"   id="nl-music">Music</a></li>
     <li><a href="#" onclick="go('drift');return false;"   id="nl-drift">Drift</a></li>
-    <li><a href="#" onclick="go('upload');return false;"  id="nl-upload">Upload</a></li>
   </ul>
 </nav>
 
@@ -470,15 +469,12 @@ footer p{font-size:.75rem;color:var(--muted)}
       <div class="about-name" id="about-name-display">Your Name</div>
       <div class="about-body" id="about-bio-display">Use the Upload panel to edit your bio and name.</div>
     </div>
-    <div class="about-right">
-      <!-- Single portrait / hero image — upload once, lives here forever -->
-      <div class="portrait-slot" id="portrait-slot" onclick="document.getElementById('portrait-inp').click()" title="Click to upload your photo">
-        <img id="portrait-img" style="display:none;width:100%;height:100%;object-fit:cover;display:none">
-        <div class="portrait-ph" id="portrait-ph">
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
-          <span>Add a photo</span>
+   <div class="about-right">
+      <div class="portrait-slot" id="portrait-slot">
+        <div class="portrait-ph">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" opacity=".3"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+          <span style="font-size:.63rem;opacity:.4;letter-spacing:.12em">photo via /admin</span>
         </div>
-        <input type="file" id="portrait-inp" accept="image/*" style="display:none" onchange="handlePortrait(event)">
       </div>
     </div>
   </div>
@@ -527,131 +523,6 @@ footer p{font-size:.75rem;color:var(--muted)}
   </div>
 </div>
 
-<!-- UPLOAD / ADMIN BACKDOOR -->
-<div class="page" id="page-upload">
-  <div class="sh"><h2>Upload</h2></div>
-  <div class="upload-shell">
-
-    <div class="lock-box" id="lock-box">
-      <div style="font-size:2.2rem;margin-bottom:1.2rem">🔒</div>
-      <h3>This door needs a key</h3>
-      <div class="field"><label>Password</label><input type="password" id="pw-input" placeholder="••••••••" onkeydown="if(event.key==='Enter')unlock()"></div>
-      <div id="pw-err" style="color:var(--a1);font-size:.82rem;margin-bottom:1rem;display:none">✗ Wrong password.</div>
-      <button class="btn btn-fill" onclick="unlock()">Unlock</button>
-      <p style="font-size:.72rem;color:var(--muted);margin-top:1.2rem">Default: <code style="color:var(--a2)">admin123</code></p>
-    </div>
-
-    <div class="upload-area" id="upload-area">
-      <div class="ftabs">
-        <button class="ftab on"  onclick="utab('home')">Home &amp; Bio</button>
-        <button class="ftab"     onclick="utab('essays')">Essays</button>
-        <button class="ftab"     onclick="utab('albums')">Albums</button>
-        <button class="ftab"     onclick="utab('tracks')">Tracks</button>
-      </div>
-
-      <!-- ─── HOME & BIO ─── -->
-      <div class="tpanel on" id="tp-home">
-        <div class="toast" id="t-home">✓ Saved!</div>
-
-        <div class="admin-section-label">Site Description</div>
-        <div class="field"><label>Hero Description</label><textarea id="site-desc-inp" placeholder="What is The Nest?"></textarea></div>
-        <button class="btn btn-fill btn-sm" onclick="saveSiteDesc()">Save Description</button>
-
-        <div class="admin-section-label" style="margin-top:2rem">Your Identity</div>
-        <div class="field"><label>Display Name</label><input type="text" id="bio-name-inp" placeholder="Your Name"></div>
-        <div class="field"><label>Bio</label><textarea id="bio-body-inp" placeholder="Who are you?" style="min-height:140px"></textarea></div>
-        <button class="btn btn-fill btn-sm" onclick="saveBioAdmin()">Save Bio &amp; Name</button>
-      </div>
-
-      <!-- ─── ESSAYS ─── -->
-      <div class="tpanel" id="tp-essays">
-        <div class="toast" id="t-essays">✓ Saved!</div>
-
-        <div class="add-btn-row">
-          <button class="btn btn-fill btn-sm" onclick="openNewEssayForm()">+ New Essay</button>
-        </div>
-
-        <!-- new / edit essay form (hidden until triggered) -->
-        <div id="essay-form-wrap" style="display:none;border:1px solid var(--bdr);border-radius:8px;padding:1.5rem;background:var(--bg3);margin-bottom:1.5rem">
-          <input type="hidden" id="ef-editing-id">
-          <div style="font-size:.8rem;color:var(--a2);margin-bottom:1rem" id="ef-mode-label">New Essay</div>
-          <div class="field" id="f-et"><label>Title *</label><input type="text" id="ef-title"><div class="errmsg">Required.</div></div>
-          <div class="field"><label>Date</label><input type="date" id="ef-date"></div>
-          <div class="field"><label>Cover Image <span style="opacity:.5;font-size:.65rem">(optional — shows on card &amp; top of essay)</span></label><input type="file" id="ef-cover" accept="image/*"></div>
-          <div class="field"><label>Excerpt</label><textarea id="ef-excerpt"></textarea></div>
-          <div class="field" id="f-eb"><label>Body *</label><textarea id="ef-body" style="min-height:180px"></textarea><div class="errmsg">Required.</div></div>
-          <div class="btn-row">
-            <button class="btn btn-fill btn-sm" onclick="saveEssay()">Save Essay</button>
-            <button class="btn btn-ghost btn-sm" onclick="closeEssayForm()">Cancel</button>
-          </div>
-        </div>
-
-        <div class="admin-list" id="essays-admin-list"></div>
-      </div>
-
-      <!-- ─── ALBUMS ─── -->
-      <div class="tpanel" id="tp-albums">
-        <div class="toast" id="t-albums">✓ Saved!</div>
-
-        <div class="add-btn-row">
-          <button class="btn btn-fill btn-sm" onclick="openNewAlbumForm()">+ New Album</button>
-        </div>
-
-        <div id="album-form-wrap" style="display:none;border:1px solid var(--bdr);border-radius:8px;padding:1.5rem;background:var(--bg3);margin-bottom:1.5rem">
-          <input type="hidden" id="af-editing-id">
-          <div style="font-size:.8rem;color:var(--a2);margin-bottom:1rem" id="af-mode-label">New Album</div>
-          <div class="field" id="f-at"><label>Album Title *</label><input type="text" id="af-title"><div class="errmsg">Required.</div></div>
-          <div class="field"><label>Year</label><input type="text" id="af-year" placeholder="2025"></div>
-          <div class="field"><label>Description</label><textarea id="af-desc"></textarea></div>
-          <div class="field"><label>Album Art <span style="opacity:.5;font-size:.65rem">(replaces existing if editing)</span></label><input type="file" id="af-art" accept="image/*"></div>
-          <div class="btn-row">
-            <button class="btn btn-fill btn-sm" onclick="saveAlbum()">Save Album</button>
-            <button class="btn btn-ghost btn-sm" onclick="closeAlbumForm()">Cancel</button>
-          </div>
-        </div>
-
-        <div class="admin-list" id="albums-admin-list"></div>
-      </div>
-
-      <!-- ─── TRACKS ─── -->
-      <div class="tpanel" id="tp-tracks">
-        <div class="toast" id="t-tracks">✓ Saved!</div>
-        <p style="font-size:.85rem;color:var(--muted);margin-bottom:1.5rem">Select an album then add or edit its tracks.</p>
-
-        <div id="no-albums-notice" style="display:none;padding:1rem;border:1px solid var(--bdr);border-radius:7px;font-size:.85rem;color:var(--muted);margin-bottom:1.5rem">No albums yet — create one in the Albums tab.</div>
-
-        <div id="tracks-panel-inner">
-          <div class="field">
-            <label>Album</label>
-            <select id="tracks-album-filter" onchange="renderTracksAdmin()">
-              <option value="">— select album —</option>
-            </select>
-          </div>
-
-          <div id="add-track-btn-row" style="display:none;margin-bottom:1.5rem">
-            <button class="btn btn-fill btn-sm" onclick="openNewTrackForm()">+ Add Track</button>
-          </div>
-
-          <div id="track-form-wrap" style="display:none;border:1px solid var(--bdr);border-radius:8px;padding:1.5rem;background:var(--bg3);margin-bottom:1.5rem">
-            <input type="hidden" id="tf-editing-id">
-            <div style="font-size:.8rem;color:var(--a2);margin-bottom:1rem" id="tf-mode-label">New Track</div>
-            <div class="field" id="f-tt"><label>Title *</label><input type="text" id="tf-title"><div class="errmsg">Required.</div></div>
-            <div class="field"><label>Inspiration / Description</label><textarea id="tf-desc"></textarea></div>
-            <div class="field" id="f-tf"><label>MP3 File <span style="opacity:.5;font-size:.65rem" id="tf-file-note">(required for new track)</span></label><input type="file" id="tf-file" accept="audio/*"></div>
-            <div class="btn-row">
-              <button class="btn btn-fill btn-sm" onclick="saveTrack()">Save Track</button>
-              <button class="btn btn-ghost btn-sm" onclick="closeTrackForm()">Cancel</button>
-            </div>
-          </div>
-
-          <div class="admin-list" id="tracks-admin-list"></div>
-        </div>
-      </div>
-
-    </div><!-- /upload-area -->
-  </div>
-</div>
-
 <footer>
   <span class="flogo">The Nest</span>
   <p>© <span id="yr"></span></p>
@@ -660,8 +531,6 @@ footer p{font-size:.75rem;color:var(--muted)}
 <script>
 'use strict';
 document.getElementById('yr').textContent = new Date().getFullYear();
-const PASS = 'admin123'; // ← change me
-
 /* ════════════════════════════ STATE ════════════════════════════ */
 let posts      = JSON.parse(sessionStorage.getItem('tn_posts')     || '[]');
 let albums     = JSON.parse(sessionStorage.getItem('tn_albums')    || '[]');
@@ -689,7 +558,6 @@ function go(pg) {
   if (pg === 'music')   renderMusic();
   if (pg === 'drift')   { renderDriftCount(); startDanmaku(); }
   if (pg === 'home')    { renderBio(); }
-  if (pg === 'upload')  onAdminOpen();
   window.scrollTo(0, 0);
 }
 
@@ -716,53 +584,9 @@ function saveBioAdmin() {
   renderBio();
   toast('t-home');
 }
-function handlePortrait(e) {
-  const file = e.target.files[0]; if (!file) return;
-  const url = URL.createObjectURL(file);
-  const img = document.getElementById('portrait-img');
-  const ph  = document.getElementById('portrait-ph');
-  img.src = url;
-  img.style.display = 'block';
-  ph.style.display  = 'none';
-  // add replace hint
-  let hint = document.querySelector('.portrait-replace');
-  if (!hint) {
-    hint = document.createElement('span');
-    hint.className = 'portrait-replace';
-    hint.textContent = '↺ replace';
-    document.getElementById('portrait-slot').appendChild(hint);
-  }
-}
-
 /* ════════════════════════════ AUTH ════════════════════════════ */
-function unlock() {
-  if (document.getElementById('pw-input').value === PASS) {
-    document.getElementById('lock-box').style.display = 'none';
-    document.getElementById('upload-area').classList.add('open');
-    onAdminOpen();
-  } else {
-    document.getElementById('pw-err').style.display = 'block';
-  }
-}
-function onAdminOpen() {
-  if (!document.getElementById('upload-area').classList.contains('open')) return;
-  // prefill home tab
-  document.getElementById('site-desc-inp').value = bioData.desc || '';
-  document.getElementById('bio-name-inp').value  = bioData.name || '';
-  document.getElementById('bio-body-inp').value  = bioData.text || '';
-  renderEssaysAdmin();
-  renderAlbumsAdmin();
-  populateTrackAlbumFilter();
-}
 
 /* ════════════════════════════ UPLOAD TABS ════════════════════════════ */
-function utab(name) {
-  const keys = ['home','essays','albums','tracks'];
-  document.querySelectorAll('.ftab').forEach((t,i) => t.classList.toggle('on', keys[i] === name));
-  document.querySelectorAll('.tpanel').forEach(p => p.classList.remove('on'));
-  document.getElementById('tp-' + name).classList.add('on');
-  if (name === 'tracks') refreshTracksTab();
-}
 
 /* ════════════════════════════ VALIDATION ════════════════════════════ */
 function validate(inputId, wrapId, ok) {
