@@ -42,7 +42,7 @@ body.theme-moss{
 #theme-picker-overlay.compact{
   inset:auto;
   top:0;right:0;
-  background:rgba(8,7,12,.96);
+  background:color-mix(in srgb,var(--bg) 96%,transparent);
   backdrop-filter:blur(16px);
   border-bottom:1px solid rgba(255,255,255,.08);
   border-left:1px solid rgba(255,255,255,.08);
@@ -546,6 +546,11 @@ const coverBlobMap = {};
 let audioInst = {}, curAudio = null, curId = null;
 
 /* ════════ CONTENT LOADING — reads /content/ files from Decap CMS ════════ */
+/* ══ CONFIG — set these to your GitHub repo ══ */
+const GH_USER = 'michaelzjunyan-archangel';
+const GH_REPO = 'the-nest';
+const GH_BRANCH = 'main';
+
 function parseFM(raw) {
   const m = raw.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/);
   if (!m) return { meta:{}, body:raw.trim() };
@@ -558,23 +563,28 @@ function parseFM(raw) {
   });
   return { meta, body: m[2].trim() };
 }
+
 async function fetchFolder(folder) {
   try {
-    const mRes = await fetch('/content/'+folder+'/index.json');
-    if (!mRes.ok) return [];
-    const files = await mRes.json();
-    if (!Array.isArray(files) || !files.length) return [];
-    const items = await Promise.all(files.map(async fname => {
+    /* Use GitHub Contents API to list files — no index.json needed */
+    const apiUrl = `https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/content/${folder}?ref=${GH_BRANCH}`;
+    const res = await fetch(apiUrl, { headers: { 'Accept': 'application/vnd.github.v3+json' } });
+    if (!res.ok) return [];
+    const entries = await res.json();
+    const mdFiles = entries.filter(e => e.name.endsWith('.md') && e.type === 'file');
+    const items = await Promise.all(mdFiles.map(async entry => {
       try {
-        const r = await fetch('/content/'+folder+'/'+fname);
+        /* Fetch raw file content directly */
+        const r = await fetch(entry.download_url);
         if (!r.ok) return null;
         const p = parseFM(await r.text());
-        return Object.assign({}, p.meta, { _body: p.body, _slug: fname.replace(/\.md$/,'') });
+        return Object.assign({}, p.meta, { _body: p.body, _slug: entry.name.replace(/\.md$/,'') });
       } catch(e) { return null; }
     }));
     return items.filter(Boolean);
   } catch(e) { return []; }
 }
+
 async function loadContent() {
   try {
     const r = await fetch('/content/settings/bio.json');
