@@ -22,6 +22,10 @@ collections:
           - label: Hero Description
             name: description
             widget: text
+          - label: Portrait Photo
+            name: portrait
+            widget: widget
+            required: false
 
   - name: essays
     label: Essays
