@@ -24,7 +24,7 @@ collections:
             widget: text
           - label: Portrait Photo
             name: portrait
-            widget: widget
+            widget: image
             required: false
 
   - name: essays
