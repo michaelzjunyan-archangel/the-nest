@@ -33,7 +33,7 @@ body.theme-moss{
 
 /* ── THEME PICKER — full overlay (first visit) ── */
 #theme-picker-overlay{
-  position:fixed;inset:0;z-index:9500;
+  position:fixed;inset:0;z-index:200;
   display:flex;align-items:center;justify-content:center;
   background:rgba(0,0,0,.88);backdrop-filter:blur(10px);
   transition:opacity .4s ease;
@@ -1350,6 +1350,20 @@ function pickTheme(name) {
   overlay.classList.add('compact');
 }
 
+// Click outside the picker box to dismiss it (picks Void as default)
+document.getElementById('theme-picker-overlay').addEventListener('click', function(e) {
+  if (e.target === this) pickTheme(sessionStorage.getItem('tn_theme') || 'void');
+  (function(){
+  const saved = sessionStorage.getItem('tn_theme');
+  const overlay = document.getElementById('theme-picker-overlay');
+  if (saved) {
+    document.body.classList.add('theme-' + saved);
+    overlay.classList.add('compact');
+  } else {
+    document.body.classList.add('theme-void');
+    overlay.addEventListener('click', function(e){ if(e.target===overlay) pickTheme('void'); });
+  }
+})();
 /* ════════════════════════════ EGG BADGES ════════════════════════════ */
 function updateEggBadges() {
   const w = document.getElementById('nav-egg-writing');
