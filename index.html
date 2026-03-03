@@ -1346,24 +1346,9 @@ function pickTheme(name) {
   document.body.classList.add('theme-' + name);
   sessionStorage.setItem('tn_theme', name);
   const overlay = document.getElementById('theme-picker-overlay');
-  overlay.classList.remove('hidden');
   overlay.classList.add('compact');
 }
 
-// Click outside the picker box to dismiss it (picks Void as default)
-document.getElementById('theme-picker-overlay').addEventListener('click', function(e) {
-  if (e.target === this) pickTheme(sessionStorage.getItem('tn_theme') || 'void');
-  (function(){
-  const saved = sessionStorage.getItem('tn_theme');
-  const overlay = document.getElementById('theme-picker-overlay');
-  if (saved) {
-    document.body.classList.add('theme-' + saved);
-    overlay.classList.add('compact');
-  } else {
-    document.body.classList.add('theme-void');
-    overlay.addEventListener('click', function(e){ if(e.target===overlay) pickTheme('void'); });
-  }
-})();
 /* ════════════════════════════ EGG BADGES ════════════════════════════ */
 function updateEggBadges() {
   const w = document.getElementById('nav-egg-writing');
@@ -1373,6 +1358,7 @@ function updateEggBadges() {
   if (m) m.textContent = tracksMeta.length;
   if (d) d.textContent = driftMsgs.length;
 }
+
 (function(){
   const saved = sessionStorage.getItem('tn_theme');
   const overlay = document.getElementById('theme-picker-overlay');
@@ -1381,25 +1367,26 @@ function updateEggBadges() {
     overlay.classList.add('compact');
   } else {
     document.body.classList.add('theme-void');
-    // overlay stays as full-screen
+    overlay.addEventListener('click', function(e){
+      if (e.target === overlay) pickTheme('void');
+    });
   }
 })();
+
 renderBio();
 updateEggBadges();
-
-<!-- Netlify Identity: redirects logged-in users back to /admin -->
+</script>
+<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 <script>
   if (window.netlifyIdentity) {
-    window.netlifyIdentity.on("init", user => {
+    window.netlifyIdentity.on('init', function(user) {
       if (!user) {
-        window.netlifyIdentity.on("login", () => {
-          document.location.href = "/admin/";
+        window.netlifyIdentity.on('login', function() {
+          document.location.href = '/admin/';
         });
       }
     });
   }
-</script>
-<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>  
 </script>
 </body>
 </html>
