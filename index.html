@@ -171,6 +171,7 @@ nav{display:flex;align-items:stretch;border-bottom:1px solid var(--bdr);backgrou
   display:flex;align-items:center;justify-content:center;
   opacity:.8;
 }
+.hero-subtitle{font-family:var(--prose);font-style:italic;font-size:clamp(.95rem,2vw,1.15rem);color:var(--muted);margin-top:-.8rem;margin-bottom:2.5rem;letter-spacing:.01em;line-height:1.6;max-width:55ch;opacity:.85} 
 .hero-nav-link:nth-child(2) .egg-num{ background:var(--a2) }
 .hero-nav-link:nth-child(3) .egg-num{ background:var(--a3) }
 .scroll-cue{position:absolute;bottom:2.5rem;left:2.5rem;font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:.6rem;animation:cue 2s ease-in-out infinite}
@@ -444,7 +445,7 @@ footer p{font-size:.75rem;color:var(--muted)}
   <div class="home-hero">
     <div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
     <div class="hero-inner">
-      <div class="hero-tag">✦ you found it</div>
+     <div class="hero-tag" id="hero-tag">✦ you found it</div>
       <h1 class="hero-title">The<br><em>Nest.</em></h1>
       <div class="nest-desc-block" id="nest-desc-display">
         Click <em>Edit description</em> below to say what this place is.
