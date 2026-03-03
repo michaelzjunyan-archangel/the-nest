@@ -1,0 +1,101 @@
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: public/uploads
+public_folder: /uploads
+
+collections:
+  - name: settings
+    label: Site Settings
+    files:
+      - name: bio
+        label: Bio and Description
+        file: content/settings/bio.json
+        fields:
+          - label: Your Name
+            name: name
+            widget: string
+          - label: Bio
+            name: bio
+            widget: text
+          - label: Hero Description
+            name: description
+            widget: text
+
+  - name: essays
+    label: Essays
+    folder: content/essays
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - label: Title
+        name: title
+        widget: string
+      - label: Date
+        name: date
+        widget: datetime
+        format: "YYYY-MM-DD"
+      - label: Excerpt
+        name: excerpt
+        widget: text
+        required: false
+      - label: Cover Image
+        name: cover
+        widget: image
+        required: false
+      - label: Body
+        name: body
+        widget: markdown
+
+  - name: albums
+    label: Albums
+    folder: content/albums
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - label: Album Title
+        name: title
+        widget: string
+      - label: Year
+        name: year
+        widget: string
+        required: false
+      - label: Description
+        name: desc
+        widget: text
+        required: false
+      - label: Album Art
+        name: art
+        widget: image
+        required: false
+
+  - name: tracks
+    label: Tracks
+    folder: content/tracks
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - label: Album
+        name: albumSlug
+        widget: relation
+        collection: albums
+        search_fields:
+          - title
+        value_field: "{{slug}}"
+        display_fields:
+          - title
+      - label: Track Title
+        name: title
+        widget: string
+      - label: Track Number
+        name: track
+        widget: number
+        required: false
+      - label: Notes
+        name: desc
+        widget: text
+        required: false
+      - label: MP3 File
+        name: audio
+        widget: file
