@@ -446,8 +446,9 @@ footer p{font-size:.75rem;color:var(--muted)}
     <div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
     <div class="hero-inner">
      <div class="hero-tag" id="hero-tag">✦ you found it</div>
-      <h1 class="hero-title">The<br><em>Nest.</em></h1>
-      <div class="nest-desc-block" id="nest-desc-display">
+     <h1 class="hero-title">The<br><em>Nest.</em></h1>
+     <div class="hero-subtitle" id="hero-subtitle"></div>
+     <div class="nest-desc-block" id="nest-desc-display">
         Click <em>Edit description</em> below to say what this place is.
       </div>
       <div class="hero-nav">
@@ -1278,6 +1279,32 @@ function updateEggBadges() {
   }
 })();
 
+(function(){
+  const lines = [
+    "Warm. Strange. Alive.",
+    "come in. stay a while. or don't.",
+    "everything here is real. nothing here is permanent.",
+    "made of late nights and unfinished thoughts",
+    "somewhere between a diary and a broadcast",
+    "words, sounds, and small strange things",
+    "you weren't supposed to find this",
+    "this is what the inside of a head looks like",
+    "a collection of things that refused to stay private",
+    "not a portfolio. something more embarrassing.",
+    "built slowly, with intention and procrastination",
+    "for the people who read the whole page",
+    "leave something in drift. it won't stay long.",
+    "the internet as it was meant to be: weird and personal",
+    "if you know, you know. if you don't — now you do.",
+    "a quiet corner of a loud world",
+    "made with too much coffee and a lot of feelings",
+    "some things are best said sideways",
+    "this site has no algorithm. just vibes.",
+    "still under construction. always will be."
+  ];
+  const el = document.getElementById('hero-subtitle');
+  if (el) el.textContent = lines[Math.floor(Math.random() * lines.length)];
+})();
 loadContent();
 </script>
 <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
