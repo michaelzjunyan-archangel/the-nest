@@ -73,14 +73,15 @@ collections:
         name: art
         widget: image
         required: false
-      - label: "Subtitle"
+      - label: "Album Subtitle"
         name: "desc"
         widget: "string"
         pattern: ['^.{0,120}$', "Max 120 characters"]
         required: false
       - label: "Album Bio"
-        name: "album bio"
+        name: "bio"
         widget: "text"
+        hint: "Longer description shown in the 'About this album' dropdown"
         required: false
 
   - name: tracks
