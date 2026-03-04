@@ -175,7 +175,7 @@ nav{display:flex;align-items:stretch;border-bottom:1px solid var(--bdr);backgrou
 .alb-acc-btn.open .alb-acc-chevron{transform:rotate(90deg)}
 .alb-bio-panel{display:none;padding:1.4rem 2rem 1.6rem;border-top:1px solid var(--bdr);background:color-mix(in srgb,var(--bg3) 50%,transparent)}
 .alb-bio-panel.open{display:block}
-.alb-bio-text{font-family:var(--sans);font-size:.88rem;line-height:1.85;color:var(--body)}
+.alb-bio-text{font-family:var(--sans);font-size:.88rem;line-height:1.85;color:var(--body);max-width:none}
 .track-list{display:none}.track-list.open{display:block;border-top:1px solid var(--bdr)}
 .track-row{padding:1rem 1.6rem;border-bottom:1px solid var(--bdr);transition:background .15s}
 .track-row:last-child{border-bottom:none}
@@ -424,7 +424,16 @@ function parseFM(raw){
       i++;const blk=[];
       while(i<lines.length&&(lines[i].startsWith('  ')||lines[i]==='')){blk.push(lines[i].replace(/^  /,''));i++;}
       meta[k]=blk.join('\n').trim();
-    }else{meta[k]=rest.replace(/^["']|["']$/g,'');i++;}
+    }else{
+  // collect any following indented continuation lines
+  let val=rest;
+  i++;
+  while(i<lines.length&&lines[i].startsWith('  ')){
+    val+=' '+lines[i].trim();
+    i++;
+  }
+  meta[k]=val.replace(/^["']|["']$/g,'');
+}
   }
   return{meta,body:m[2].trim()};
 }
