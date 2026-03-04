@@ -1,24 +1,22 @@
 backend:
   name: git-gateway
   branch: main
-
 media_folder: uploads
 public_folder: /uploads
-
 collections:
   - name: drifts
-      label: Drifts
-      folder: content/drifts
-      create: true
-      slug: "{{slug}}"
-      fields:
-        - label: Message
-          name: message
-          widget: string
-        - label: Name
-          name: name
-          widget: string
-          required: false
+    label: Drifts
+    folder: content/drifts
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - label: Message
+        name: message
+        widget: string
+      - label: Name
+        name: name
+        widget: string
+        required: false
   - name: settings
     label: Site Settings
     files:
@@ -39,7 +37,6 @@ collections:
             name: portrait
             widget: image
             required: false
-
   - name: essays
     label: Essays
     folder: content/essays
@@ -64,7 +61,6 @@ collections:
       - label: Body
         name: body
         widget: markdown
-
   - name: albums
     label: Albums
     folder: content/albums
@@ -78,51 +74,4 @@ collections:
         name: year
         widget: string
         required: false
-      - label: Album Subtitle
-        name: desc
-        widget: string
-        pattern: ['^.{0,500}$', "Max 500 characters"]
-        required: false
-      - label: Album Bio
-        name: bio
-        widget: text
-        hint: "Longer description shown in the 'About this album' dropdown"
-        required: false
-      - label: Album Art
-        name: art
-        widget: image
-        required: false
-
-  - name: tracks
-    label: Tracks
-    folder: content/tracks
-    create: true
-    slug: "{{slug}}"
-    fields:
-      - label: Album
-        name: albumSlug
-        widget: relation
-        collection: albums
-        search_fields:
-          - title
-        value_field: "{{slug}}"
-        display_fields:
-          - title
-      - label: Track Title
-        name: title
-        widget: string
-      - label: Track Number
-        name: track
-        widget: number
-        required: false
-      - label: Notes
-        name: desc
-        widget: text
-        required: false
-      - label: Lyrics
-        name: lyrics
-        widget: markdown
-        required: false
-      - label: MP3 File
-        name: audio
-        widget: file
+      - label: Album Subtit
