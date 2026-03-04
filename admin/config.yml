@@ -68,7 +68,7 @@ collections:
       - label: Album Subtitle
         name: desc
         widget: string
-        pattern: ['^.{0,120}$', "Max 120 characters"]
+        pattern: ['^.{0,500}$', "Max 500 characters"]
         required: false
       - label: Album Bio
         name: bio
