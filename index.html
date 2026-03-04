@@ -420,7 +420,7 @@ function parseFM(raw){
     const line=lines[i],ci=line.indexOf(':');
     if(ci<0){i++;continue;}
     const k=line.slice(0,ci).trim(),rest=line.slice(ci+1).trim();
-    if(rest==='|'||rest==='|-'||rest==='>'){
+    if(rest==='|'||rest==='|-'||rest==='>'||rest==='>-'){
       i++;const blk=[];
       while(i<lines.length&&(lines[i].startsWith('  ')||lines[i]==='')){blk.push(lines[i].replace(/^  /,''));i++;}
       meta[k]=blk.join('\n').trim();
