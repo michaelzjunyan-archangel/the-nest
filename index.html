@@ -464,6 +464,15 @@ async function loadContent(){
   const rawTracks=await fetchFolder('tracks');
   tracksMeta=rawTracks.map(t=>{const id=t._slug;if(t.audio&&t.audio.trim())audioBlobMap[id]=t.audio.trim();return{id,albumId:t.albumSlug||'',title:t.title||'Untitled',track:parseInt(t.track)||99,desc:t.desc||'',lyrics:t.lyrics||''};}).sort((a,b)=>a.track-b.track);
   renderBio();renderWriting();renderMusic();updateEggBadges();
+  const rawDrifts = await fetchFolder('drifts');
+  rawDrifts.forEach(d => {
+    if (d.message && d.message.trim()) {
+      const text = d.name ? `${d.message}\n— ${d.name}` : d.message;
+      driftMsgs.push({ text, id: 'preset-' + d._slug, preset: true });
+    }
+  });
+  renderDriftCount();
+  updateEggBadges();
 }
 
 /* ── NAV ── */
