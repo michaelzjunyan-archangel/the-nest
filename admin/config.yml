@@ -6,19 +6,19 @@ media_folder: uploads
 public_folder: /uploads
 
 collections:
-- name: drifts
-    label: Drifts
-    folder: content/drifts
-    create: true
-    slug: "{{slug}}"
-    fields:
-      - label: Message
-        name: message
-        widget: string
-      - label: Name
-        name: name
-        widget: string
-        required: false
+  - name: drifts
+      label: Drifts
+      folder: content/drifts
+      create: true
+      slug: "{{slug}}"
+      fields:
+        - label: Message
+          name: message
+          widget: string
+        - label: Name
+          name: name
+          widget: string
+          required: false
   - name: settings
     label: Site Settings
     files:
