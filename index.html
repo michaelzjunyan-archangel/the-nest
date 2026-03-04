@@ -32,39 +32,87 @@ body.theme-moss{
 }
 
 /* ── THEME PICKER — full overlay (first visit) ── */
+/* THEME PICKER */
 #theme-picker-overlay{
-  position:fixed;inset:0;z-index:200;
+  position:fixed;inset:0;z-index:400;
   display:flex;align-items:center;justify-content:center;
   background:rgba(0,0,0,.88);backdrop-filter:blur(10px);
-  transition:opacity .4s ease;
 }
 #theme-picker-overlay.hidden{display:none}
+
+/* collapsed state — just a floating button */
 #theme-picker-overlay.compact{
-  inset:auto;
-  top:0;right:0;
-  background:color-mix(in srgb,var(--bg) 96%,transparent);
-  backdrop-filter:blur(16px);
-  border-bottom:1px solid rgba(255,255,255,.08);
-  border-left:1px solid rgba(255,255,255,.08);
-  border-bottom-left-radius:10px;
-  padding:.6rem 1rem .7rem;
-  align-items:center;
-  justify-content:flex-end;
+  inset:auto;top:.75rem;right:.75rem;
+  background:none;backdrop-filter:none;
+  border:none;padding:0;
+  display:block;
   z-index:9500;
 }
-#theme-picker-overlay.compact .tp-title{ display:none }
-#theme-picker-overlay.compact .tp-options{ gap:.7rem }
-#theme-picker-overlay.compact .tp-swatch{
-  width:26px;height:26px;
-  box-shadow:2px 0 0 0 rgba(255,255,255,.5),-2px 0 0 0 rgba(255,255,255,.5),0 2px 0 0 rgba(255,255,255,.5),0 -2px 0 0 rgba(255,255,255,.5);
-  border-width:2px;
-}
-#theme-picker-overlay.compact .tp-label{
-  font-size:.55rem;letter-spacing:.1em;
-}
-#theme-picker-overlay.compact .tp-opt{ gap:.35rem }
 
-.tp-box{ text-align:center }
+/* the little floating button */
+.tp-toggle-btn{
+  display:none;
+  width:36px;height:36px;border-radius:50%;
+  border:1.5px solid rgba(255,255,255,.2);
+  background:color-mix(in srgb,var(--bg) 90%,transparent);
+  backdrop-filter:blur(16px);
+  cursor:pointer;
+  align-items:center;justify-content:center;
+  box-shadow:0 2px 12px rgba(0,0,0,.3);
+  transition:transform .2s,box-shadow .2s;
+  position:relative;
+  overflow:hidden;
+}
+.tp-toggle-btn:hover{transform:scale(1.08);box-shadow:0 4px 20px rgba(0,0,0,.4)}
+.tp-toggle-btn-inner{
+  width:18px;height:18px;border-radius:50%;
+  background:conic-gradient(var(--a1) 0%,var(--a2) 40%,var(--a3) 70%,var(--a1) 100%);
+  transition:transform .6s ease;
+}
+.tp-toggle-btn:hover .tp-toggle-btn-inner{transform:rotate(180deg)}
+#theme-picker-overlay.compact .tp-toggle-btn{display:flex}
+
+/* dropdown panel */
+.tp-dropdown{
+  display:none;
+  position:absolute;top:44px;right:0;
+  background:color-mix(in srgb,var(--bg) 96%,transparent);
+  border:1px solid var(--bdr);
+  border-radius:12px;
+  padding:.8rem;
+  backdrop-filter:blur(20px);
+  box-shadow:0 8px 32px rgba(0,0,0,.4);
+  flex-direction:column;gap:.5rem;
+  min-width:130px;
+  transform-origin:top right;
+  animation:tp-drop .2s cubic-bezier(.34,1.56,.64,1);
+}
+.tp-dropdown.open{display:flex}
+@keyframes tp-drop{
+  from{opacity:0;transform:scale(.85)}
+  to{opacity:1;transform:scale(1)}
+}
+.tp-dropdown-opt{
+  display:flex;align-items:center;gap:.7rem;
+  cursor:pointer;padding:.45rem .6rem;
+  border-radius:7px;transition:background .15s;
+  border:none;background:none;width:100%;text-align:left;
+}
+.tp-dropdown-opt:hover{background:rgba(255,255,255,.06)}
+.tp-dropdown-opt.active{background:rgba(255,255,255,.08)}
+.tp-dot{width:14px;height:14px;border-radius:50%;flex-shrink:0}
+.tp-dot-void{background:conic-gradient(from 0deg,#0c0b0f 0%,#e07c52 40%,#8b67cc 70%,#0c0b0f 100%)}
+.tp-dot-parchment{background:conic-gradient(from 45deg,#e8e0d0 0%,#b84a1e 40%,#5a3e9c 70%,#e8e0d0 100%)}
+.tp-dot-moss{background:conic-gradient(from -30deg,#0e1210 0%,#c8a45a 40%,#6aab7a 70%,#0e1210 100%)}
+.tp-dropdown-label{
+  font-family:'Courier New',monospace;font-size:.65rem;
+  letter-spacing:.14em;text-transform:uppercase;
+  color:var(--body);
+}
+
+/* full overlay (first visit) */
+#theme-picker-overlay:not(.compact) .tp-toggle-btn{display:none}
+.tp-box{text-align:center}
 .tp-title{
   font-family:'Courier New',monospace;
   font-size:clamp(.85rem,2vw,1.1rem);
@@ -72,39 +120,17 @@ body.theme-moss{
   color:#fff;margin-bottom:2.5rem;opacity:.9;
   text-shadow:2px 2px 0 #000;
 }
-.tp-options{ display:flex;gap:1.8rem;justify-content:center;flex-wrap:wrap }
-.tp-opt{
-  cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:.9rem;
-  transition:transform .15s;
-}
-.tp-opt:hover{ transform:translateY(-4px) }
-.tp-swatch{
-  width:96px;height:96px;border:3px solid #fff;
-  position:relative;overflow:hidden;image-rendering:pixelated;
-  box-shadow:4px 0 0 0 #fff,-4px 0 0 0 #fff,0 4px 0 0 #fff,0 -4px 0 0 #fff,
-    4px 4px 0 0 rgba(255,255,255,.4),-4px -4px 0 0 rgba(255,255,255,.4);
-}
+.tp-options{display:flex;gap:1.8rem;justify-content:center;flex-wrap:wrap}
+.tp-opt{cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:.9rem;transition:transform .15s}
+.tp-opt:hover{transform:translateY(-4px)}
+.tp-swatch{width:96px;height:96px;border:3px solid #fff;position:relative;overflow:hidden;border-radius:50%;
+  box-shadow:4px 0 0 0 #fff,-4px 0 0 0 #fff,0 4px 0 0 #fff,0 -4px 0 0 #fff}
 .tp-swatch-inner{width:100%;height:100%}
-/* swirly conic gradient swatches */
-.tp-opt[data-theme=void] .tp-swatch-inner{
-  background:conic-gradient(from 0deg, #0c0b0f 0%, #e07c52 25%, #8b67cc 50%, #1b1823 75%, #0c0b0f 100%);
-  border-radius:50%;transform:rotate(-20deg);
-}
-.tp-opt[data-theme=parchment] .tp-swatch-inner{
-  background:conic-gradient(from 45deg, #f4efe6 0%, #b84a1e 30%, #5a3e9c 60%, #ede6d8 80%, #f4efe6 100%);
-  border-radius:50%;transform:rotate(10deg);
-}
-.tp-opt[data-theme=moss] .tp-swatch-inner{
-  background:conic-gradient(from -30deg, #0e1210 0%, #c8a45a 35%, #6aab7a 65%, #1a2318 85%, #0e1210 100%);
-  border-radius:50%;transform:rotate(5deg);
-}
-/* make the swatch container itself circular */
-.tp-swatch{ border-radius:50%;overflow:hidden }
-.tp-label{
-  font-family:'Courier New',monospace;
-  font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;
-  color:rgba(255,255,255,.7);text-shadow:1px 1px 0 #000;
-}
+.tp-opt[data-theme=void] .tp-swatch-inner{background:conic-gradient(from 0deg,#0c0b0f 0%,#e07c52 25%,#8b67cc 50%,#1b1823 75%,#0c0b0f 100%);border-radius:50%;transform:rotate(-20deg)}
+.tp-opt[data-theme=parchment] .tp-swatch-inner{background:conic-gradient(from 45deg,#f4efe6 0%,#b84a1e 30%,#5a3e9c 60%,#ede6d8 80%,#f4efe6 100%);border-radius:50%;transform:rotate(10deg)}
+.tp-opt[data-theme=moss] .tp-swatch-inner{background:conic-gradient(from -30deg,#0e1210 0%,#c8a45a 35%,#6aab7a 65%,#1a2318 85%,#0e1210 100%);border-radius:50%;transform:rotate(5deg)}
+.tp-label{font-family:'Courier New',monospace;font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.7);text-shadow:1px 1px 0 #000}
+  
 html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--body);font-family:var(--sans);font-size:15px;line-height:1.7;min-height:100vh;overflow-x:hidden}
 body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9000;
@@ -620,6 +646,7 @@ let audioInst = {}, curAudio = null, curId = null;
 const GH_USER = 'michaelzjunyan-archangel';
 const GH_REPO = 'the-nest';
 const GH_BRANCH = 'main';
+const GH_TOKEN = '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';
 
 function parseFM(raw) {
   const m = raw.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/);
@@ -655,14 +682,14 @@ async function fetchFolder(folder) {
   if (_folderCache[folder]) return _folderCache[folder];
   try {
     const apiUrl = `https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/content/${folder}?ref=${GH_BRANCH}`;
-    const res = await fetch(apiUrl, { headers: { 'Accept': 'application/vnd.github.v3+json' } });
+    const res = await fetch(apiUrl, { headers: { 'Accept': 'application/vnd.github.v3+json', 'Authorization': `Bearer ${GH_TOKEN}` } });
     if (!res.ok) return [];
     const entries = await res.json();
     const mdFiles = entries.filter(e => e.name.endsWith('.md') && e.type === 'file');
     const items = await Promise.all(mdFiles.map(async entry => {
       try {
         /* Fetch raw file content directly */
-        const r = await fetch(entry.download_url);
+        const r = await fetch(entry.download_url, { headers: { 'Authorization': `Bearer ${GH_TOKEN}` } });
         if (!r.ok) return null;
         const p = parseFM(await r.text());
         return Object.assign({}, p.meta, { _body: p.body, _slug: entry.name.replace(/\.md$/,'') });
@@ -1536,9 +1563,47 @@ function pickTheme(name) {
   document.body.classList.remove('theme-void','theme-parchment','theme-moss');
   document.body.classList.add('theme-' + name);
   sessionStorage.setItem('tn_theme', name);
+  // mark active option
+  ['void','parchment','moss'].forEach(t => {
+    const el = document.getElementById('tpopt-'+t);
+    if (el) el.classList.toggle('active', t === name);
+  });
+  // collapse full overlay to compact button
   const overlay = document.getElementById('theme-picker-overlay');
   overlay.classList.add('compact');
+  // close dropdown if open
+  document.getElementById('tp-dropdown').classList.remove('open');
 }
+
+function tpToggleDropdown() {
+  document.getElementById('tp-dropdown').classList.toggle('open');
+}
+
+// close dropdown when clicking anywhere else
+document.addEventListener('click', function(e) {
+  const overlay = document.getElementById('theme-picker-overlay');
+  if (overlay.classList.contains('compact') &&
+      !overlay.contains(e.target)) {
+    document.getElementById('tp-dropdown').classList.remove('open');
+  }
+});
+
+(function(){
+  const saved   = sessionStorage.getItem('tn_theme');
+  const overlay = document.getElementById('theme-picker-overlay');
+  if (saved) {
+    document.body.classList.add('theme-' + saved);
+    overlay.classList.add('compact');
+    // mark active
+    const el = document.getElementById('tpopt-'+saved);
+    if (el) el.classList.add('active');
+  } else {
+    document.body.classList.add('theme-void');
+    overlay.addEventListener('click', function(e) {
+      if (e.target === overlay) pickTheme('void');
+    });
+  }
+})();
 
 /* ════════════════════════════ EGG BADGES ════════════════════════════ */
 function updateEggBadges() {
