@@ -658,7 +658,7 @@ function startDanmaku(){if(danmakuRunning)return;danmakuRunning=true;driftMsgs.f
 function fireMessage(text){
   const stage=document.getElementById('stage');
   const emptyEl=document.getElementById('stage-empty');if(emptyEl)emptyEl.style.display='none';
-  const stageH=stage.clientHeight,stageW=stage.clientWidth||window.innerWidth;
+  const stageH=stage.clientHeight||460,stageW=stage.clientWidth||window.innerWidth;
   const LANES=3,laneH=stageH/LANES,lane=lanePtr%LANES;lanePtr++;
   const top=Math.min(Math.round(laneH*lane+laneH*0.1), stageH-H-10);
   const color=COLORS[Math.floor(Math.random()*COLORS.length)];
