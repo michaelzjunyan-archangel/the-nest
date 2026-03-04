@@ -451,7 +451,7 @@ async function loadContent(){
   const rawEssays=await fetchFolder('essays');
   posts=rawEssays.map(e=>{const id=e._slug;if(e.cover&&e.cover.trim())coverBlobMap[id]=e.cover.trim();return{id,title:e.title||'Untitled',date:(e.date||'').slice(0,10),excerpt:e.excerpt||'',body:e._body||'',coverId:(e.cover&&e.cover.trim())?id:null};}).sort((a,b)=>b.date>a.date?1:-1);
   const rawAlbums=await fetchFolder('albums');
-  albums=rawAlbums.map(a=>{const id=a._slug;if(a.art&&a.art.trim())albumArtMap[id]=a.art.trim();return{id,title:a.title||'Untitled',year:a.year||'',desc:a.desc||''};});
+  albums=rawAlbums.map(a=>{const id=a._slug;if(a.art&&a.art.trim())albumArtMap[id]=a.art.trim();return{id,title:a.title||'Untitled',year:a.year||'',desc:a.desc||'',bio:a.bio||''};});
   const rawTracks=await fetchFolder('tracks');
   tracksMeta=rawTracks.map(t=>{const id=t._slug;if(t.audio&&t.audio.trim())audioBlobMap[id]=t.audio.trim();return{id,albumId:t.albumSlug||'',title:t.title||'Untitled',track:parseInt(t.track)||99,desc:t.desc||'',lyrics:t.lyrics||''};}).sort((a,b)=>a.track-b.track);
   renderBio();renderWriting();renderMusic();updateEggBadges();
