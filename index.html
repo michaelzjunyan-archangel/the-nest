@@ -168,7 +168,7 @@ nav{display:flex;align-items:stretch;border-bottom:1px solid var(--bdr);backgrou
 .alb-title{font-family:var(--serif);font-size:1.55rem;font-weight:600;color:var(--head)}
 .alb-year{font-size:.8rem;color:var(--muted)}
 .alb-desc{font-size:.85rem;color:var(--muted);font-style:italic;line-height:1.55;margin-top:.4rem;max-width:48ch}
-.track-list{border-top:1px solid var(--bdr)}
+.track-list{display:none}.track-list.open{display:block;border-top:1px solid var(--bdr)}
 .track-row{padding:1rem 1.6rem;border-bottom:1px solid var(--bdr);transition:background .15s}
 .track-row:last-child{border-bottom:none}
 .track-row:hover{background:var(--bg3)}
@@ -518,10 +518,13 @@ function renderMusic(){
   const total=tracksMeta.length;
   document.getElementById('track-count').textContent=total+(total===1?' track':' tracks');
   if(!albums.length){wrap.innerHTML='<div class="empty"><p>No albums yet.</p></div>';return;}
-  wrap.innerHTML=albums.map(a=>{
+  const ordered=[...albums].reverse();
+  wrap.innerHTML=ordered.map(a=>{
     const ts=tracksMeta.filter(t=>t.albumId===a.id);
     const artURL=albumArtMap[a.id];
     const artHTML=artURL?`<img class="album-art" src="${artURL}" alt="${esc(a.title)}">`:`<div class="album-art-ph">🎵</div>`;
+    const subtitle=a.desc?(a.desc.length>120?a.desc.slice(0,120)+'…':a.desc):'';
+    const hasBio=!!(a.bio&&a.bio.trim());
     const tracksHTML=ts.length?ts.map((t,i)=>`
       <div class="track-row">
         <div class="track-top"><span class="tn">${String(i+1).padStart(2,'0')}</span><span class="tname">${esc(t.title)}</span></div>
@@ -533,11 +536,38 @@ function renderMusic(){
         ${t.desc?`<div class="tinsp">${esc(t.desc)}</div>`:''}
         ${t.lyrics?`<button class="lyrics-toggle" onclick="toggleLyrics('${t.id}')">⟡ lyrics</button><div class="lyrics-panel" id="lyr-${t.id}"><div class="lyrics-text">${renderLyrics(t.lyrics)}</div></div>`:''}
       </div>`).join(''):`<div style="padding:1.2rem 1.8rem;font-size:.85rem;font-style:italic;color:var(--muted)">No tracks yet.</div>`;
-    return`<div class="album-block"><div class="album-head">${artHTML}<div class="album-meta"><span class="alb-label">Album</span><span class="alb-title">${esc(a.title)}</span>${a.year?`<span class="alb-year">${esc(a.year)}</span>`:''}${a.desc?`<span class="alb-desc">${a.desc}</span>`:''}</div></div><div class="track-list">${tracksHTML}</div></div>`;
+    return`
+    <div class="album-block">
+      <div class="album-head">${artHTML}
+        <div class="album-meta">
+          <span class="alb-label">Album</span>
+          <span class="alb-title">${esc(a.title)}</span>
+          ${a.year?`<span class="alb-year">${esc(a.year)}</span>`:''}
+          ${subtitle?`<span class="alb-subtitle">${esc(subtitle)}</span>`:''}
+        </div>
+      </div>
+      ${hasBio?`
+      <button class="alb-acc-btn" id="bio-bar-${a.id}" onclick="toggleAlbSection('${a.id}','bio')">
+        <span>About this album</span><span class="alb-acc-chevron">›</span>
+      </button>
+      <div class="alb-bio-panel" id="bio-panel-${a.id}">
+        <div class="alb-bio-text">${a.bio.replace(/\n/g,'<br>')}</div>
+      </div>`:''}
+      <button class="alb-acc-btn" id="trk-bar-${a.id}" onclick="toggleAlbSection('${a.id}','trk')">
+        <span>Tracks${ts.length?` · ${ts.length}`:''}</span><span class="alb-acc-chevron">›</span>
+      </button>
+      <div class="track-list" id="trk-panel-${a.id}">${tracksHTML}</div>
+    </div>`;
   }).join('');
 }
+function toggleAlbSection(id,type){
+  const bar=document.getElementById(type+'-bar-'+id);
+  const panel=document.getElementById(type+'-panel-'+id);
+  if(!bar||!panel)return;
+  bar.classList.toggle('open');
+  panel.classList.toggle('open');
+}
 
-/* ── AUDIO ── */
 function getAudio(id){
   if(!audioInst[id]){const src=audioBlobMap[id];if(!src)return null;const a=new Audio(src);audioInst[id]=a;a.addEventListener('timeupdate',()=>{updProg(id,a);mpUpdProg(a);});a.addEventListener('loadedmetadata',()=>{updProg(id,a);mpUpdProg(a);});a.addEventListener('ended',()=>{stopUI(id);mpHide();curAudio=null;curId=null;});}
   return audioInst[id];
