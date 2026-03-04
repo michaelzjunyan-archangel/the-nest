@@ -199,7 +199,7 @@ nav{display:flex;align-items:stretch;border-bottom:1px solid var(--bdr);backgrou
 .danmaku-msg{position:absolute;width:260px;font-family:var(--serif);text-align:center;animation:drift linear forwards;pointer-events:none;user-select:none;display:flex;flex-direction:column;align-items:center;gap:.6rem;padding:2rem 1.6rem 1.5rem}
 .danmaku-msg .dm-scribble{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none}
 .danmaku-msg .dm-scribble path{fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:6 3 14 2 8 4 18 3 5 6;vector-effect:non-scaling-stroke}
-.danmaku-msg .dm-quote{position:relative;z-index:1;font-size:1.3rem;font-weight:600;line-height:1.35;letter-spacing:-.01em;word-break:break-word;white-space:pre-wrap}
+.danmaku-msg .dm-quote{position:relative;z-index:1;font-size:clamp(.85rem,1.3rem,1.3rem);font-weight:600;line-height:1.35;letter-spacing:-.01em;word-break:break-word;white-space:pre-wrap}
 .danmaku-msg .dm-name{position:relative;z-index:1;font-size:.7rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;opacity:.65;font-family:var(--sans)}
 @keyframes drift{from{transform:translateX(0);opacity:0}5%{opacity:1}88%{opacity:1}to{transform:translateX(calc(-100% - var(--sw,1600px)));opacity:0}}
 .drift-form-wrap{padding:3rem 2.5rem;max-width:680px}
@@ -672,7 +672,10 @@ function fireMessage(text){
     for(let i=0;i<pts.length;i++){const p0=pts[(i-1+pts.length)%pts.length],p1=pts[i],p2=pts[(i+1)%pts.length],p3=pts[(i+2)%pts.length];const cp1x=p1[0]+(p2[0]-p0[0])/6,cp1y=p1[1]+(p2[1]-p0[1])/6,cp2x=p2[0]-(p3[0]-p1[0])/6,cp2y=p2[1]-(p3[1]-p1[1])/6;d+=`C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${p2[0]} ${p2[1]} `;}
     return d+'Z';
   }
-  const W=260,H=nameText?170:140,path=scribblePath(W,H);
+  const msgLen=quoteText.length;
+  const W=msgLen>100?380:msgLen>50?320:260;
+  const H=nameText?(msgLen>100?220:msgLen>50?195:170):(msgLen>100?190:msgLen>50?165:140);
+  const path=scribblePath(W,H);
   const el=document.createElement('div');
   el.className='danmaku-msg';
   el.style.cssText=`top:${top}px;left:${stageW+30}px;color:${color};width:${W}px;height:${H}px;--sw:${stageW}px;animation-duration:${speed}s;`;
