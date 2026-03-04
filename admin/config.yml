@@ -65,23 +65,19 @@ collections:
         name: year
         widget: string
         required: false
-      - label: Description
+      - label: Album Subtitle
         name: desc
+        widget: string
+        pattern: ['^.{0,120}$', "Max 120 characters"]
+        required: false
+      - label: Album Bio
+        name: bio
         widget: text
+        hint: "Longer description shown in the 'About this album' dropdown"
         required: false
       - label: Album Art
         name: art
         widget: image
-        required: false
-      - label: "Album Subtitle"
-        name: "desc"
-        widget: "string"
-        pattern: ['^.{0,120}$', "Max 120 characters"]
-        required: false
-      - label: "Album Bio"
-        name: "bio"
-        widget: "text"
-        hint: "Longer description shown in the 'About this album' dropdown"
         required: false
 
   - name: tracks
