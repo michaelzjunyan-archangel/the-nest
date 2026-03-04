@@ -253,8 +253,7 @@ nav{display:flex;align-items:stretch;border-bottom:1px solid var(--bdr);backgrou
 .alb-label{font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;color:var(--a2)}
 .alb-title{font-family:var(--serif);font-size:1.55rem;font-weight:600;color:var(--head)}
 .alb-year{font-size:.8rem;color:var(--muted)}
-.alb-desc{font-size:.85rem;color:var(--muted);font-style:italic;line-height:1.55;margin-top:.4rem;max-width:48ch;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;transition:all .3s}
-.alb-desc.expanded{display:block !important;-webkit-box-orient:unset !important;-webkit-line-clamp:unset !important;overflow:visible !important}
+.alb-desc{font-size:.85rem;color:var(--muted);font-style:italic;line-height:1.55;margin-top:.4rem;max-width:48ch}
 .alb-more{font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--a2);background:none;border:none;cursor:pointer;padding:0;margin-top:.4rem;font-family:var(--sans);opacity:.8;transition:opacity .2s}
 .alb-more:hover{opacity:1}
 .track-row{padding:1rem 1.6rem;border-bottom:1px solid var(--bdr);transition:background .15s}
@@ -403,6 +402,7 @@ footer p{font-size:.75rem;color:var(--muted)}
   .album-head{grid-template-columns:100px 1fr}
   .album-art,.album-art-ph{width:100px;height:100px}
   nav{overflow-x:auto}
+  #mini-player{bottom:5rem;right:.75rem;min-width:200px}
 }
 ::-webkit-scrollbar{width:5px}
 ::-webkit-scrollbar-track{background:var(--bg)}
@@ -650,9 +650,10 @@ function parseFM(raw) {
   return { meta, body: m[2].trim() };
 }
 
+const _folderCache = {};
 async function fetchFolder(folder) {
+  if (_folderCache[folder]) return _folderCache[folder];
   try {
-    /* Use GitHub Contents API to list files — no index.json needed */
     const apiUrl = `https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/content/${folder}?ref=${GH_BRANCH}`;
     const res = await fetch(apiUrl, { headers: { 'Accept': 'application/vnd.github.v3+json' } });
     if (!res.ok) return [];
@@ -667,6 +668,8 @@ async function fetchFolder(folder) {
         return Object.assign({}, p.meta, { _body: p.body, _slug: entry.name.replace(/\.md$/,'') });
       } catch(e) { return null; }
     }));
+    _folderCache[folder] = items.filter(Boolean);
+    return _folderCache[folder];
     return items.filter(Boolean);
   } catch(e) { return []; }
 }
@@ -1110,7 +1113,7 @@ function openPost(i) {
   }
   document.getElementById('pv-meta').textContent  = fmtDate(p.date);
   document.getElementById('pv-title').textContent = p.title;
-  document.getElementById('pv-body').innerHTML    = p.body.split(/\n\n+/).map(para=>`<p>${esc(para)}</p>`).join('');
+  document.getElementById('pv-body').innerHTML    = renderMarkdown(p.body);
   document.getElementById('posts-grid').classList.add('hide');
   document.getElementById('writing-sh').classList.add('hide');
   document.getElementById('post-view').classList.add('open');
@@ -1120,6 +1123,23 @@ function closePost() {
   document.getElementById('posts-grid').classList.remove('hide');
   document.getElementById('writing-sh').classList.remove('hide');
   document.getElementById('post-view').classList.remove('open');
+}
+
+function renderMarkdown(md) {
+  if (!md) return '';
+  return md.split(/\n\n+/).map(block => {
+    if (/^#{1,3}\s/.test(block)) {
+      const level = block.match(/^(#{1,3})/)[1].length;
+      return `<h${level+1} style="font-family:var(--serif);font-weight:300;color:var(--head);margin:1.8em 0 .6em">${inlineMd(block.replace(/^#{1,3}\s+/,''))}</h${level+1}>`;
+    }
+    return `<p>${inlineMd(block)}</p>`;
+  }).join('');
+}
+function inlineMd(s) {
+  return esc(s)
+    .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g,'<em>$1</em>')
+    .replace(/\[(.+?)\]\((.+?)\)/g,'<a href="$2" style="color:var(--a2)">$1</a>');
 }
 
 /* ════════════════════════════ MUSIC ════════════════════════════ */
@@ -1163,7 +1183,7 @@ function renderMusic() {
             <span class="alb-label">Album</span>
             <span class="alb-title">${esc(a.title)}</span>
             ${a.year?`<span class="alb-year">${esc(a.year)}</span>`:''}
-            ${a.desc?`<span class="alb-desc" id="albd-${a.id}">${esc(a.desc)}</span><button class="alb-more" id="albm-${a.id}" onclick="toggleAlbDesc('${a.id}')">show more</button>`:''}
+            ${a.desc?`<span class="alb-desc" id="albd-${a.id}">${esc(a.desc.length>120 ? a.desc.slice(0,120)+'…' : a.desc)}</span>${a.desc.length>120?`<button class="alb-more" id="albm-${a.id}" onclick="toggleAlbDesc('${a.id}')">show more</button>`:''}`:''}
           </div>
         </div>
         <div class="track-list">${tracksHTML}</div>
@@ -1358,6 +1378,8 @@ let lanePtr = 0;
 
 function renderDriftCount() {
   document.getElementById('drift-count').textContent = driftMsgs.length+(driftMsgs.length===1?' drift':' drifts');
+  const empty = document.getElementById('stage-empty');
+  if (empty) empty.style.display = driftMsgs.length ? 'none' : '';
 }
 function sendDrift() {
   const msg = document.getElementById('d-msg').value.trim();
@@ -1478,9 +1500,16 @@ function hexToRgb(h) {
 function toggleAlbDesc(id) {
   const desc = document.getElementById('albd-'+id);
   const btn  = document.getElementById('albm-'+id);
-  const expanded = desc.classList.toggle('expanded');
-  btn.textContent = expanded ? 'show less' : 'show more';
- 
+  const a    = albums.find(x=>x.id===id);
+  if (!a) return;
+  const isShort = desc.textContent.slice(-1) !== '…';
+  if (isShort) {
+    desc.textContent = a.desc.slice(0,120)+'…';
+    btn.textContent  = 'show more';
+  } else {
+    desc.textContent = a.desc;
+    btn.textContent  = 'show less';
+  }
 }
 
 function toggleLyrics(id) {
