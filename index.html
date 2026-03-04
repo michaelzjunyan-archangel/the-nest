@@ -488,6 +488,11 @@ function go(pg){
   window.scrollTo(0,0);
 }
 
+<form name="drifts" netlify netlify-honeypot="bot-field" hidden>
+  <input name="message">
+  <input name="name">
+</form>
+  
 /* ── BIO ── */
 function renderBio(){
   document.getElementById('about-name-display').textContent=bioData.name||'Your Name';
@@ -641,8 +646,14 @@ function sendDrift(){
   ta.classList.remove('err');err.classList.remove('show');
   const name=document.getElementById('d-name').value.trim();
   const text=name?`${msg}\n— ${name}`:msg;
-  driftMsgs.push({text,id:Date.now()});renderDriftCount();fireMessage(text);updateEggBadges();
-  document.getElementById('d-msg').value='';document.getElementById('d-name').value='';
+  driftMsgs.push({text,id:Date.now()});
+  renderDriftCount();fireMessage(text);updateEggBadges();
+  document.getElementById('d-msg').value='';
+  document.getElementById('d-name').value='';
+  // save to Netlify Forms silently
+  fetch('/',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},
+    body:new URLSearchParams({'form-name':'drifts',message:msg,name:name||''})
+  }).catch(()=>{}); // fail silently — drift still floats even if save fails
 }
 function startDanmaku(){if(danmakuRunning)return;danmakuRunning=true;driftMsgs.forEach((m,i)=>setTimeout(()=>fireMessage(m.text),i*2000));}
 function fireMessage(text){
