@@ -79,7 +79,7 @@ collections:
         pattern: ['^.{0,120}$', "Max 120 characters"]
         required: false
       - label: "Album Bio"
-        name: "bio"
+        name: "album bio"
         widget: "text"
         required: false
 
