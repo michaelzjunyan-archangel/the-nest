@@ -568,7 +568,7 @@ function renderMusic(){
         <span>About this album</span><span class="alb-acc-chevron">›</span>
       </button>
       <div class="alb-bio-panel" id="bio-panel-${a.id}">
-        <div class="alb-bio-text">${a.bio.replace(/\n/g,'<br>')}</div>
+       <div class="alb-bio-text">${a.bio.replace(/\n+/g,' ').trim()}</div>
       </div>`:''}
       <button class="alb-acc-btn" id="trk-bar-${a.id}" onclick="toggleAlbSection('${a.id}','trk')">
         <span>Tracks${ts.length?` · ${ts.length}`:''}</span><span class="alb-acc-chevron">›</span>
