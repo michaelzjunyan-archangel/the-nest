@@ -672,9 +672,12 @@ function fireMessage(text){
     for(let i=0;i<pts.length;i++){const p0=pts[(i-1+pts.length)%pts.length],p1=pts[i],p2=pts[(i+1)%pts.length],p3=pts[(i+2)%pts.length];const cp1x=p1[0]+(p2[0]-p0[0])/6,cp1y=p1[1]+(p2[1]-p0[1])/6,cp2x=p2[0]-(p3[0]-p1[0])/6,cp2y=p2[1]-(p3[1]-p1[1])/6;d+=`C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${p2[0]} ${p2[1]} `;}
     return d+'Z';
   }
-  const W=260,H=nameText?170:140,path=scribblePath(W,H);
-  const el=document.createElement('div');
-  const qSize=msgLen>100?'.85rem':msgLen>50?'1rem':'1.3rem';
+  const msgLen=quoteText.length;
+const W=msgLen>100?380:msgLen>50?320:260;
+const H=nameText?(msgLen>100?220:msgLen>50?195:170):(msgLen>100?190:msgLen>50?165:140);
+const path=scribblePath(W,H);
+const qSize=msgLen>100?'.85rem':msgLen>50?'1rem':'1.3rem';
+const el=document.createElement('div');
   
   el.className='danmaku-msg';
   el.style.cssText=`top:${top}px;left:${stageW+30}px;color:${color};width:${W}px;height:${H}px;--sw:${stageW}px;animation-duration:${speed}s;`;
