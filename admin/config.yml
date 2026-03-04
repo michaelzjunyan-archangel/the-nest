@@ -17,7 +17,7 @@ collections:
             name: name
             widget: string
           - label: Bio
-            name: bio
+            name: HeroBio
             widget: text
           - label: Hero Description
             name: description
