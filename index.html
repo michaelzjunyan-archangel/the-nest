@@ -175,7 +175,7 @@ nav{display:flex;align-items:stretch;border-bottom:1px solid var(--bdr);backgrou
 .alb-acc-btn.open .alb-acc-chevron{transform:rotate(90deg)}
 .alb-bio-panel{display:none;padding:1.4rem 2rem 1.6rem;border-top:1px solid var(--bdr);background:color-mix(in srgb,var(--bg3) 50%,transparent)}
 .alb-bio-panel.open{display:block}
-.alb-bio-text{font-family:var(--prose);font-size:.93rem;line-height:1.9;color:var(--body)}
+.alb-bio-text{font-family:var(--sans);font-size:.88rem;line-height:1.85;color:var(--body)}
 .track-list{display:none}.track-list.open{display:block;border-top:1px solid var(--bdr)}
 .track-row{padding:1rem 1.6rem;border-bottom:1px solid var(--bdr);transition:background .15s}
 .track-row:last-child{border-bottom:none}
@@ -531,7 +531,7 @@ function renderMusic(){
     const ts=tracksMeta.filter(t=>t.albumId===a.id);
     const artURL=albumArtMap[a.id];
     const artHTML=artURL?`<img class="album-art" src="${artURL}" alt="${esc(a.title)}">`:`<div class="album-art-ph">🎵</div>`;
-    const subtitle=a.desc?(a.desc.length>120?a.desc.slice(0,120)+'…':a.desc):'';
+    const subtitle=a.desc?(a.desc.length>12000?a.desc.slice(0,12000)+'…':a.desc):'';
     const hasBio=!!(a.bio&&a.bio.trim());
     const tracksHTML=ts.length?ts.map((t,i)=>`
       <div class="track-row">
