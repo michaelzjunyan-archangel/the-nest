@@ -260,7 +260,10 @@ footer p{font-size:.75rem;color:var(--muted)}
 </style>
 </head>
 <body>
-
+<form name="drifts" netlify netlify-honeypot="bot-field" hidden>
+  <input name="message">
+  <input name="name">
+</form>
 <!-- THEME PICKER -->
 <div id="theme-picker-overlay">
   <div class="tp-box">
@@ -488,10 +491,6 @@ function go(pg){
   window.scrollTo(0,0);
 }
 
-<form name="drifts" netlify netlify-honeypot="bot-field" hidden>
-  <input name="message">
-  <input name="name">
-</form>
   
 /* ── BIO ── */
 function renderBio(){
