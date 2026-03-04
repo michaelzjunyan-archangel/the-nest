@@ -646,7 +646,6 @@ let audioInst = {}, curAudio = null, curId = null;
 const GH_USER = 'michaelzjunyan-archangel';
 const GH_REPO = 'the-nest';
 const GH_BRANCH = 'main';
-const GH_TOKEN = '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';
 
 function parseFM(raw) {
   const m = raw.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/);
@@ -682,15 +681,14 @@ async function fetchFolder(folder) {
   if (_folderCache[folder]) return _folderCache[folder];
   try {
     const apiUrl = `https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/content/${folder}?ref=${GH_BRANCH}`;
-    const res = await fetch(apiUrl, { headers: { 'Accept': 'application/vnd.github.v3+json', 'Authorization': `Bearer ${GH_TOKEN}` } });
+  const res = await fetch(apiUrl, { headers: { 'Accept': 'application/vnd.github.v3+json' } });
     if (!res.ok) return [];
     const entries = await res.json();
     const mdFiles = entries.filter(e => e.name.endsWith('.md') && e.type === 'file');
     const items = await Promise.all(mdFiles.map(async entry => {
       try {
         /* Fetch raw file content directly */
-        const r = await fetch(entry.download_url, { headers: { 'Authorization': `Bearer ${GH_TOKEN}` } });
-        if (!r.ok) return null;
+       const r = await fetch(entry.download_url);
         const p = parseFM(await r.text());
         return Object.assign({}, p.meta, { _body: p.body, _slug: entry.name.replace(/\.md$/,'') });
       } catch(e) { return null; }
@@ -1307,97 +1305,7 @@ function mpSeek(e){
   if(!curAudio||!curAudio.duration)return;
   const r=e.currentTarget.getBoundingClientRect();
   curAudio.currentTime=((e.clientX-r.left)/r.width)*curAudio.duration;
-}/* ════════════════════════════ AUDIO ENGINE + MINI-PLAYER ════════════════════════════ */
-function getAudio(id) {
-  if (!audioInst[id]) {
-    const src = audioBlobMap[id]; if (!src) return null;
-    const a = new Audio(src); audioInst[id] = a;
-    a.addEventListener('timeupdate',     () => { updProg(id,a); mpUpdProg(a); });
-    a.addEventListener('loadedmetadata', () => { updProg(id,a); mpUpdProg(a); });
-    a.addEventListener('ended', () => { stopUI(id); mpHide(); curAudio=null; curId=null; });
-  }
-  return audioInst[id];
 }
-function togglePlay(id) {
-  const a = getAudio(id);
-  if (!a) { alert('Audio not available — upload via the admin panel.'); return; }
-  if (curAudio && curAudio !== a) { curAudio.pause(); stopUI(curId); }
-  if (a.paused) {
-    a.play().catch(e=>alert('Playback error: '+e.message));
-    playUI(id); mpShow(id); curAudio=a; curId=id;
-  } else {
-    a.pause(); stopUI(id); mpPauseUI(); curAudio=null; curId=null;
-  }
-}
-function playUI(id) {
-  const btn=document.getElementById('pbtn-'+id),ico=document.getElementById('pico-'+id); if(!btn)return;
-  btn.classList.add('playing');
-  ico.innerHTML='<rect x="6" y="4" width="4" height="16" fill="white"/><rect x="14" y="4" width="4" height="16" fill="white"/>';
-}
-function stopUI(id) {
-  const btn=document.getElementById('pbtn-'+id),ico=document.getElementById('pico-'+id); if(!btn)return;
-  btn.classList.remove('playing');
-  ico.innerHTML='<polygon points="5,3 19,12 5,21" fill="white"/>';
-}
-function updProg(id,a) {
-  const fill=document.getElementById('pfill-'+id),time=document.getElementById('ptime-'+id); if(!fill||!time)return;
-  fill.style.width=(a.duration?(a.currentTime/a.duration)*100:0)+'%';
-  time.textContent=fmt(a.currentTime)+' / '+fmt(a.duration||0);
-}
-function seek(id,e) {
-  const a=audioInst[id]; if(!a||!a.duration)return;
-  const r=e.currentTarget.getBoundingClientRect();
-  a.currentTime=((e.clientX-r.left)/r.width)*a.duration;
-}
-function fmt(s){if(!s||isNaN(s))return'0:00';return Math.floor(s/60)+':'+String(Math.floor(s%60)).padStart(2,'0');}
-
-/* Mini-player controls */
-function mpShow(id) {
-  const t = tracksMeta.find(x=>x.id===id); if (!t) return;
-  const a = albums.find(x=>x.id===t.albumId);
-  document.getElementById('mp-title').textContent  = t.title;
-  document.getElementById('mp-album').textContent  = a ? a.title : '';
-  /* album art */
-  const artEl = document.getElementById('mp-art');
-  const artUrl = a && albumArtMap[a.id];
-  if (artUrl) {
-    artEl.outerHTML = `<img class="mp-art" id="mp-art" src="${esc(artUrl)}" alt="">`;
-  } else {
-    artEl.className = 'mp-art-ph'; artEl.textContent = '🎵';
-  }
-  mpPlayUI();
-  document.getElementById('mini-player').classList.add('visible');
-}
-function mpHide(){ document.getElementById('mini-player').classList.remove('visible'); }
-function mpClose(){
-  if(curAudio){curAudio.pause();stopUI(curId);curAudio=null;}
-  mpHide();
-}
-function mpToggle(){
-  if(!curAudio||!curId)return;
-  if(curAudio.paused){curAudio.play();playUI(curId);mpPlayUI();}
-  else{curAudio.pause();stopUI(curId);mpPauseUI();}
-}
-function mpPlayUI(){
-  const btn=document.getElementById('mp-btn'),ico=document.getElementById('mp-ico');
-  btn.classList.add('playing');
-  ico.innerHTML='<rect x="6" y="4" width="4" height="16" fill="white"/><rect x="14" y="4" width="4" height="16" fill="white"/>';
-}
-function mpPauseUI(){
-  const btn=document.getElementById('mp-btn'),ico=document.getElementById('mp-ico');
-  btn.classList.remove('playing');
-  ico.innerHTML='<polygon points="5,3 19,12 5,21" fill="white"/>';
-}
-function mpUpdProg(a){
-  const fill=document.getElementById('mp-pfill'); if(!fill)return;
-  fill.style.width=(a.duration?(a.currentTime/a.duration)*100:0)+'%';
-}
-function mpSeek(e){
-  if(!curAudio||!curAudio.duration)return;
-  const r=e.currentTarget.getBoundingClientRect();
-  curAudio.currentTime=((e.clientX-r.left)/r.width)*curAudio.duration;
-}
-
 /* ════════════════════════════ DRIFT / DANMAKU ════════════════════════════ */
 const COLORS = ['#e07c52','#8b67cc','#50b893','#d4a843','#cc6b8a','#6bacc9'];
 let danmakuRunning = false;
@@ -1602,20 +1510,6 @@ function updateEggBadges() {
 }
 
 (function(){
-  const saved = sessionStorage.getItem('tn_theme');
-  const overlay = document.getElementById('theme-picker-overlay');
-  if (saved) {
-    document.body.classList.add('theme-' + saved);
-    overlay.classList.add('compact');
-  } else {
-    document.body.classList.add('theme-void');
-    overlay.addEventListener('click', function(e){
-      if (e.target === overlay) pickTheme('void');
-    });
-  }
-})();
-
-(function(){
   const lines = [
     "Warm. Strange. Alive.",
     "come in. stay a while. or don't.",
@@ -1642,6 +1536,7 @@ function updateEggBadges() {
   if (el) el.textContent = lines[Math.floor(Math.random() * lines.length)];
 })();
 loadContent();
+  
 </script>
 <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 <script>
