@@ -660,7 +660,7 @@ function fireMessage(text){
   const emptyEl=document.getElementById('stage-empty');if(emptyEl)emptyEl.style.display='none';
   const stageH=stage.clientHeight,stageW=stage.clientWidth||window.innerWidth;
   const LANES=3,laneH=stageH/LANES,lane=lanePtr%LANES;lanePtr++;
-  const top=Math.round(laneH*lane+laneH*0.1);
+  const top=Math.min(Math.round(laneH*lane+laneH*0.1), stageH-H-10);
   const color=COLORS[Math.floor(Math.random()*COLORS.length)];
   const speed=16+Math.random()*8;
   const parts=text.split('\n—');
@@ -677,10 +677,17 @@ function fireMessage(text){
   const H=nameText?(msgLen>100?220:msgLen>50?195:170):(msgLen>100?190:msgLen>50?165:140);
   const path=scribblePath(W,H);
   const el=document.createElement('div');
+  const qSize=msgLen>100?'.85rem':msgLen>50?'1rem':'1.3rem';
+  
   el.className='danmaku-msg';
   el.style.cssText=`top:${top}px;left:${stageW+30}px;color:${color};width:${W}px;height:${H}px;--sw:${stageW}px;animation-duration:${speed}s;`;
-  el.innerHTML=`<svg class="dm-scribble" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="position:absolute;inset:0;width:100%;height:${H}px;overflow:visible"><path d="${path}" stroke="${color}" stroke-opacity="0.6" fill="${color}" fill-opacity="0.06"/></svg><div class="dm-quote">${esc(quoteText)}</div>${nameText?`<div class="dm-name">— ${esc(nameText)}</div>`:''}`;
   stage.appendChild(el);
+  el.innerHTML=`
+  <svg class="dm-scribble" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="position:absolute;inset:0;width:100%;height:${H}px;overflow:visible">
+    <path d="${path}" stroke="${color}" stroke-opacity="0.6" fill="${color}" fill-opacity="0.06"/>
+  </svg>
+  <div class="dm-quote" style="font-size:${qSize}">${esc(quoteText)}</div>
+  ${nameText?`<div class="dm-name">— ${esc(nameText)}</div>`:''}`;
   el.addEventListener('animationend',()=>el.remove());
 }
 
