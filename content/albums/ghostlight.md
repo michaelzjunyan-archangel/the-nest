@@ -1,7 +1,7 @@
 ---
 title: Ghostlight
 year: "2025"
-desc: "Ghostlight is my first EP. Conceived between patchworks of samples and
+desc: "Ghostlight is my first EP.  Conceived between patchworks of samples and
   angsty, long days of freshman year, Ghostlight embodies everything everything
   I like in hip-hop: catchy, grainy beats, sporadic vocals, heavenly melodies in
   samples, and heavy lyricism. Stuck in the quagmire of impostor syndrome, I
