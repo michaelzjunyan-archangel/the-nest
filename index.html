@@ -673,11 +673,11 @@ function fireMessage(text){
     return d+'Z';
   }
   const msgLen=quoteText.length;
-const W=msgLen>100?380:msgLen>50?320:260;
-const H=nameText?(msgLen>100?220:msgLen>50?195:170):(msgLen>100?190:msgLen>50?165:140);
-const path=scribblePath(W,H);
-const qSize=msgLen>100?'.85rem':msgLen>50?'1rem':'1.3rem';
-const el=document.createElement('div');
+  const W=msgLen>100?380:msgLen>50?320:260;
+  const H=nameText?(msgLen>100?220:msgLen>50?195:170):(msgLen>100?190:msgLen>50?165:140);
+  const path=scribblePath(W,H);
+  const qSize=msgLen>100?'.85rem':msgLen>50?'1rem':'1.3rem';
+  const el=document.createElement('div');
   
   el.className='danmaku-msg';
   el.style.cssText=`top:${top}px;left:${stageW+30}px;color:${color};width:${W}px;height:${H}px;--sw:${stageW}px;animation-duration:${speed}s;`;
