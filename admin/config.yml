@@ -73,6 +73,15 @@ collections:
         name: art
         widget: image
         required: false
+      - label: "Subtitle"
+        name: "desc"
+        widget: "string"
+        pattern: ['^.{0,120}$', "Max 120 characters"]
+        required: false
+      - label: "Album Bio"
+        name: "bio"
+        widget: "text"
+        required: false
 
   - name: tracks
     label: Tracks
