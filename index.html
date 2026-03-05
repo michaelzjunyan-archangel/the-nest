@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>The Nest</title>
-<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
 <link href="https://fonts.loli.net/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,800;1,9..144,300;1,9..144,500&family=Montserrat:wght@300;400;500;600&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -539,9 +539,8 @@ function go(pg){
   const nl=document.getElementById('nl-'+pg);if(nl)nl.classList.add('active');
   if(pg==='writing')renderWriting();
   if(pg==='music')renderMusic();
-  if(pg==='drift'){renderDriftCount();if(window.updateConstellationCounts)window.updateConstellationCounts();startDanmaku();}
-  else{stopDanmaku();}
-  if(pg==='stars')starsInit();
+  if(pg==='drift'){renderDriftCount();if(window.updateConstellationCounts)window.updateConstellationCounts();startDanmaku();} else{stopDanmaku();}
+  if(pg==='stars')requestAnimationFrame(()=>requestAnimationFrame(starsInit));
   if(pg==='home')renderBio();
   window.scrollTo(0,0);
 }
@@ -747,14 +746,25 @@ function nextThought(){
   if(!driftPool.length)driftPool=buildPool();
   fireMessage(driftPool[driftPoolIdx%driftPool.length],false);
   driftPoolIdx++;
-  thoughtTimer=setTimeout(nextThought,5400+Math.random()*1800);
+  thoughtTimer=setTimeout(nextThought,5400+Math.random()*1800);driftTimers.push(thoughtTimer);
 }
 
+let driftTimers=[];
+function stopDanmaku(){
+  danmakuRunning=false;
+  driftTimers.forEach(t=>clearTimeout(t));
+  driftTimers=[];
+  if(thoughtTimer){clearTimeout(thoughtTimer);thoughtTimer=null;}
+  const stage=document.getElementById('stage');
+  if(stage)stage.querySelectorAll('.danmaku-msg').forEach(el=>el.remove());
+  driftPool=[];driftPoolIdx=0;lanePtr=0;
+}
 function startDanmaku(){
   if(danmakuRunning)return;danmakuRunning=true;
   driftPool=buildPool();
   driftPoolIdx=0;
-  thoughtTimer=setTimeout(nextThought,400);
+  const t=setTimeout(nextThought,400);
+  driftTimers.push(t);
 }
 function renderDriftCount(){document.getElementById('drift-count').textContent=driftMsgs.length+(driftMsgs.length===1?' drift':' drifts');const empty=document.getElementById('stage-empty');if(empty)empty.style.display=driftMsgs.length?'none':'';}
 function sendDrift(){
@@ -969,25 +979,27 @@ function starsLoadState(){try{starsUnlocked=new Set(JSON.parse(localStorage.getI
 function starsSaveState(){localStorage.setItem(SKEY,JSON.stringify([...starsUnlocked]));}
 
 function starsInit(){
-  if(starsReady)return;
-  starsReady=true;
   starsLoadState();
   const canvas=document.getElementById('stars-canvas');
   const container=document.getElementById('page-stars');
-  starsW=container.clientWidth;starsH=container.clientHeight;
+  starsW=container.offsetWidth||window.innerWidth;
+  starsH=container.offsetHeight||window.innerHeight-56;
   canvas.width=starsW;canvas.height=starsH;
   starsBuildNodes();starsInitBg();
   starsUpdateUI();
   if(starsAnimId)cancelAnimationFrame(starsAnimId);
   starsDrawLoop();
-
-  canvas.addEventListener('click',starsClick);
-  canvas.addEventListener('mousemove',starsMouseMove);
-  window.addEventListener('resize',()=>{
-    starsW=container.clientWidth;starsH=container.clientHeight;
-    canvas.width=starsW;canvas.height=starsH;
-    starsBuildNodes();starsInitBg();
-  });
+  if(!canvas._starsListeners){
+    canvas._starsListeners=true;
+    canvas.addEventListener('click',starsClick);
+    canvas.addEventListener('mousemove',starsMouseMove);
+    window.addEventListener('resize',()=>{
+      starsW=container.offsetWidth||window.innerWidth;
+      starsH=container.offsetHeight||window.innerHeight-56;
+      canvas.width=starsW;canvas.height=starsH;
+      starsBuildNodes();starsInitBg();
+    });
+  }
 }
 
 function starsBuildNodes(){
