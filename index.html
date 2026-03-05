@@ -166,12 +166,20 @@ nav{display:flex;align-items:stretch;border-bottom:1px solid var(--bdr);backgrou
 .album-head{display:grid;grid-template-columns:160px 1fr}
 .album-art{width:160px;height:160px;object-fit:cover;display:block}
 .album-art-ph{width:160px;height:160px;background:linear-gradient(145deg,var(--bg3),#221d2e);display:flex;align-items:center;justify-content:center;font-size:3rem;color:var(--muted)}
-.album-meta{padding:1.5rem 2rem;display:flex;flex-direction:column;justify-content:center;gap:.3rem}
+.album-meta{padding:1.5rem 2rem;display:flex;flex-direction:column;justify-content:center;gap:.25rem}
 .alb-label{font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;color:var(--a2)}
 .alb-title{font-family:var(--serif);font-size:1.55rem;font-weight:600;color:var(--head)}
 .alb-year{font-size:.8rem;color:var(--muted)}
-.alb-desc{font-size:.85rem;color:var(--muted);font-style:italic;line-height:1.55;margin-top:.4rem;max-width:48ch}
-.track-list{border-top:1px solid var(--bdr)}
+.alb-subtitle{font-size:.85rem;color:var(--muted);font-style:italic;line-height:1.5;margin-top:.1rem;max-width:52ch}
+.alb-acc-btn{display:flex;align-items:center;justify-content:space-between;width:100%;padding:.7rem 1.6rem;background:none;border:none;border-top:1px solid var(--bdr);cursor:pointer;text-align:left;font-family:var(--sans);font-size:.7rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);transition:background .15s,color .15s}
+.alb-acc-btn:hover{background:rgba(255,255,255,.03);color:var(--body)}
+.alb-acc-btn.open{color:var(--body)}
+.alb-acc-chevron{transition:transform .25s;display:inline-block;opacity:.5}
+.alb-acc-btn.open .alb-acc-chevron{transform:rotate(90deg)}
+.alb-bio-panel{display:none;padding:1.4rem 2rem 1.6rem;border-top:1px solid var(--bdr);background:color-mix(in srgb,var(--bg3) 50%,transparent)}
+.alb-bio-panel.open{display:block}
+.alb-bio-text{font-family:var(--sans);font-size:.88rem;line-height:1.85;color:var(--body);max-width:none}
+.track-list{display:none}.track-list.open{display:block;border-top:1px solid var(--bdr)}
 .track-row{padding:1rem 1.6rem;border-bottom:1px solid var(--bdr);transition:background .15s}
 .track-row:last-child{border-bottom:none}
 .track-row:hover{background:var(--bg3)}
@@ -305,6 +313,7 @@ footer p{font-size:.75rem;color:var(--muted)}
     <li><a href="#" onclick="go('writing');return false;" id="nl-writing">Writing</a></li>
     <li><a href="#" onclick="go('music');return false;"   id="nl-music">Music</a></li>
     <li><a href="#" onclick="go('drift');return false;"   id="nl-drift">Drift</a></li>
+    <li><a href="#" onclick="go('stars');return false;"   id="nl-stars">Stars</a></li>
   </ul>
 </nav>
 
@@ -393,6 +402,43 @@ footer p{font-size:.75rem;color:var(--muted)}
   <button class="mp-close" onclick="mpClose()" title="close">✕</button>
 </div>
 
+<div class="page" id="page-stars" style="position:relative;height:calc(100vh - 56px);overflow:hidden">
+  <canvas id="stars-canvas" style="position:absolute;inset:0;width:100%;height:100%;cursor:crosshair"></canvas>
+
+  <!-- top overlay -->
+  <div style="position:absolute;top:0;left:0;right:0;z-index:10;display:flex;align-items:center;justify-content:space-between;padding:1.2rem 2rem;pointer-events:none">
+    <div style="font-family:var(--sans);font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(160,168,192,.35)">Read the Stars</div>
+    <div style="font-family:var(--sans);font-size:.6rem;letter-spacing:.15em;color:rgba(160,168,192,.3)"><span id="stars-cnt-done" style="color:var(--a2)">0</span> / <span id="stars-cnt-total">0</span> discovered</div>
+  </div>
+
+  <!-- progress dots -->
+  <div id="stars-progress" style="position:absolute;bottom:2rem;right:2rem;z-index:10;display:flex;flex-direction:column;gap:.45rem;align-items:flex-end"></div>
+
+  <!-- hint -->
+  <div id="stars-hint" style="position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);z-index:10;font-family:var(--sans);font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(160,168,192,.22);white-space:nowrap;transition:opacity .8s;pointer-events:none">click bright stars · connect them all · unlock a secret</div>
+
+  <!-- status -->
+  <div id="stars-status" style="position:absolute;top:3.8rem;left:50%;transform:translateX(-50%);z-index:10;font-family:var(--sans);font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(160,168,192,.3);white-space:nowrap;opacity:0;transition:opacity .4s;pointer-events:none"></div>
+
+  <!-- fact card -->
+  <div id="stars-card" style="
+    position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) scale(.88);
+    z-index:20;width:min(500px,90%);
+    background:linear-gradient(140deg,color-mix(in srgb,var(--bg) 97%,transparent),color-mix(in srgb,var(--bg2) 97%,transparent));
+    border:1px solid var(--bdr);border-radius:6px;
+    padding:2.8rem 3rem;text-align:center;
+    opacity:0;pointer-events:none;
+    transition:all .5s cubic-bezier(.34,1.56,.64,1);
+    backdrop-filter:blur(20px);
+  ">
+    <div id="sc-name" style="font-family:var(--sans);font-size:.6rem;letter-spacing:.22em;text-transform:uppercase;color:var(--a2);opacity:.6;margin-bottom:1rem"></div>
+    <div id="sc-symbol" style="font-size:2rem;margin-bottom:1rem"></div>
+    <div id="sc-text" style="font-family:var(--serif);font-style:italic;font-size:clamp(1.05rem,2.2vw,1.35rem);line-height:1.75;margin-bottom:.7rem;color:var(--head)"></div>
+    <div id="sc-cat" style="font-family:var(--sans);font-size:.55rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:2rem"></div>
+    <button onclick="starsCloseCard()" style="background:none;border:1px solid var(--bdr);color:var(--muted);font-family:var(--sans);font-size:.56rem;letter-spacing:.18em;text-transform:uppercase;padding:.5rem 1.5rem;cursor:pointer;border-radius:3px;transition:all .2s">seal it in the stars ✦</button>
+  </div>
+</div>
+
 <footer>
   <span class="flogo">The Nest</span>
   <p>© <span id="yr"></span></p>
@@ -450,7 +496,7 @@ async function loadContent(){
   const rawEssays=await fetchFolder('essays');
   posts=rawEssays.map(e=>{const id=e._slug;if(e.cover&&e.cover.trim())coverBlobMap[id]=e.cover.trim();return{id,title:e.title||'Untitled',date:(e.date||'').slice(0,10),excerpt:e.excerpt||'',body:e._body||'',coverId:(e.cover&&e.cover.trim())?id:null};}).sort((a,b)=>b.date>a.date?1:-1);
   const rawAlbums=await fetchFolder('albums');
-  albums=rawAlbums.map(a=>{const id=a._slug;if(a.art&&a.art.trim())albumArtMap[id]=a.art.trim();return{id,title:a.title||'Untitled',year:a.year||'',desc:a.desc||''};});
+  albums=rawAlbums.map(a=>{const id=a._slug;if(a.art&&a.art.trim())albumArtMap[id]=a.art.trim();return{id,title:a.title||'Untitled',year:a.year||'',desc:a.desc||'',bio:a.bio||''};});
   const rawTracks=await fetchFolder('tracks');
   tracksMeta=rawTracks.map(t=>{const id=t._slug;if(t.audio&&t.audio.trim())audioBlobMap[id]=t.audio.trim();return{id,albumId:t.albumSlug||'',title:t.title||'Untitled',track:parseInt(t.track)||99,desc:t.desc||'',lyrics:t.lyrics||''};}).sort((a,b)=>a.track-b.track);
   renderBio();renderWriting();renderMusic();updateEggBadges();
@@ -465,6 +511,7 @@ function go(pg){
   if(pg==='writing')renderWriting();
   if(pg==='music')renderMusic();
   if(pg==='drift'){renderDriftCount();startDanmaku();}
+  if(pg==='stars')starsInit();
   if(pg==='home')renderBio();
   window.scrollTo(0,0);
 }
@@ -533,10 +580,13 @@ function renderMusic(){
   const total=tracksMeta.length;
   document.getElementById('track-count').textContent=total+(total===1?' track':' tracks');
   if(!albums.length){wrap.innerHTML='<div class="empty"><p>No albums yet.</p></div>';return;}
-  wrap.innerHTML=albums.map(a=>{
+  const ordered=[...albums].reverse();
+  wrap.innerHTML=ordered.map(a=>{
     const ts=tracksMeta.filter(t=>t.albumId===a.id);
     const artURL=albumArtMap[a.id];
     const artHTML=artURL?`<img class="album-art" src="${artURL}" alt="${esc(a.title)}">`:`<div class="album-art-ph">🎵</div>`;
+    const subtitle=a.desc?(a.desc.length>500?a.desc.slice(0,500)+'…':a.desc):'';
+    const hasBio=!!(a.bio&&a.bio.trim());
     const tracksHTML=ts.length?ts.map((t,i)=>`
       <div class="track-row">
         <div class="track-top"><span class="tn">${String(i+1).padStart(2,'0')}</span><span class="tname">${esc(t.title)}</span></div>
@@ -548,11 +598,38 @@ function renderMusic(){
         ${t.desc?`<div class="tinsp">${esc(t.desc)}</div>`:''}
         ${t.lyrics?`<button class="lyrics-toggle" onclick="toggleLyrics('${t.id}')">⟡ lyrics</button><div class="lyrics-panel" id="lyr-${t.id}"><div class="lyrics-text">${renderLyrics(t.lyrics)}</div></div>`:''}
       </div>`).join(''):`<div style="padding:1.2rem 1.8rem;font-size:.85rem;font-style:italic;color:var(--muted)">No tracks yet.</div>`;
-    return`<div class="album-block"><div class="album-head">${artHTML}<div class="album-meta"><span class="alb-label">Album</span><span class="alb-title">${esc(a.title)}</span>${a.year?`<span class="alb-year">${esc(a.year)}</span>`:''}${a.desc?`<span class="alb-desc">${a.desc}</span>`:''}</div></div><div class="track-list">${tracksHTML}</div></div>`;
+    return`
+    <div class="album-block">
+      <div class="album-head">${artHTML}
+        <div class="album-meta">
+          <span class="alb-label">Album</span>
+          <span class="alb-title">${esc(a.title)}</span>
+          ${a.year?`<span class="alb-year">${esc(a.year)}</span>`:''}
+          ${subtitle?`<span class="alb-subtitle">${esc(subtitle)}</span>`:''}
+        </div>
+      </div>
+      ${hasBio?`
+      <button class="alb-acc-btn" id="bio-bar-${a.id}" onclick="toggleAlbSection('${a.id}','bio')">
+        <span>About this album</span><span class="alb-acc-chevron">›</span>
+      </button>
+      <div class="alb-bio-panel" id="bio-panel-${a.id}">
+        <div class="alb-bio-text">${a.bio.replace(/\n+/g,' ').trim()}</div>
+      </div>`:''}
+      <button class="alb-acc-btn" id="trk-bar-${a.id}" onclick="toggleAlbSection('${a.id}','trk')">
+        <span>Tracks${ts.length?` · ${ts.length}`:''}</span><span class="alb-acc-chevron">›</span>
+      </button>
+      <div class="track-list" id="trk-panel-${a.id}">${tracksHTML}</div>
+    </div>`;
   }).join('');
 }
+function toggleAlbSection(id,type){
+  const bar=document.getElementById(type+'-bar-'+id);
+  const panel=document.getElementById(type+'-panel-'+id);
+  if(!bar||!panel)return;
+  bar.classList.toggle('open');
+  panel.classList.toggle('open');
+}
 
-/* ── AUDIO ── */
 function getAudio(id){
   if(!audioInst[id]){const src=audioBlobMap[id];if(!src)return null;const a=new Audio(src);audioInst[id]=a;a.addEventListener('timeupdate',()=>{updProg(id,a);mpUpdProg(a);});a.addEventListener('loadedmetadata',()=>{updProg(id,a);mpUpdProg(a);});a.addEventListener('ended',()=>{stopUI(id);mpHide();curAudio=null;curId=null;});}
   return audioInst[id];
