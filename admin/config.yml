@@ -4,11 +4,44 @@ backend:
 media_folder: uploads
 public_folder: /uploads
 collections:
-  - label: "Why the Nest"
-    name: why
-    widget: text
-    required: false
-    hint: "Shows above your bio on the home page."
+  - name: drifts
+    label: Drifts
+    folder: content/drifts
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - label: Message
+        name: message
+        widget: string
+      - label: Name
+        name: name
+        widget: string
+        required: false
+  - name: settings
+    label: Site Settings
+    files:
+      - name: bio
+        label: Bio and Description
+        file: content/settings/bio.json
+        fields:
+          - label: Your Name
+            name: name
+            widget: string
+          - label: Bio
+            name: HeroBio
+            widget: text
+          - label: Hero Description
+            name: description
+            widget: text
+          - label: Why the Nest
+            name: why
+            widget: text
+            required: false
+            hint: "Shows above your bio on the home page."
+          - label: Portrait Photo
+            name: portrait
+            widget: image
+            required: false
   - name: drifts
     label: Drifts
     folder: content/drifts
