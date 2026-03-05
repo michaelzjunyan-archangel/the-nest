@@ -514,7 +514,7 @@ async function fetchFolder(folder){
 async function loadContent(){
   try{
     const r=await fetch('/content/settings/bio.json');
-    if(r.ok){const d=await r.json();bioData={name:d.name||'',text:d.bio||'',desc:d.description||'',why:d.why||''};
+    if(r.ok){const d=await r.json();bioData={name:d.name||'',text:d.HeroBio||d.bio||'',desc:d.description||'',why:d.why||''};
       if(d.portrait&&d.portrait.trim()){const img=document.getElementById('portrait-img'),ph=document.getElementById('portrait-ph');if(img){img.src=d.portrait.trim();img.style.display='block';}if(ph)ph.style.display='none';}}
   }catch(e){}
   const rawEssays=await fetchFolder('essays');
@@ -568,7 +568,11 @@ function renderWriting(){
 function openPost(i,cardEl){
   if(cardEl){
     cardEl.classList.add('clicked');
-    setTimeout(()=>{_doOpenPost(i);cardEl.classList.remove('clicked');},420);
+    setTimeout(()=>{
+      _doOpenPost(i);
+      // remove after animation fully completes
+      setTimeout(()=>cardEl.classList.remove('clicked'),400);
+    },750);
     return;
   }
   _doOpenPost(i);
@@ -831,8 +835,10 @@ document.addEventListener('click',function(e){
     document.body.classList.add('theme-'+saved);
     overlay.classList.add('compact');
     const el=document.getElementById('tpopt-'+saved);if(el)el.classList.add('active');
+    pickTheme(saved);
   }else{
     document.body.classList.add('theme-void');
+    pickTheme('void');
     overlay.addEventListener('click',function(e){if(e.target===overlay)pickTheme('void');});
   }
 })();
