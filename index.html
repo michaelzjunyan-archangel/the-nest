@@ -125,10 +125,13 @@ nav{display:flex;align-items:stretch;border-bottom:1px solid var(--bdr);backgrou
 .about-label{font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--a3);margin-bottom:1.2rem}
 .about-name{font-family:var(--serif);font-size:clamp(2rem,4vw,3.2rem);font-weight:300;color:var(--head);letter-spacing:-.02em;margin-bottom:1.5rem}
 .about-body{font-size:.97rem;line-height:1.85;color:var(--body);font-family:var(--prose)}
-.about-right{padding:0;display:flex;align-items:stretch}
-.portrait-slot{width:100%;min-height:480px;position:relative;overflow:hidden;background:var(--bg3);display:flex;align-items:center;justify-content:center;transition:filter .3s}
+.about-right{padding:2.5rem 2.5rem 2.5rem 1.5rem;display:flex;align-items:flex-end;justify-content:center;gap:1.2rem}
+.portrait-stack{display:flex;flex-direction:column;align-items:flex-end;gap:1.2rem;width:100%}
+.portrait-slot{position:relative;overflow:hidden;background:var(--bg3);display:flex;align-items:center;justify-content:center;transition:filter .3s;flex-shrink:0}
 .portrait-slot:hover{filter:brightness(1.07)}
 .portrait-slot img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.portrait-slot.ps-main{width:100%;height:320px;align-self:flex-end}
+.portrait-slot.ps-secondary{width:62%;height:200px;align-self:flex-start}
 .portrait-ph{display:flex;flex-direction:column;align-items:center;gap:.8rem;color:var(--muted);font-family:var(--sans);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;transition:color .2s;pointer-events:none;position:relative;z-index:1}
 .portrait-slot:hover .portrait-ph{color:var(--a2)}
 
@@ -361,11 +364,20 @@ footer p{font-size:.75rem;color:var(--muted)}
       <div class="about-body" id="about-bio-display"></div>
     </div>
     <div class="about-right">
-      <div class="portrait-slot">
-        <img id="portrait-img" style="display:none;position:absolute;inset:0;width:100%;height:100%;object-fit:cover" alt="">
-        <div class="portrait-ph" id="portrait-ph">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" opacity=".3"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
-          <span style="font-size:.63rem;opacity:.4;letter-spacing:.12em">photo via /admin</span>
+      <div class="portrait-stack">
+        <div class="portrait-slot ps-main">
+          <img id="portrait-img" style="display:none;position:absolute;inset:0;width:100%;height:100%;object-fit:cover" alt="">
+          <div class="portrait-ph" id="portrait-ph">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" opacity=".3"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+            <span style="font-size:.6rem;opacity:.4;letter-spacing:.12em">photo via /admin</span>
+          </div>
+        </div>
+        <div class="portrait-slot ps-secondary">
+          <img id="portrait-img-2" style="display:none;position:absolute;inset:0;width:100%;height:100%;object-fit:cover" alt="">
+          <div class="portrait-ph" id="portrait-ph-2">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" opacity=".3"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+            <span style="font-size:.58rem;opacity:.4;letter-spacing:.12em">photo 2 via /admin</span>
+          </div>
         </div>
       </div>
     </div>
@@ -516,7 +528,8 @@ async function loadContent(){
   try{
     const r=await fetch('/content/settings/bio.json');
     if(r.ok){const d=await r.json();bioData={name:d.name||'',text:d.HeroBio||d.bio||'',desc:d.description||'',why:d.why||''};
-      if(d.portrait&&d.portrait.trim()){const img=document.getElementById('portrait-img'),ph=document.getElementById('portrait-ph');if(img){img.src=d.portrait.trim();img.style.display='block';}if(ph)ph.style.display='none';}}
+      if(d.portrait&&d.portrait.trim()){const img=document.getElementById('portrait-img'),ph=document.getElementById('portrait-ph');if(img){img.src=d.portrait.trim();img.style.display='block';}if(ph)ph.style.display='none';}
+      if(d.portrait2&&d.portrait2.trim()){const img=document.getElementById('portrait-img-2'),ph=document.getElementById('portrait-ph-2');if(img){img.src=d.portrait2.trim();img.style.display='block';}if(ph)ph.style.display='none';}}
   }catch(e){}
   const rawEssays=await fetchFolder('essays');
   posts=rawEssays.map(e=>{const id=e._slug;if(e.cover&&e.cover.trim())coverBlobMap[id]=e.cover.trim();return{id,title:e.title||'Untitled',date:(e.date||'').slice(0,10),excerpt:e.excerpt||'',body:e._body||'',coverId:(e.cover&&e.cover.trim())?id:null};}).sort((a,b)=>b.date>a.date?1:-1);
