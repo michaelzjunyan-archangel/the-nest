@@ -4,7 +4,6 @@ backend:
 media_folder: uploads
 public_folder: /uploads
 collections:
-  - name: drifts
     label: Drifts
     folder: content/drifts
     create: true
@@ -30,6 +29,13 @@ collections:
           - label: Bio
             name: HeroBio
             widget: text
+          - label: Hero Description
+            name: description
+            widget: text
+          - label: Portrait Photo
+            name: portrait
+            widget: image
+            required: false
           - label: Hero Description
             name: description
             widget: text
@@ -43,38 +49,6 @@ collections:
             widget: image
             required: false
   - name: drifts
-    label: Drifts
-    folder: content/drifts
-    create: true
-    slug: "{{slug}}"
-    fields:
-      - label: Message
-        name: message
-        widget: string
-      - label: Name
-        name: name
-        widget: string
-        required: false
-  - name: settings
-    label: Site Settings
-    files:
-      - name: bio
-        label: Bio and Description
-        file: content/settings/bio.json
-        fields:
-          - label: Your Name
-            name: name
-            widget: string
-          - label: Bio
-            name: HeroBio
-            widget: text
-          - label: Hero Description
-            name: description
-            widget: text
-          - label: Portrait Photo
-            name: portrait
-            widget: image
-            required: false
   - name: essays
     label: Essays
     folder: content/essays
