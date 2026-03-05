@@ -728,10 +728,32 @@ const THOUGHTS=[
   "somewhere between giving up and trying differently",
 ];
 let thoughtIdx=0,thoughtTimer=null;
+function buildPool(){
+  // merge CMS presets + hardcoded thoughts, shuffle
+  const presets=driftMsgs.map(m=>m.text);
+  const all=[...presets,...THOUGHTS];
+  // fisher-yates shuffle
+  for(let i=all.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [all[i],all[j]]=[all[j],all[i]];
+  }
+  return all;
+}
+
+let driftPool=[],driftPoolIdx=0;
+
 function nextThought(){
-  fireMessage(THOUGHTS[thoughtIdx%THOUGHTS.length],false);
-  thoughtIdx++;
+  if(!driftPool.length)driftPool=buildPool();
+  fireMessage(driftPool[driftPoolIdx%driftPool.length],false);
+  driftPoolIdx++;
   thoughtTimer=setTimeout(nextThought,5400+Math.random()*1800);
+}
+
+function startDanmaku(){
+  if(danmakuRunning)return;danmakuRunning=true;
+  driftPool=buildPool();
+  driftPoolIdx=0;
+  thoughtTimer=setTimeout(nextThought,400);
 }
 function renderDriftCount(){document.getElementById('drift-count').textContent=driftMsgs.length+(driftMsgs.length===1?' drift':' drifts');const empty=document.getElementById('stage-empty');if(empty)empty.style.display=driftMsgs.length?'none':'';}
 function sendDrift(){
@@ -744,15 +766,7 @@ function sendDrift(){
   driftMsgs.push({text,id:Date.now()});renderDriftCount();fireMessage(text,true);updateEggBadges();
   document.getElementById('d-msg').value='';document.getElementById('d-name').value='';
 }
-function startDanmaku(){
-  if(danmakuRunning)return;danmakuRunning=true;
-  driftMsgs.forEach((m,i)=>{
-    const t=setTimeout(()=>fireMessage(m.text,false),300+i*540);
-    driftTimers.push(t);
-  });
-  const afterPresets=300+Math.max(driftMsgs.length,1)*540+400;
-  thoughtTimer=setTimeout(nextThought,afterPresets);
-}
+
 function fireMessage(text,isUser){
   const stage=document.getElementById('stage');
   const emptyEl=document.getElementById('stage-empty');if(emptyEl)emptyEl.style.display='none';
