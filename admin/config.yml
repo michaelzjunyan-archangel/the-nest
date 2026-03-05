@@ -4,6 +4,11 @@ backend:
 media_folder: uploads
 public_folder: /uploads
 collections:
+  - label: "Why the Nest"
+    name: why
+    widget: text
+    required: false
+    hint: "Shows above your bio on the home page."
   - name: drifts
     label: Drifts
     folder: content/drifts
