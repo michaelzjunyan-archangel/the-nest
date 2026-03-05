@@ -135,7 +135,10 @@ nav{display:flex;align-items:stretch;border-bottom:1px solid var(--bdr);backgrou
 .portrait-slot:hover .portrait-ph{color:var(--a2)}
 
 .posts-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr))}
-.post-card{border-right:1px solid var(--bdr);border-bottom:1px solid var(--bdr);cursor:pointer;transition:background .2s;position:relative;overflow:hidden}
+.post-card{border-right:1px solid var(--bdr);border-bottom:1px solid var(--bdr);cursor:pointer;transition:background .2s,box-shadow .4s;position:relative;overflow:hidden}
+@keyframes card-glow-in{0%{box-shadow:0 0 0px transparent}40%{box-shadow:0 0 30px var(--a2),0 0 60px var(--a2),inset 0 0 20px rgba(139,103,204,.15)}100%{box-shadow:0 0 8px var(--a2),inset 0 0 6px rgba(139,103,204,.07)}}
+.post-card.clicked{animation:card-glow-in .6s cubic-bezier(.22,1,.36,1) forwards;background:var(--bg2)}
+.post-card.clicked .post-title{color:var(--a2)}
 .post-card:hover{background:var(--bg2)}
 .post-card:hover .post-title{color:var(--a1)}
 .post-card-cover{width:100%;height:180px;object-fit:cover;display:block;filter:brightness(.85);transition:filter .3s,transform .4s}
@@ -194,6 +197,10 @@ nav{display:flex;align-items:stretch;border-bottom:1px solid var(--bdr);backgrou
 .danmaku-msg .dm-quote{position:relative;z-index:1;font-size:1.3rem;font-weight:600;line-height:1.35;letter-spacing:-.01em;word-break:break-word;white-space:pre-wrap}
 .danmaku-msg .dm-name{position:relative;z-index:1;font-size:.7rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;opacity:.65;font-family:var(--sans)}
 @keyframes drift{from{transform:translateX(0);opacity:0}5%{opacity:1}88%{opacity:1}to{transform:translateX(calc(-100% - var(--sw,1600px)));opacity:0}}
+@keyframes glow-pulse{0%,100%{filter:drop-shadow(0 0 4px currentColor) drop-shadow(0 0 10px currentColor)}50%{filter:drop-shadow(0 0 12px currentColor) drop-shadow(0 0 30px currentColor) drop-shadow(0 0 55px currentColor)}}
+.danmaku-msg.user-msg{animation:drift linear forwards,glow-pulse 2s ease-in-out infinite}
+.danmaku-msg.user-msg .dm-quote{color:var(--head)}
+.danmaku-msg.user-msg .dm-scribble path{stroke-opacity:0.95;fill-opacity:0.15}
 .drift-form-wrap{padding:3rem 2.5rem;max-width:680px}
 .drift-prompt{font-family:var(--serif);font-weight:300;font-style:italic;font-size:clamp(1.4rem,3vw,2rem);color:var(--head);margin-bottom:.6rem;line-height:1.2}
 .drift-sub{font-size:.85rem;color:var(--muted);margin-bottom:2rem}
@@ -481,10 +488,18 @@ function renderWriting(){
   if(!posts.length){grid.innerHTML='<div class="empty" style="grid-column:1/-1"><p>No essays yet.</p></div>';return;}
   grid.innerHTML=posts.map((p,i)=>{
     const coverUrl=p.coverId&&coverBlobMap[p.coverId];
-    return`<div class="post-card" onclick="openPost(${i})">${coverUrl?`<img class="post-card-cover" src="${coverUrl}" alt="">`:''}<div class="${coverUrl?'post-card-body':'post-card-body-nocover'}"><div class="pmeta">${fmtDate(p.date)}</div><div class="post-title">${esc(p.title)}</div><div class="post-exc">${esc(p.excerpt||'')}</div></div><span class="post-arrow">→</span></div>`;
+    return`<div class="post-card" onclick="openPost(${i},this)">${coverUrl?`<img class="post-card-cover" src="${coverUrl}" alt="">`:''}<div class="${coverUrl?'post-card-body':'post-card-body-nocover'}"><div class="pmeta">${fmtDate(p.date)}</div><div class="post-title">${esc(p.title)}</div><div class="post-exc">${esc(p.excerpt||'')}</div></div><span class="post-arrow">→</span></div>`;
   }).join('');
 }
-function openPost(i){
+function openPost(i,cardEl){
+  if(cardEl){
+    cardEl.classList.add('clicked');
+    setTimeout(()=>{_doOpenPost(i);cardEl.classList.remove('clicked');},420);
+    return;
+  }
+  _doOpenPost(i);
+}
+function _doOpenPost(i){
   const p=posts[i];
   const coverUrl=p.coverId&&coverBlobMap[p.coverId];
   const pvCover=document.getElementById('pv-cover');
@@ -577,6 +592,34 @@ function mpSeek(e){if(!curAudio||!curAudio.duration)return;const r=e.currentTarg
 /* ── DRIFT ── */
 const COLORS=['#e07c52','#8b67cc','#50b893','#d4a843','#cc6b8a','#6bacc9'];
 let danmakuRunning=false,lanePtr=0;
+const THOUGHTS=[
+  "some things only make sense at 3am",
+  "not lonely. just alone in a specific way.",
+  "the distance between feeling something and saying it",
+  "i keep returning to the same three songs",
+  "memory is just a story you keep editing",
+  "what does it mean to be known",
+  "the world is loud and i am taking notes",
+  "everything i make is an attempt at translation",
+  "there are people i think about and never reach out to",
+  "beauty as a form of argument",
+  "i finished it and immediately wondered if it was good",
+  "the version of yourself you were last year",
+  "some doors you close and some just drift shut",
+  "i think that was the moment but i'm not sure",
+  "you can miss a place you've never been",
+  "loving something before you understand it",
+  "the gap between what i meant and what i made",
+  "it mattered, even if no one saw it",
+  "a feeling with no name in any language i speak",
+  "somewhere between giving up and trying differently",
+];
+let thoughtIdx=0,thoughtTimer=null;
+function nextThought(){
+  fireMessage(THOUGHTS[thoughtIdx%THOUGHTS.length],false);
+  thoughtIdx++;
+  thoughtTimer=setTimeout(nextThought,18000+Math.random()*6000);
+}
 function renderDriftCount(){document.getElementById('drift-count').textContent=driftMsgs.length+(driftMsgs.length===1?' drift':' drifts');const empty=document.getElementById('stage-empty');if(empty)empty.style.display=driftMsgs.length?'none':'';}
 function sendDrift(){
   const msg=document.getElementById('d-msg').value.trim();
@@ -588,7 +631,12 @@ function sendDrift(){
   driftMsgs.push({text,id:Date.now()});renderDriftCount();fireMessage(text,true);updateEggBadges();
   document.getElementById('d-msg').value='';document.getElementById('d-name').value='';
 }
-function startDanmaku(){if(danmakuRunning)return;danmakuRunning=true;driftMsgs.forEach((m,i)=>setTimeout(()=>fireMessage(m.text),i*2000));}
+function startDanmaku(){
+  if(danmakuRunning)return;danmakuRunning=true;
+  driftMsgs.forEach((m,i)=>setTimeout(()=>fireMessage(m.text,false),i*2200));
+  const firstDelay=Math.max(driftMsgs.length*2200,500);
+  thoughtTimer=setTimeout(nextThought,firstDelay);
+}
 function fireMessage(text,isUser){
   const stage=document.getElementById('stage');
   const emptyEl=document.getElementById('stage-empty');if(emptyEl)emptyEl.style.display='none';
