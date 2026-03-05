@@ -539,6 +539,7 @@ function go(pg){
   if(pg==='writing')renderWriting();
   if(pg==='music')renderMusic();
   if(pg==='drift'){renderDriftCount();if(window.updateConstellationCounts)window.updateConstellationCounts();startDanmaku();}
+  else{stopDanmaku();}
   if(pg==='stars')starsInit();
   if(pg==='home')renderBio();
   window.scrollTo(0,0);
@@ -730,7 +731,7 @@ let thoughtIdx=0,thoughtTimer=null;
 function nextThought(){
   fireMessage(THOUGHTS[thoughtIdx%THOUGHTS.length],false);
   thoughtIdx++;
-  thoughtTimer=setTimeout(nextThought,18000+Math.random()*6000);
+  thoughtTimer=setTimeout(nextThought,5400+Math.random()*1800);
 }
 function renderDriftCount(){document.getElementById('drift-count').textContent=driftMsgs.length+(driftMsgs.length===1?' drift':' drifts');const empty=document.getElementById('stage-empty');if(empty)empty.style.display=driftMsgs.length?'none':'';}
 function sendDrift(){
@@ -745,10 +746,12 @@ function sendDrift(){
 }
 function startDanmaku(){
   if(danmakuRunning)return;danmakuRunning=true;
-  // presets first, spaced out
-  driftMsgs.forEach((m,i)=>setTimeout(()=>fireMessage(m.text,false),i*3500));
-  const firstDelay=Math.max(driftMsgs.length*3500+1000,1000);
-  thoughtTimer=setTimeout(nextThought,firstDelay);
+  driftMsgs.forEach((m,i)=>{
+    const t=setTimeout(()=>fireMessage(m.text,false),300+i*540);
+    driftTimers.push(t);
+  });
+  const afterPresets=300+Math.max(driftMsgs.length,1)*540+400;
+  thoughtTimer=setTimeout(nextThought,afterPresets);
 }
 function fireMessage(text,isUser){
   const stage=document.getElementById('stage');
@@ -756,13 +759,19 @@ function fireMessage(text,isUser){
   const stageH=stage.clientHeight||460,stageW=stage.clientWidth||window.innerWidth;
   const LANES=4,laneH=stageH/LANES;
   const speed=16+Math.random()*8;
-  // pick the lane that becomes free soonest
-  const now=Date.now();
-  let lane=0,soonest=Infinity;
-  for(let l=0;l<LANES;l++){const free=laneFreeAt[l]||0;if(free<soonest){soonest=free;lane=l;}}
-  // mark lane occupied until this message has fully crossed
-  laneFreeAt[lane]=now+speed*1000+500;
-  lanePtr++;
+  // spatial check — find a lane with no live message in it
+  const liveMsgs=[...stage.querySelectorAll('.danmaku-msg')];
+  let lane=lanePtr%LANES;
+  for(let attempt=0;attempt<LANES;attempt++){
+    const tryLane=(lanePtr+attempt)%LANES;
+    const laneTop=laneH*tryLane,laneBot=laneTop+laneH;
+    const occupied=liveMsgs.some(el=>{
+      const t=parseFloat(el.style.top)||0;
+      return t>=laneTop-10&&t<laneBot;
+    });
+    if(!occupied){lane=tryLane;break;}
+  }
+  lanePtr=(lane+1)%LANES;
   const color=COLORS[Math.floor(Math.random()*COLORS.length)];
   const parts=text.split('\n—');
   const quoteText=parts[0].trim(),nameText=parts[1]?parts[1].trim():null;
