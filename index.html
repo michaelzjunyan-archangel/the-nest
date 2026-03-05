@@ -13,9 +13,9 @@
   --a1:#e07c52;--a2:#8b67cc;--a3:#50b893;--a4:#d4a843;--danger:#c0504a;
   --serif:'Fraunces',Georgia,serif;--sans:'Montserrat',sans-serif;--prose:'Lora',Georgia,serif;
 }
-body.theme-void{--bg:#0c0b0f;--bg2:#131118;--bg3:#1b1823;--bdr:#272333;--muted:#5e596e;--body:#bbb4cc;--head:#eae5f5;--a1:#e07c52;--a2:#8b67cc;--a3:#50b893;--a4:#d4a843;}
-body.theme-parchment{--bg:#e8e0d0;--bg2:#dfd6c4;--bg3:#d4c9b4;--bdr:#bfb5a0;--muted:#7a6e5e;--body:#3d3226;--head:#1a120a;--a1:#b84a1e;--a2:#5a3e9c;--a3:#2e7a5c;--a4:#9a6f0a;}
-body.theme-moss{--bg:#0e1210;--bg2:#141a14;--bg3:#1a2318;--bdr:#253022;--muted:#576455;--body:#b0c4a8;--head:#e2eed8;--a1:#c8a45a;--a2:#6aab7a;--a3:#85c4a0;--a4:#e8c870;}
+body.theme-void{--bg:#0c0b0f;--bg2:#131118;--bg3:#1b1823;--bdr:#272333;--muted:#5e596e;--body:#b8b2c8;--head:#e2ddf0;--a1:#c9896a;--a2:#8b7ab8;--a3:#62a88a;--a4:#c4a86a;}
+body.theme-parchment{--bg:#ede6d8;--bg2:#e4dac8;--bg3:#d8cdb8;--bdr:#c4b8a4;--muted:#7e7060;--body:#3e3228;--head:#1c1208;--a1:#a8624a;--a2:#6e5a98;--a3:#4a8a6a;--a4:#9a7e3a;}
+body.theme-moss{--bg:#0e1210;--bg2:#141a14;--bg3:#1a2318;--bdr:#253022;--muted:#546050;--body:#a8bea0;--head:#d8e8ce;--a1:#b89858;--a2:#6a9e72;--a3:#7ab090;--a4:#c8b060;}
 
 /* ── THEME PICKER ── */
 #theme-picker-overlay{
@@ -85,9 +85,9 @@ nav{display:flex;align-items:stretch;border-bottom:1px solid var(--bdr);backgrou
 @keyframes blink{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.6)}}
 .nav-links{display:flex;list-style:none;align-items:stretch}
 .nav-links li{display:flex}
-.nav-links li a{display:flex;align-items:center;padding:0 1.4rem;font-size:1rem;font-weight:300;font-family:var(--serif);font-style:italic;letter-spacing:.01em;color:var(--muted);text-decoration:none;border-right:1px solid var(--bdr);transition:color .2s,background .2s;white-space:nowrap}
+.nav-links li a{display:flex;align-items:center;padding:0 1.4rem;font-size:1rem;font-weight:300;font-family:var(--serif);font-style:italic;letter-spacing:.01em;color:var(--muted);text-decoration:none;border-right:1px solid var(--bdr);transition:color .2s,background .2s;white-space:nowrap;position:relative}
 .nav-links li a:hover{color:var(--head);background:rgba(255,255,255,.03)}
-.nav-links li a.active{color:var(--a1);background:rgba(224,124,82,.06)}
+.nav-links li a.active{color:var(--a1);background:rgba(255,255,255,.03)}
 
 .page{display:none;animation:up .3s ease}
 .page.active{display:block}
@@ -96,30 +96,27 @@ nav{display:flex;align-items:stretch;border-bottom:1px solid var(--bdr);backgrou
 .sh h2{font-family:var(--serif);font-weight:300;font-size:clamp(2rem,3.5vw,2.8rem);color:var(--head);letter-spacing:-.02em}
 .sh .badge{font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
 
-.home-hero{min-height:calc(100vh - 56px);display:flex;flex-direction:column;justify-content:center;padding:5rem 2.5rem 4rem;position:relative;overflow:hidden}
+.home-hero{min-height:calc(100vh - 56px);display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr auto;align-items:center;padding:5rem 2.5rem 4rem;position:relative;overflow:hidden;gap:0}
 .blob{position:absolute;border-radius:50%;filter:blur(100px);pointer-events:none;z-index:0}
 .b1{width:600px;height:600px;background:rgba(139,103,204,.12);top:-150px;right:-150px}
 .b2{width:350px;height:350px;background:rgba(224,124,82,.09);bottom:50px;left:20px}
 .b3{width:250px;height:250px;background:rgba(80,184,147,.07);top:40%;right:30%}
-.hero-inner{position:relative;z-index:2;max-width:900px}
+.hero-inner{position:relative;z-index:2;grid-column:1;grid-row:1}
+.hero-right-panel{grid-column:2;grid-row:1;position:relative;height:100%;min-height:460px;width:100%}
+#hero-constellation{position:absolute;inset:0;width:100%;height:100%}
+#hnav-labels{position:absolute;inset:0;pointer-events:none}
+.hnav-node-label{position:absolute;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:.3rem;pointer-events:all;cursor:pointer;text-decoration:none}
+.hnl-name{font-family:'Cinzel Decorative',serif;font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);transition:color .25s,text-shadow .25s;white-space:nowrap}
+.hnl-count{font-family:var(--mono);font-size:.5rem;letter-spacing:.1em;color:var(--muted);opacity:.4;transition:opacity .2s}
+.hnav-node-label:hover .hnl-name{color:var(--head)}
+.hnav-node-label:hover .hnl-count{opacity:.8}
+.scroll-cue{grid-column:1;grid-row:2;position:relative;z-index:2;font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:.6rem;animation:cue 2s ease-in-out infinite;padding-top:1.5rem}
 .hero-tag{font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--a2);margin-bottom:1.8rem}
 .hero-title{font-family:var(--serif);font-weight:300;font-size:clamp(4rem,9vw,8.5rem);line-height:.95;color:var(--head);letter-spacing:-.04em;margin-bottom:2.5rem}
 .hero-title em{font-style:italic;color:var(--a1)}
 .hero-subtitle{font-family:var(--prose);font-style:italic;font-size:clamp(.95rem,2vw,1.15rem);color:var(--muted);margin-top:-.8rem;margin-bottom:2.5rem;letter-spacing:.01em;line-height:1.6;max-width:55ch;opacity:.85}
 .nest-desc-block{max-width:60ch;font-size:1.05rem;line-height:1.9;color:var(--body);margin-bottom:3rem;font-family:var(--prose);font-weight:400;letter-spacing:.01em}
 .nest-desc-block em{color:var(--a4);font-style:italic}
-.hero-nav{display:flex;gap:1rem;flex-wrap:wrap;align-items:flex-end;margin-top:.5rem}
-.hero-nav-link{display:inline-flex;align-items:center;justify-content:center;position:relative;text-decoration:none;padding:.65rem 1.6rem .55rem;font-family:var(--serif);font-style:italic;font-weight:300;font-size:1.05rem;letter-spacing:.02em;color:var(--head);transition:color .25s,transform .2s}
-.hero-nav-link:nth-child(1){clip-path:ellipse(52% 48% at 48% 54%);background:rgba(224,124,82,.15);border:1.5px solid rgba(224,124,82,.35)}
-.hero-nav-link:nth-child(2){clip-path:ellipse(55% 46% at 50% 50%);background:rgba(139,103,204,.12);border:1.5px solid rgba(139,103,204,.3);padding:.65rem 1.8rem .55rem}
-.hero-nav-link:nth-child(3){clip-path:ellipse(50% 50% at 52% 48%);background:rgba(80,184,147,.1);border:1.5px solid rgba(80,184,147,.28)}
-.hero-nav-link:hover{transform:translateY(-3px) scale(1.04);color:var(--a1)}
-.hero-nav-link:nth-child(2):hover{color:var(--a2)}
-.hero-nav-link:nth-child(3):hover{color:var(--a3)}
-.hero-nav-link .egg-num{position:absolute;top:-3px;right:-3px;width:16px;height:16px;border-radius:50%;background:var(--a1);color:white;font-family:var(--sans);font-size:.55rem;font-style:normal;font-weight:600;display:flex;align-items:center;justify-content:center;opacity:.8}
-.hero-nav-link:nth-child(2) .egg-num{background:var(--a2)}
-.hero-nav-link:nth-child(3) .egg-num{background:var(--a3)}
-.scroll-cue{position:absolute;bottom:2.5rem;left:2.5rem;font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:.6rem;animation:cue 2s ease-in-out infinite}
 @keyframes cue{0%,100%{opacity:.4;transform:translateY(0)}50%{opacity:1;transform:translateY(4px)}}
 
 .about-section{border-top:1px solid var(--bdr);display:grid;grid-template-columns:1fr 1fr}
@@ -136,9 +133,27 @@ nav{display:flex;align-items:stretch;border-bottom:1px solid var(--bdr);backgrou
 
 .posts-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr))}
 .post-card{border-right:1px solid var(--bdr);border-bottom:1px solid var(--bdr);cursor:pointer;transition:background .2s,box-shadow .4s;position:relative;overflow:hidden}
-@keyframes card-glow-in{0%{box-shadow:0 0 0px transparent}40%{box-shadow:0 0 30px var(--a2),0 0 60px var(--a2),inset 0 0 20px rgba(139,103,204,.15)}100%{box-shadow:0 0 8px var(--a2),inset 0 0 6px rgba(139,103,204,.07)}}
-.post-card.clicked{animation:card-glow-in .6s cubic-bezier(.22,1,.36,1) forwards;background:var(--bg2)}
-.post-card.clicked .post-title{color:var(--a2)}
+@keyframes chest-open{
+  0%  {box-shadow:none;                                                                              filter:brightness(1)}
+  5%  {box-shadow:0 0 6px var(--card-glow);                                                         filter:brightness(1.02)}
+  25% {box-shadow:0 0 18px var(--card-glow),0 6px 40px var(--card-glow-soft);                      filter:brightness(1.06)}
+  55% {box-shadow:0 0 35px var(--card-glow),0 10px 70px var(--card-glow-soft),inset 0 0 18px var(--card-glow-inset); filter:brightness(1.1)}
+  80% {box-shadow:0 0 20px var(--card-glow),0 6px 40px var(--card-glow-soft);                      filter:brightness(1.04)}
+  100%{box-shadow:0 0 8px var(--card-glow-soft);                                                    filter:brightness(1)}
+}
+@keyframes chest-title{
+  0%,100%{color:var(--head)}
+  40%,70%{color:var(--card-glow);text-shadow:0 0 16px var(--card-glow)}
+}
+.post-card{
+  transition:box-shadow 1.8s ease, filter 1.8s ease;
+}
+.post-card:hover{
+  box-shadow:0 0 22px var(--card-glow-soft),0 0 6px var(--card-glow-soft);
+  filter:brightness(1.04);
+}
+.post-card.clicked{animation:chest-open 0.75s cubic-bezier(.4,0,.2,1) forwards}
+.post-card.clicked .post-title{animation:chest-title 0.75s cubic-bezier(.4,0,.2,1) forwards}
 .post-card:hover{background:var(--bg2)}
 .post-card:hover .post-title{color:var(--a1)}
 .post-card-cover{width:100%;height:180px;object-fit:cover;display:block;filter:brightness(.85);transition:filter .3s,transform .4s}
@@ -252,7 +267,7 @@ footer p{font-size:.75rem;color:var(--muted)}
 .lyrics-toggle{background:none;border:none;cursor:pointer;font-family:var(--sans);font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;color:var(--a2);padding:0;margin:.5rem 0 0 2.5rem;opacity:.8;transition:opacity .2s;display:block}
 .lyrics-toggle:hover{opacity:1}
 
-@media(max-width:700px){
+@media(max-width:700px){.hero-right-panel{display:none!important}.home-hero{grid-template-columns:1fr!important}
   .about-section{grid-template-columns:1fr}
   .about-right{display:none}
   .albums-wrap{padding:1.5rem}
@@ -320,22 +335,27 @@ footer p{font-size:.75rem;color:var(--muted)}
 <div class="page active" id="page-home">
   <div class="home-hero">
     <div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
+    <!-- LEFT -->
     <div class="hero-inner">
       <div class="hero-tag">✦ you found it</div>
       <h1 class="hero-title">The<br><em>Nest.</em></h1>
       <div class="hero-subtitle" id="hero-subtitle"></div>
       <div class="nest-desc-block" id="nest-desc-display">A place where things live.</div>
-      <div class="hero-nav">
-        <a class="hero-nav-link" href="#" onclick="go('writing');return false;">writing<span class="egg-num" id="nav-egg-writing">0</span></a>
-        <a class="hero-nav-link" href="#" onclick="go('music');return false;">music<span class="egg-num" id="nav-egg-music">0</span></a>
-        <a class="hero-nav-link" href="#" onclick="go('drift');return false;">drift<span class="egg-num" id="nav-egg-drift">0</span></a>
-      </div>
+    </div>
+    <!-- RIGHT -->
+    <div class="hero-right-panel">
+      <canvas id="hero-constellation"></canvas>
+      <div id="hnav-labels"></div>
     </div>
     <div class="scroll-cue">↓ scroll</div>
   </div>
   <div class="about-section">
     <div class="about-left">
-      <div class="about-label">The person behind this</div>
+      <div id="why-block" style="display:none;margin-bottom:2.8rem;padding-bottom:2.4rem;border-bottom:1px solid var(--bdr)">
+        <div class="about-label">why the nest</div>
+        <div id="why-display" style="font-family:var(--prose);font-size:1rem;line-height:1.9;color:var(--body);font-style:italic"></div>
+      </div>
+      <div class="about-label">the person behind this</div>
       <div class="about-name" id="about-name-display">Your Name</div>
       <div class="about-body" id="about-bio-display"></div>
     </div>
@@ -494,7 +514,7 @@ async function fetchFolder(folder){
 async function loadContent(){
   try{
     const r=await fetch('/content/settings/bio.json');
-    if(r.ok){const d=await r.json();bioData={name:d.name||'',text:d.bio||'',desc:d.description||''};
+    if(r.ok){const d=await r.json();bioData={name:d.name||'',text:d.bio||'',desc:d.description||'',why:d.why||''};
       if(d.portrait&&d.portrait.trim()){const img=document.getElementById('portrait-img'),ph=document.getElementById('portrait-ph');if(img){img.src=d.portrait.trim();img.style.display='block';}if(ph)ph.style.display='none';}}
   }catch(e){}
   const rawEssays=await fetchFolder('essays');
@@ -503,7 +523,7 @@ async function loadContent(){
   albums=rawAlbums.map(a=>{const id=a._slug;if(a.art&&a.art.trim())albumArtMap[id]=a.art.trim();return{id,title:a.title||'Untitled',year:a.year||'',desc:a.desc||'',bio:a.bio||''};});
   const rawTracks=await fetchFolder('tracks');
   tracksMeta=rawTracks.map(t=>{const id=t._slug;if(t.audio&&t.audio.trim())audioBlobMap[id]=t.audio.trim();return{id,albumId:t.albumSlug||'',title:t.title||'Untitled',track:parseInt(t.track)||99,desc:t.desc||'',lyrics:t.lyrics||''};}).sort((a,b)=>a.track-b.track);
-  renderBio();renderWriting();renderMusic();updateEggBadges();
+  renderBio();renderWriting();if(window.updateConstellationCounts)window.updateConstellationCounts();renderMusic();updateEggBadges();
 }
 
 /* ── NAV ── */
@@ -514,7 +534,7 @@ function go(pg){
   const nl=document.getElementById('nl-'+pg);if(nl)nl.classList.add('active');
   if(pg==='writing')renderWriting();
   if(pg==='music')renderMusic();
-  if(pg==='drift'){renderDriftCount();startDanmaku();}
+  if(pg==='drift'){renderDriftCount();if(window.updateConstellationCounts)window.updateConstellationCounts();startDanmaku();}
   if(pg==='stars')starsInit();
   if(pg==='home')renderBio();
   window.scrollTo(0,0);
@@ -525,6 +545,9 @@ function renderBio(){
   document.getElementById('about-name-display').textContent=bioData.name||'Your Name';
   document.getElementById('about-bio-display').innerHTML=bioData.text?bioData.text.replace(/\n/g,'<br>'):'';
   document.getElementById('nest-desc-display').innerHTML=bioData.desc?bioData.desc.replace(/\n/g,'<br>'):'A place where things live.';
+  const wb=document.getElementById('why-block');
+  const wd=document.getElementById('why-display');
+  if(wb&&wd){wd.innerHTML=bioData.why?bioData.why.replace(/\n/g,'<br>'):'';wb.style.display=bioData.why?'block':'none';}
 }
 
 /* ── UTILS ── */
@@ -760,6 +783,33 @@ function updateEggBadges(){
 
 /* ── THEME PICKER ── */
 function pickTheme(name){
+  const THEME_GLYPHS={
+    void:{writing:'✦',music:'♫',drift:'◌'},
+    parchment:{writing:'✒',music:'𝄞',drift:'~'},
+    moss:{writing:'🌿',music:'🪵',drift:'☁'},
+  };
+  const g=THEME_GLYPHS[name]||THEME_GLYPHS.void;
+  ['writing','music','drift'].forEach(s=>{
+    const el=document.getElementById('nav-icon-'+s);
+    if(el)el.textContent=g[s];
+  });
+  // update essay card glow color to match theme — set on body so new cards inherit it
+  const THEME_GLOW={void:'#5b6ea8',parchment:'#a86248',moss:'#4a7c59'};
+  const glowColor=THEME_GLOW[name]||THEME_GLOW.void;
+  document.body.style.setProperty('--card-glow',glowColor);
+  document.body.style.setProperty('--card-glow-soft',glowColor+'66');
+  document.body.style.setProperty('--card-glow-inset',glowColor+'26');
+
+  // update constellation node colors to match theme
+  const THEME_NAV={
+    void:    ['#c9896a','#8b7ab8','#62a88a','#c4a86a'],
+    parchment:['#a86248','#6e5a98','#4a8a6a','#9a7e3a'],
+    moss:    ['#b89858','#6a9e72','#7ab090','#c8b060'],
+  };
+  const nc=THEME_NAV[name]||THEME_NAV.void;
+  if(window._heroNodes){
+    window._heroNodes.forEach((n,i)=>{if(nc[i])n.color=nc[i];});
+  }
   document.body.classList.remove('theme-void','theme-parchment','theme-moss');
   document.body.classList.add('theme-'+name);
   sessionStorage.setItem('tn_theme',name);
@@ -1080,7 +1130,204 @@ document.querySelectorAll('.nav-links a').forEach(a=>{
   });
 });
 
+/* ── HERO CONSTELLATION NAV ── */
+function initHeroConstellation(){
+  const canvas=document.getElementById('hero-constellation');
+  const labelWrap=document.getElementById('hnav-labels');
+  if(!canvas||!labelWrap||canvas._init)return;
+  canvas._init=true;
+
+  const DPR=window.devicePixelRatio||1;
+  const ctx=canvas.getContext('2d');
+
+  let LW,LH;
+  function resize(){
+    LW=canvas.parentElement.offsetWidth||500;
+    LH=canvas.parentElement.offsetHeight||460;
+    canvas.width=LW*DPR; canvas.height=LH*DPR;
+    canvas.style.width=LW+'px'; canvas.style.height=LH+'px';
+    ctx.setTransform(DPR,0,0,DPR,0,0);
+    positionLabels();
+  }
+
+  // Scorpius-ish open arc — tail sweeps bottom-right
+  // positions as % of panel [x, y]
+  const NAV=[
+    {xf:.22,yf:.28, page:'writing', label:'Writing', color:'#e07c52', count:'—'},
+    {xf:.48,yf:.18, page:'music',   label:'Music',   color:'#8b67cc', count:'—'},
+    {xf:.72,yf:.30, page:'drift',   label:'Drift',   color:'#50b893', count:'—'},
+    {xf:.82,yf:.52, page:'stars',   label:'Stars',   color:'#c9a84c', count:'✦'},
+  ];
+  const EDGES=[[0,1],[1,2],[2,3]];
+
+  // Create DOM labels
+  const labelEls=NAV.map((n,i)=>{
+    const a=document.createElement('a');
+    a.className='hnav-node-label';
+    a.href='#';
+    a.onclick=e=>{e.preventDefault();go(n.page);};
+    a.innerHTML=`<span class="hnl-name">${n.label}</span><span class="hnl-count" id="hnl-c-${n.page}">${n.count}</span>`;
+    labelWrap.appendChild(a);
+    return a;
+  });
+
+  function positionLabels(){
+    NAV.forEach((n,i)=>{
+      const x=n.xf*LW, y=n.yf*LH;
+      // place label below the star with offset
+      labelEls[i].style.left=x+'px';
+      labelEls[i].style.top=(y+26)+'px';
+    });
+  }
+
+  let bgS=[];
+  function initBg(){
+    bgS=Array.from({length:80},()=>({
+      x:Math.random()*LW, y:Math.random()*LH,
+      r:Math.random()*.7+.1, o:Math.random()*.22+.04,
+      p:Math.random()*Math.PI*2, s:Math.random()*.005+.002,
+    }));
+  }
+
+  const nodes=NAV.map(n=>({...n,
+    pulse:Math.random()*Math.PI*2,
+    pspeed:.012+Math.random()*.008,
+    hov:false,
+  }));
+  window._heroNodes=nodes;
+
+  function hex(h){return h.slice(1).match(/../g).map(x=>parseInt(x,16));}
+
+  // hover from DOM labels
+  labelEls.forEach((el,i)=>{
+    el.addEventListener('mouseenter',()=>nodes[i].hov=true);
+    el.addEventListener('mouseleave',()=>nodes[i].hov=false);
+  });
+
+  // hover from canvas (over the star nodes themselves)
+  canvas.style.pointerEvents='all';
+  canvas.addEventListener('mousemove',e=>{
+    const rect=canvas.getBoundingClientRect();
+    const mx=e.clientX-rect.left, my=e.clientY-rect.top;
+    nodes.forEach((n,i)=>{
+      const d=Math.hypot(n.xf*LW-mx, n.yf*LH-my);
+      n.hov=(d<28);
+    });
+    canvas.style.cursor=nodes.some(n=>n.hov)?'pointer':'default';
+  });
+  canvas.addEventListener('mouseleave',()=>{
+    nodes.forEach(n=>n.hov=false);
+    canvas.style.cursor='default';
+  });
+  canvas.addEventListener('click',e=>{
+    const rect=canvas.getBoundingClientRect();
+    const mx=e.clientX-rect.left, my=e.clientY-rect.top;
+    nodes.forEach(n=>{
+      if(Math.hypot(n.xf*LW-mx,n.yf*LH-my)<28) go(n.page);
+    });
+  });
+
+  function draw(){
+    ctx.clearRect(0,0,LW,LH);
+
+    // faint nebula behind constellation center
+    const cx=LW*.52, cy=LH*.35;
+    const neb=ctx.createRadialGradient(cx,cy,0,cx,cy,LW*.4);
+    neb.addColorStop(0,'rgba(139,103,204,.05)');
+    neb.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.fillStyle=neb; ctx.fillRect(0,0,LW,LH);
+
+    // bg stars
+    bgS.forEach(s=>{
+      s.p+=s.s;
+      ctx.beginPath(); ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(200,185,155,${s.o*(.5+.5*Math.sin(s.p))})`;
+      ctx.fill();
+    });
+
+    // edges
+    EDGES.forEach(([a,b])=>{
+      const na=nodes[a],nb=nodes[b];
+      const ax=na.xf*LW,ay=na.yf*LH,bx=nb.xf*LW,by=nb.yf*LH;
+      const lit=na.hov||nb.hov;
+      ctx.beginPath(); ctx.moveTo(ax,ay); ctx.lineTo(bx,by);
+      if(lit){
+        const [er,eg,eb]=hex(na.hov?na.color:nb.color);
+        ctx.strokeStyle=`rgba(${er},${eg},${eb},.5)`;
+        ctx.lineWidth=1.2; ctx.shadowColor=na.hov?na.color:nb.color; ctx.shadowBlur=10;
+      }else{
+        ctx.strokeStyle='rgba(180,170,200,.12)';
+        ctx.lineWidth=.8; ctx.setLineDash([3,9]);
+      }
+      ctx.stroke(); ctx.setLineDash([]); ctx.shadowBlur=0;
+    });
+
+    // stars
+    nodes.forEach(n=>{
+      n.pulse+=n.pspeed;
+      const x=n.xf*LW, y=n.yf*LH;
+      const g=.6+.4*Math.sin(n.pulse);
+      const [r,g2,b]=hex(n.color);
+      const baseR=n.hov?11:6.5;
+      const rad=baseR*(1+.07*Math.sin(n.pulse));
+
+      if(n.hov){
+        // wide atmospheric glow
+        const gl=ctx.createRadialGradient(x,y,0,x,y,rad+30);
+        gl.addColorStop(0,`rgba(${r},${g2},${b},.18)`);
+        gl.addColorStop(1,`rgba(${r},${g2},${b},0)`);
+        ctx.fillStyle=gl; ctx.beginPath(); ctx.arc(x,y,rad+30,0,Math.PI*2); ctx.fill();
+      }
+
+      // outer ring
+      ctx.beginPath(); ctx.arc(x,y,rad+4+2*Math.sin(n.pulse),0,Math.PI*2);
+      ctx.strokeStyle=`rgba(${r},${g2},${b},${n.hov?.4:.08*g})`;
+      ctx.lineWidth=n.hov?1.2:.8;
+      ctx.shadowColor=n.color; ctx.shadowBlur=n.hov?10:3;
+      ctx.stroke(); ctx.shadowBlur=0;
+
+      // core
+      ctx.beginPath(); ctx.arc(x,y,rad,0,Math.PI*2);
+      ctx.fillStyle=`rgba(${r},${g2},${b},${n.hov?1:.8*g})`;
+      ctx.shadowColor=n.color; ctx.shadowBlur=n.hov?22:8;
+      ctx.fill();
+
+      // bright center on hover
+      if(n.hov){
+        ctx.beginPath(); ctx.arc(x,y,rad*.38,0,Math.PI*2);
+        ctx.fillStyle='rgba(255,255,255,.75)';
+        ctx.shadowColor='#fff'; ctx.shadowBlur=8;
+        ctx.fill();
+      }
+      ctx.shadowBlur=0;
+    });
+
+    requestAnimationFrame(draw);
+  }
+
+  resize(); initBg(); draw();
+
+  window.updateConstellationCounts=function(){
+    NAV.forEach(n=>{
+      const el=document.getElementById('hnl-c-'+n.page);
+      if(!el)return;
+      if(n.page==='writing')el.textContent=posts.length||'';
+      else if(n.page==='music')el.textContent=tracksMeta.length||'';
+      else if(n.page==='drift')el.textContent=driftMsgs.length||'';
+    });
+  };
+
+  window.addEventListener('resize',()=>{resize();initBg();});
+}
+
+const _goOrig=go;
+go=function(pg){
+  _goOrig(pg);
+  if(pg==='home') requestAnimationFrame(()=>requestAnimationFrame(initHeroConstellation));
+};
+
 loadContent();
+requestAnimationFrame(()=>requestAnimationFrame(initHeroConstellation));
 </script>
 <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 <script>
