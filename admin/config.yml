@@ -4,6 +4,7 @@ backend:
 media_folder: uploads
 public_folder: /uploads
 collections:
+  - name: drifts
     label: Drifts
     folder: content/drifts
     create: true
@@ -32,13 +33,6 @@ collections:
           - label: Hero Description
             name: description
             widget: text
-          - label: Portrait Photo
-            name: portrait
-            widget: image
-            required: false
-          - label: Hero Description
-            name: description
-            widget: text
           - label: Why the Nest
             name: why
             widget: text
@@ -48,7 +42,6 @@ collections:
             name: portrait
             widget: image
             required: false
-  - name: drifts
   - name: essays
     label: Essays
     folder: content/essays
