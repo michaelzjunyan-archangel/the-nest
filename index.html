@@ -167,16 +167,8 @@ nav{display:flex;align-items:stretch;border-bottom:1px solid var(--bdr);backgrou
 .alb-label{font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;color:var(--a2)}
 .alb-title{font-family:var(--serif);font-size:1.55rem;font-weight:600;color:var(--head)}
 .alb-year{font-size:.8rem;color:var(--muted)}
-.alb-subtitle{font-size:.85rem;color:var(--muted);font-style:italic;line-height:1.5;margin-top:.1rem;max-width:52ch}
-.alb-acc-btn{display:flex;align-items:center;justify-content:space-between;width:100%;padding:.7rem 1.6rem;background:none;border:none;border-top:1px solid var(--bdr);cursor:pointer;text-align:left;font-family:var(--sans);font-size:.7rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);transition:background .15s,color .15s}
-.alb-acc-btn:hover{background:rgba(255,255,255,.03);color:var(--body)}
-.alb-acc-btn.open{color:var(--body)}
-.alb-acc-chevron{transition:transform .25s;display:inline-block;opacity:.5}
-.alb-acc-btn.open .alb-acc-chevron{transform:rotate(90deg)}
-.alb-bio-panel{display:none;padding:1.4rem 2rem 1.6rem;border-top:1px solid var(--bdr);background:color-mix(in srgb,var(--bg3) 50%,transparent)}
-.alb-bio-panel.open{display:block}
-.alb-bio-text{font-family:var(--sans);font-size:.88rem;line-height:1.85;color:var(--body);max-width:none}
-.track-list{display:none}.track-list.open{display:block;border-top:1px solid var(--bdr)}
+.alb-desc{font-size:.85rem;color:var(--muted);font-style:italic;line-height:1.55;margin-top:.4rem;max-width:48ch}
+.track-list{border-top:1px solid var(--bdr)}
 .track-row{padding:1rem 1.6rem;border-bottom:1px solid var(--bdr);transition:background .15s}
 .track-row:last-child{border-bottom:none}
 .track-row:hover{background:var(--bg3)}
@@ -241,7 +233,7 @@ footer p{font-size:.75rem;color:var(--muted)}
 
 .lyrics-panel{display:none;margin:.8rem 0 0 2.5rem;padding:1.2rem 1.4rem;border-left:2px solid var(--a2);background:color-mix(in srgb,var(--a2) 5%,transparent);border-radius:0 8px 8px 0;max-height:320px;overflow-y:auto}
 .lyrics-panel.open{display:block}
-.lyrics-text{font-family:var(--sans);font-size:.88rem;line-height:2;color:var(--body);white-space:pre-wrap}
+.lyrics-text{font-family:var(--prose);font-size:.88rem;line-height:2;color:var(--body);white-space:pre-wrap}
 .lyrics-toggle{background:none;border:none;cursor:pointer;font-family:var(--sans);font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;color:var(--a2);padding:0;margin:.5rem 0 0 2.5rem;opacity:.8;transition:opacity .2s;display:block}
 .lyrics-toggle:hover{opacity:1}
 
@@ -260,10 +252,7 @@ footer p{font-size:.75rem;color:var(--muted)}
 </style>
 </head>
 <body>
-<form name="drifts" data-netlify="true" netlify-honeypot="bot-field" hidden>
-  <input name="message">
-  <input name="name">
-</form>
+
 <!-- THEME PICKER -->
 <div id="theme-picker-overlay">
   <div class="tp-box">
@@ -423,20 +412,11 @@ function parseFM(raw){
     const line=lines[i],ci=line.indexOf(':');
     if(ci<0){i++;continue;}
     const k=line.slice(0,ci).trim(),rest=line.slice(ci+1).trim();
-    if(rest==='|'||rest==='|-'||rest==='>'||rest==='>-'){
+    if(rest==='|'||rest==='|-'||rest==='>'){
       i++;const blk=[];
       while(i<lines.length&&(lines[i].startsWith('  ')||lines[i]==='')){blk.push(lines[i].replace(/^  /,''));i++;}
       meta[k]=blk.join('\n').trim();
-    }else{
-  // collect any following indented continuation lines
-  let val=rest;
-  i++;
-  while(i<lines.length&&lines[i].startsWith('  ')){
-    val+=' '+lines[i].trim();
-    i++;
-  }
-  meta[k]=val.replace(/^["']|["']$/g,'');
-}
+    }else{meta[k]=rest.replace(/^["']|["']$/g,'');i++;}
   }
   return{meta,body:m[2].trim()};
 }
@@ -463,19 +443,10 @@ async function loadContent(){
   const rawEssays=await fetchFolder('essays');
   posts=rawEssays.map(e=>{const id=e._slug;if(e.cover&&e.cover.trim())coverBlobMap[id]=e.cover.trim();return{id,title:e.title||'Untitled',date:(e.date||'').slice(0,10),excerpt:e.excerpt||'',body:e._body||'',coverId:(e.cover&&e.cover.trim())?id:null};}).sort((a,b)=>b.date>a.date?1:-1);
   const rawAlbums=await fetchFolder('albums');
-  albums=rawAlbums.map(a=>{const id=a._slug;if(a.art&&a.art.trim())albumArtMap[id]=a.art.trim();return{id,title:a.title||'Untitled',year:a.year||'',desc:a.desc||'',bio:a.bio||''};});
+  albums=rawAlbums.map(a=>{const id=a._slug;if(a.art&&a.art.trim())albumArtMap[id]=a.art.trim();return{id,title:a.title||'Untitled',year:a.year||'',desc:a.desc||''};});
   const rawTracks=await fetchFolder('tracks');
   tracksMeta=rawTracks.map(t=>{const id=t._slug;if(t.audio&&t.audio.trim())audioBlobMap[id]=t.audio.trim();return{id,albumId:t.albumSlug||'',title:t.title||'Untitled',track:parseInt(t.track)||99,desc:t.desc||'',lyrics:t.lyrics||''};}).sort((a,b)=>a.track-b.track);
   renderBio();renderWriting();renderMusic();updateEggBadges();
-  const rawDrifts = await fetchFolder('drifts');
-  rawDrifts.forEach(d => {
-    if (d.message && d.message.trim()) {
-      const text = d.name ? `${d.message}\n— ${d.name}` : d.message;
-      driftMsgs.push({ text, id: 'preset-' + d._slug, preset: true });
-    }
-  });
-  renderDriftCount();
-  updateEggBadges();
 }
 
 /* ── NAV ── */
@@ -491,7 +462,6 @@ function go(pg){
   window.scrollTo(0,0);
 }
 
-  
 /* ── BIO ── */
 function renderBio(){
   document.getElementById('about-name-display').textContent=bioData.name||'Your Name';
@@ -548,13 +518,10 @@ function renderMusic(){
   const total=tracksMeta.length;
   document.getElementById('track-count').textContent=total+(total===1?' track':' tracks');
   if(!albums.length){wrap.innerHTML='<div class="empty"><p>No albums yet.</p></div>';return;}
-  const ordered=[...albums].reverse();
-  wrap.innerHTML=ordered.map(a=>{
+  wrap.innerHTML=albums.map(a=>{
     const ts=tracksMeta.filter(t=>t.albumId===a.id);
     const artURL=albumArtMap[a.id];
     const artHTML=artURL?`<img class="album-art" src="${artURL}" alt="${esc(a.title)}">`:`<div class="album-art-ph">🎵</div>`;
-    const subtitle=a.desc?(a.desc.length>12000?a.desc.slice(0,12000)+'…':a.desc):'';
-    const hasBio=!!(a.bio&&a.bio.trim());
     const tracksHTML=ts.length?ts.map((t,i)=>`
       <div class="track-row">
         <div class="track-top"><span class="tn">${String(i+1).padStart(2,'0')}</span><span class="tname">${esc(t.title)}</span></div>
@@ -566,38 +533,11 @@ function renderMusic(){
         ${t.desc?`<div class="tinsp">${esc(t.desc)}</div>`:''}
         ${t.lyrics?`<button class="lyrics-toggle" onclick="toggleLyrics('${t.id}')">⟡ lyrics</button><div class="lyrics-panel" id="lyr-${t.id}"><div class="lyrics-text">${renderLyrics(t.lyrics)}</div></div>`:''}
       </div>`).join(''):`<div style="padding:1.2rem 1.8rem;font-size:.85rem;font-style:italic;color:var(--muted)">No tracks yet.</div>`;
-    return`
-    <div class="album-block">
-      <div class="album-head">${artHTML}
-        <div class="album-meta">
-          <span class="alb-label">Album</span>
-          <span class="alb-title">${esc(a.title)}</span>
-          ${a.year?`<span class="alb-year">${esc(a.year)}</span>`:''}
-          ${subtitle?`<span class="alb-subtitle">${esc(subtitle)}</span>`:''}
-        </div>
-      </div>
-      ${hasBio?`
-      <button class="alb-acc-btn" id="bio-bar-${a.id}" onclick="toggleAlbSection('${a.id}','bio')">
-        <span>About this album</span><span class="alb-acc-chevron">›</span>
-      </button>
-      <div class="alb-bio-panel" id="bio-panel-${a.id}">
-       <div class="alb-bio-text">${a.bio.replace(/\n+/g,' ').trim()}</div>
-      </div>`:''}
-      <button class="alb-acc-btn" id="trk-bar-${a.id}" onclick="toggleAlbSection('${a.id}','trk')">
-        <span>Tracks${ts.length?` · ${ts.length}`:''}</span><span class="alb-acc-chevron">›</span>
-      </button>
-      <div class="track-list" id="trk-panel-${a.id}">${tracksHTML}</div>
-    </div>`;
+    return`<div class="album-block"><div class="album-head">${artHTML}<div class="album-meta"><span class="alb-label">Album</span><span class="alb-title">${esc(a.title)}</span>${a.year?`<span class="alb-year">${esc(a.year)}</span>`:''}${a.desc?`<span class="alb-desc">${a.desc}</span>`:''}</div></div><div class="track-list">${tracksHTML}</div></div>`;
   }).join('');
 }
-function toggleAlbSection(id,type){
-  const bar=document.getElementById(type+'-bar-'+id);
-  const panel=document.getElementById(type+'-panel-'+id);
-  if(!bar||!panel)return;
-  bar.classList.toggle('open');
-  panel.classList.toggle('open');
-}
 
+/* ── AUDIO ── */
 function getAudio(id){
   if(!audioInst[id]){const src=audioBlobMap[id];if(!src)return null;const a=new Audio(src);audioInst[id]=a;a.addEventListener('timeupdate',()=>{updProg(id,a);mpUpdProg(a);});a.addEventListener('loadedmetadata',()=>{updProg(id,a);mpUpdProg(a);});a.addEventListener('ended',()=>{stopUI(id);mpHide();curAudio=null;curId=null;});}
   return audioInst[id];
@@ -645,14 +585,8 @@ function sendDrift(){
   ta.classList.remove('err');err.classList.remove('show');
   const name=document.getElementById('d-name').value.trim();
   const text=name?`${msg}\n— ${name}`:msg;
-  driftMsgs.push({text,id:Date.now()});
-  renderDriftCount();fireMessage(text);updateEggBadges();
-  document.getElementById('d-msg').value='';
-  document.getElementById('d-name').value='';
-  // save to Netlify Forms silently
-  fetch('/',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},
-    body:new URLSearchParams({'form-name':'drifts',message:msg,name:name||''})
-  }).catch(()=>{}); // fail silently — drift still floats even if save fails
+  driftMsgs.push({text,id:Date.now()});renderDriftCount();fireMessage(text);updateEggBadges();
+  document.getElementById('d-msg').value='';document.getElementById('d-name').value='';
 }
 function startDanmaku(){if(danmakuRunning)return;danmakuRunning=true;driftMsgs.forEach((m,i)=>setTimeout(()=>fireMessage(m.text),i*2000));}
 function fireMessage(text){
@@ -660,7 +594,7 @@ function fireMessage(text){
   const emptyEl=document.getElementById('stage-empty');if(emptyEl)emptyEl.style.display='none';
   const stageH=stage.clientHeight||460,stageW=stage.clientWidth||window.innerWidth;
   const LANES=3,laneH=stageH/LANES,lane=lanePtr%LANES;lanePtr++;
-  const top=Math.min(Math.round(laneH*lane+laneH*0.1), stageH-H-10);
+  const top=Math.min(Math.round(laneH*lane+laneH*0.1),stageH-H-10);
   const color=COLORS[Math.floor(Math.random()*COLORS.length)];
   const speed=16+Math.random()*8;
   const parts=text.split('\n—');
@@ -678,16 +612,10 @@ function fireMessage(text){
   const path=scribblePath(W,H);
   const qSize=msgLen>100?'.85rem':msgLen>50?'1rem':'1.3rem';
   const el=document.createElement('div');
-  
   el.className='danmaku-msg';
   el.style.cssText=`top:${top}px;left:${stageW+30}px;color:${color};width:${W}px;height:${H}px;--sw:${stageW}px;animation-duration:${speed}s;`;
+  el.innerHTML=`<svg class="dm-scribble" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="position:absolute;inset:0;width:100%;height:${H}px;overflow:visible"><path d="${path}" stroke="${color}" stroke-opacity="0.6" fill="${color}" fill-opacity="0.06"/></svg><div class="dm-quote" style="font-size:${qSize}">${esc(quoteText)}</div>${nameText?`<div class="dm-name">— ${esc(nameText)}</div>`:''}`;
   stage.appendChild(el);
-  el.innerHTML=`
-  <svg class="dm-scribble" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="position:absolute;inset:0;width:100%;height:${H}px;overflow:visible">
-    <path d="${path}" stroke="${color}" stroke-opacity="0.6" fill="${color}" fill-opacity="0.06"/>
-  </svg>
-  <div class="dm-quote" style="font-size:${qSize}">${esc(quoteText)}</div>
-  ${nameText?`<div class="dm-name">— ${esc(nameText)}</div>`:''}`;
   el.addEventListener('animationend',()=>el.remove());
 }
 
