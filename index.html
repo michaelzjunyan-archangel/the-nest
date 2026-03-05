@@ -585,16 +585,15 @@ function sendDrift(){
   ta.classList.remove('err');err.classList.remove('show');
   const name=document.getElementById('d-name').value.trim();
   const text=name?`${msg}\n— ${name}`:msg;
-  driftMsgs.push({text,id:Date.now()});renderDriftCount();fireMessage(text);updateEggBadges();
+  driftMsgs.push({text,id:Date.now()});renderDriftCount();fireMessage(text,true);updateEggBadges();
   document.getElementById('d-msg').value='';document.getElementById('d-name').value='';
 }
 function startDanmaku(){if(danmakuRunning)return;danmakuRunning=true;driftMsgs.forEach((m,i)=>setTimeout(()=>fireMessage(m.text),i*2000));}
-function fireMessage(text){
+function fireMessage(text,isUser){
   const stage=document.getElementById('stage');
   const emptyEl=document.getElementById('stage-empty');if(emptyEl)emptyEl.style.display='none';
   const stageH=stage.clientHeight||460,stageW=stage.clientWidth||window.innerWidth;
   const LANES=3,laneH=stageH/LANES,lane=lanePtr%LANES;lanePtr++;
-
   const color=COLORS[Math.floor(Math.random()*COLORS.length)];
   const speed=16+Math.random()*8;
   const parts=text.split('\n—');
@@ -605,7 +604,6 @@ function fireMessage(text){
     let d=`M ${pts[0][0]} ${pts[0][1]} `;
     for(let i=0;i<pts.length;i++){const p0=pts[(i-1+pts.length)%pts.length],p1=pts[i],p2=pts[(i+1)%pts.length],p3=pts[(i+2)%pts.length];const cp1x=p1[0]+(p2[0]-p0[0])/6,cp1y=p1[1]+(p2[1]-p0[1])/6,cp2x=p2[0]-(p3[0]-p1[0])/6,cp2y=p2[1]-(p3[1]-p1[1])/6;d+=`C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${p2[0]} ${p2[1]} `;}
     return d+'Z';
-  
   }
   const msgLen=quoteText.length;
   const W=msgLen>100?380:msgLen>50?320:260;
@@ -614,7 +612,7 @@ function fireMessage(text){
   const qSize=msgLen>100?'.85rem':msgLen>50?'1rem':'1.3rem';
   const top=Math.min(Math.round(laneH*lane+laneH*0.1),stageH-H-10);
   const el=document.createElement('div');
-  el.className='danmaku-msg';
+  el.className='danmaku-msg'+(isUser?' user-msg':'');
   el.style.cssText=`top:${top}px;left:${stageW+30}px;color:${color};width:${W}px;height:${H}px;--sw:${stageW}px;animation-duration:${speed}s;`;
   el.innerHTML=`<svg class="dm-scribble" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="position:absolute;inset:0;width:100%;height:${H}px;overflow:visible"><path d="${path}" stroke="${color}" stroke-opacity="0.6" fill="${color}" fill-opacity="0.06"/></svg><div class="dm-quote" style="font-size:${qSize}">${esc(quoteText)}</div>${nameText?`<div class="dm-name">— ${esc(nameText)}</div>`:''}`;
   stage.appendChild(el);
