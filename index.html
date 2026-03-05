@@ -523,7 +523,11 @@ async function loadContent(){
   albums=rawAlbums.map(a=>{const id=a._slug;if(a.art&&a.art.trim())albumArtMap[id]=a.art.trim();return{id,title:a.title||'Untitled',year:a.year||'',desc:a.desc||'',bio:a.bio||''};});
   const rawTracks=await fetchFolder('tracks');
   tracksMeta=rawTracks.map(t=>{const id=t._slug;if(t.audio&&t.audio.trim())audioBlobMap[id]=t.audio.trim();return{id,albumId:t.albumSlug||'',title:t.title||'Untitled',track:parseInt(t.track)||99,desc:t.desc||'',lyrics:t.lyrics||''};}).sort((a,b)=>a.track-b.track);
-  renderBio();renderWriting();if(window.updateConstellationCounts)window.updateConstellationCounts();renderMusic();updateEggBadges();
+  const rawDrifts=await fetchFolder('drifts');
+  driftMsgs=rawDrifts
+    .filter(d=>d.message&&d.message.trim())
+    .map(d=>({text:d.name?d.message.trim()+'\n—'+d.name.trim():d.message.trim(),preset:true}));
+  renderBio();renderWriting();if(window.updateConstellationCounts)window.updateConstellationCounts();renderMusic();updateEggBadges();renderDriftCount();
 }
 
 /* ── NAV ── */
@@ -741,17 +745,25 @@ function sendDrift(){
 }
 function startDanmaku(){
   if(danmakuRunning)return;danmakuRunning=true;
-  driftMsgs.forEach((m,i)=>setTimeout(()=>fireMessage(m.text,false),i*2200));
-  const firstDelay=Math.max(driftMsgs.length*2200,500);
+  // presets first, spaced out
+  driftMsgs.forEach((m,i)=>setTimeout(()=>fireMessage(m.text,false),i*3500));
+  const firstDelay=Math.max(driftMsgs.length*3500+1000,1000);
   thoughtTimer=setTimeout(nextThought,firstDelay);
 }
 function fireMessage(text,isUser){
   const stage=document.getElementById('stage');
   const emptyEl=document.getElementById('stage-empty');if(emptyEl)emptyEl.style.display='none';
   const stageH=stage.clientHeight||460,stageW=stage.clientWidth||window.innerWidth;
-  const LANES=3,laneH=stageH/LANES,lane=lanePtr%LANES;lanePtr++;
-  const color=COLORS[Math.floor(Math.random()*COLORS.length)];
+  const LANES=4,laneH=stageH/LANES;
   const speed=16+Math.random()*8;
+  // pick the lane that becomes free soonest
+  const now=Date.now();
+  let lane=0,soonest=Infinity;
+  for(let l=0;l<LANES;l++){const free=laneFreeAt[l]||0;if(free<soonest){soonest=free;lane=l;}}
+  // mark lane occupied until this message has fully crossed
+  laneFreeAt[lane]=now+speed*1000+500;
+  lanePtr++;
+  const color=COLORS[Math.floor(Math.random()*COLORS.length)];
   const parts=text.split('\n—');
   const quoteText=parts[0].trim(),nameText=parts[1]?parts[1].trim():null;
   function scribblePath(w,h){
