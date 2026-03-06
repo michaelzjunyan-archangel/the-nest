@@ -448,6 +448,7 @@ footer p{font-size:.75rem;color:var(--muted)}
 
   <!-- progress dots -->
   <div id="stars-progress" style="position:absolute;bottom:2rem;right:2rem;z-index:10;display:flex;flex-direction:column;gap:.45rem;align-items:flex-end"></div>
+  <button onclick="starsReset()" style="position:absolute;bottom:2rem;left:2rem;z-index:10;background:none;border:none;cursor:pointer;font-family:var(--sans);font-size:.52rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(160,168,192,.2);transition:color .3s;padding:0" onmouseover="this.style.color='rgba(160,168,192,.6)'" onmouseout="this.style.color='rgba(160,168,192,.2)'">↺ reset stars</button>
 
   <!-- hint -->
   <div id="stars-hint" style="position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);z-index:10;font-family:var(--sans);font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(160,168,192,.22);white-space:nowrap;transition:opacity .8s;pointer-events:none">click bright stars · connect them all · unlock a secret</div>
@@ -914,37 +915,37 @@ document.addEventListener('click',function(e){
 const STARS_CONS=[
   // Big Dipper — iconic open ladle shape
   {name:"Ursa",symbol:"🐻",color:"#8b67cc",category:"biographical",
-   fact:"I do my best creative work between midnight and 4am. The silence has a different texture then.",
+   fact:"I let my incredibly disturbing intrusive thoughts win up until I was in fourth grade.",
    nodes:[[15,30],[22,28],[29,27],[36,29],[40,36],[33,40],[26,38]],
    edges:[[0,1],[1,2],[2,3],[3,4],[4,5],[5,6]]},
 
   // Orion's Belt — three in a row with shoulders and feet
   {name:"Orion",symbol:"⚔️",color:"#e07c52",category:"creative process",
-   fact:"I learned to code entirely by refusing to accept that something couldn't be done.",
+   fact:"I learned to code frontend when I was 5. It didn't give me joy until I typed in the first line of this website.",
    nodes:[[58,18],[64,22],[62,29],[60,36],[56,43],[68,43],[66,29]],
    edges:[[0,1],[1,2],[2,3],[3,4],[3,5],[2,6],[1,6]]},
 
   // Cassiopeia — W shape
-  {name:"Cassiopeia",symbol:"👑",color:"#c9a84c",category:"opinion",
+  {name:"Cassiopeia",symbol:"👑",color:"#c9a84c",category:"biographical",
    fact:"Every album I make is secretly about one specific feeling I couldn't say out loud.",
    nodes:[[42,12],[48,18],[54,12],[60,18],[66,12]],
    edges:[[0,1],[1,2],[2,3],[3,4]]},
 
   // Scorpius — curved hook with tail
   {name:"Scorpius",symbol:"🦂",color:"#cc6b8a",category:"opinion",
-   fact:"I have strong opinions about things most people have never thought twice about.",
+   fact:"Overthinking is productive until you turn onto yourself. Then it rips things apart.",
    nodes:[[72,28],[76,34],[74,40],[70,46],[68,52],[72,57],[78,60],[82,56]],
    edges:[[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,7]]},
 
   // Leo — backwards question mark + triangle
   {name:"Leo",symbol:"🦁",color:"#d4a843",category:"biographical",
-   fact:"I've never finished a video game but I will passionately defend the lore of games I haven't played.",
+   fact:"I've never finished a TV Show but I will pretend to be passionate about it to not be a let-down to my friends.",
    nodes:[[16,55],[20,49],[26,46],[32,49],[30,56],[24,60],[18,62],[22,55]],
    edges:[[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,0],[3,7],[7,0]]},
 
   // Lyra — small parallelogram with a top point
   {name:"Lyra",symbol:"🎵",color:"#50b893",category:"creative process",
-   fact:"I write the ending first. Always. Every song, every essay. I need to know where I'm going before I begin.",
+   fact:"Writing for me comes in drifts. Always. Every song, every essay. I'm floating in a sea of phrases, fragments, words, vibes, until I feel I must pull them together.",
    nodes:[[53,48],[56,53],[62,55],[65,50],[62,45],[56,47]],
    edges:[[0,1],[1,2],[2,3],[3,4],[4,5],[5,0],[0,3],[1,4]]},
 
@@ -956,25 +957,25 @@ const STARS_CONS=[
 
   // Aquarius — zigzag water-pourer
   {name:"Aquarius",symbol:"🌊",color:"#a0a8c0",category:"opinion",
-   fact:"I think nostalgia is one of the most dangerous emotions. I feel it constantly anyway.",
+   fact:"I think we have no free will. Hormones, subconscious decision-making, and impulse is all it is. I let it run me over anyway.",
    nodes:[[20,75],[27,70],[34,75],[41,70],[48,75],[44,82],[36,82]],
    edges:[[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,2]]},
 
   // Capricorn — sea-goat triangle with tail
   {name:"Capricorn",symbol:"🐐",color:"#8b67cc",category:"biographical",
-   fact:"I remember dreams in unreasonable detail. Some of my songs started there, half-remembered.",
-   nodes:[[60,70],[67,65],[74,70],[70,77],[63,79],[58,75],[60,70]],
-   edges:[[0,1],[1,2],[2,3],[3,4],[4,5],[5,0],[2,5]]},
+   fact:"I remember dreams in unreasonable detail. Some of my pieces started there, half-remembered.",
+   nodes:[[60,70],[67,65],[74,70],[70,77],[63,79],[58,75],[55,68]],
+   edges:[[0,1],[1,2],[2,3],[3,4],[4,5],[5,0],[5,6],[6,0]]},
 
   // Gemini — two parallel stick figures side by side
   {name:"Gemini",symbol:"♊",color:"#e07c52",category:"biographical",
-   fact:"I find cities overwhelming after about three days. I always need somewhere quiet to return to.",
+   fact:"I find rest tiring and nerve-racking after about three days. Sometimes two hours. I always need to get back into something. Anything.",
    nodes:[[30,14],[34,20],[34,28],[34,35],[38,14],[42,20],[42,28],[42,35]],
    edges:[[0,1],[1,2],[2,3],[4,5],[5,6],[6,7],[1,5],[2,6]]},
 
   // Virgo — irregular Y shape
   {name:"Virgo",symbol:"🌾",color:"#50b893",category:"opinion",
-   fact:"The best creative decision I ever made was deciding not to explain myself.",
+   fact:"The best creative decision I ever made was deciding not to let my work be judged, not even by myself.",
    nodes:[[76,46],[80,52],[84,58],[80,64],[76,70],[80,52],[86,46]],
    edges:[[0,1],[1,2],[2,3],[3,4],[1,5],[5,6]]},
 
@@ -1166,6 +1167,16 @@ function starsCloseCard(){
   card.style.opacity='0';card.style.transform='translate(-50%,-50%) scale(.88)';card.style.pointerEvents='none';
   starsCardOpen=false;
 }
+function starsReset(){
+  starsUnlocked=new Set();
+  starsSaveState();
+  starsSel=[];starsActive=null;starsCardOpen=false;
+  starsCloseCard();
+  starsUpdateUI();
+  starsUpdateStatus();
+  const hint=document.getElementById('stars-hint');
+  if(hint)hint.style.opacity='1';
+}
 
 function starsUpdateStatus(){
   const el=document.getElementById('stars-status');
@@ -1251,7 +1262,7 @@ function initHeroConstellation(){
     }));
   }
 
-  const nodes=NAV.map(n=>({...n,pulse:Math.random()*Math.PI*2,pspeed:.012+Math.random()*.008,hov:false,clickGlow:0}));
+  const nodes=NAV.map(n=>({...n,pulse:Math.random()*Math.PI*2,pspeed:.012+Math.random()*.008,hov:false,clickTime:0}));
   window._heroNodes=nodes;
 
   function hex(h){return h.slice(1).match(/../g).map(x=>parseInt(x,16));}
@@ -1273,7 +1284,7 @@ function initHeroConstellation(){
     const mx=e.clientX-rect.left,my=e.clientY-rect.top;
     nodes.forEach(n=>{
       if(Math.hypot(n.xf*LW-mx,n.yf*LH-my)<28){
-        n.clickGlow=1.0;
+        n.clickTime=performance.now();
         startEdgeJump(n.color);
         setTimeout(()=>go(n.page),700);
       }
@@ -1425,16 +1436,20 @@ function initHeroConstellation(){
 
       if(n.hov) spikeFns[Math.min(ni,spikeFns.length-1)](ctx,x,y,rad,rgb);
 
-      // click glow — fades out like essay card chest-open
-      if(n.clickGlow>0){
-        const cg=n.clickGlow;
-        const gl=ctx.createRadialGradient(x,y,0,x,y,rad*3.5);
-        gl.addColorStop(0,`rgba(${r},${g2},${b},${cg*.7})`);
-        gl.addColorStop(0.5,`rgba(${r},${g2},${b},${cg*.25})`);
-        gl.addColorStop(1,`rgba(${r},${g2},${b},0)`);
-        ctx.beginPath();ctx.arc(x,y,rad*3.5,0,Math.PI*2);
-        ctx.fillStyle=gl;ctx.fill();
-        n.clickGlow=Math.max(0,cg-0.018);
+      // click glow — time-based, always fires reliably
+      if(n.clickTime>0){
+        const ct=Math.min((performance.now()-n.clickTime)/650,1);
+        const ease=Math.sin(ct*Math.PI); // bell: 0→peak→0
+        if(ct<1){
+          const gl=ctx.createRadialGradient(x,y,0,x,y,rad*4);
+          gl.addColorStop(0,`rgba(${r},${g2},${b},${(ease*0.85).toFixed(3)})`);
+          gl.addColorStop(0.45,`rgba(${r},${g2},${b},${(ease*0.35).toFixed(3)})`);
+          gl.addColorStop(1,`rgba(${r},${g2},${b},0)`);
+          ctx.beginPath();ctx.arc(x,y,rad*4,0,Math.PI*2);
+          ctx.fillStyle=gl;ctx.fill();
+        } else {
+          n.clickTime=0;
+        }
       }
     });
 
