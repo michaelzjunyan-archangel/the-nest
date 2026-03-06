@@ -5,8 +5,124 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>The Nest — Admin</title>
   <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;1,9..144,300;1,9..144,500&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0c0b0f; --bg2: #131118; --bdr: #272333;
+      --muted: #5e596e; --body: #b8b2c8; --head: #e2ddf0;
+      --a1: #c9896a; --a2: #8b7ab8; --a3: #62a88a;
+      --serif: 'Fraunces', Georgia, serif;
+      --sans: 'Montserrat', sans-serif;
+    }
+
+    #nest-loader {
+      position: fixed; inset: 0; z-index: 99999;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 2rem;
+      background: var(--bg);
+      transition: opacity .5s ease;
+      pointer-events: all;
+    }
+    #nest-loader.done {
+      opacity: 0;
+      pointer-events: none; /* CRITICAL — stop blocking clicks immediately */
+    }
+
+    /* noise */
+    #nest-loader::after {
+      content: '';
+      position: absolute; inset: 0; pointer-events: none;
+      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+      opacity: .4;
+    }
+
+    .blob {
+      position: absolute; border-radius: 50%;
+      filter: blur(120px); pointer-events: none;
+    }
+    .b1 { width: 700px; height: 700px; background: rgba(139,103,204,.08); top: -200px; right: -200px; }
+    .b2 { width: 400px; height: 400px; background: rgba(201,137,106,.06); bottom: -100px; left: -100px; }
+
+    .loader-brand {
+      font-family: var(--serif); font-size: clamp(2.5rem, 6vw, 4rem);
+      font-weight: 300; color: var(--head); letter-spacing: -.03em;
+      display: flex; align-items: center; gap: .75rem;
+      position: relative; z-index: 1;
+    }
+    .loader-brand em { font-style: italic; color: var(--a1); }
+    .loader-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--a1); margin-left: .2rem;
+      animation: blink 2s ease-in-out infinite;
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: .3; transform: scale(.5); }
+    }
+    .loader-sub {
+      font-size: .65rem; letter-spacing: .22em; text-transform: uppercase;
+      color: var(--muted); margin-top: -.8rem; position: relative; z-index: 1;
+    }
+    .loader-bar-wrap {
+      width: 160px; height: 1px; background: var(--bdr);
+      border-radius: 1px; overflow: hidden; position: relative; z-index: 1;
+    }
+    .loader-bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--a1), var(--a2));
+      width: 0%;
+      animation: load 2s cubic-bezier(.4,0,.2,1) forwards;
+    }
+    @keyframes load {
+      0% { width: 0% } 60% { width: 75% } 85% { width: 90% } 100% { width: 100% }
+    }
+  </style>
 </head>
 <body>
-  <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+
+<div id="nest-loader">
+  <div class="blob b1"></div>
+  <div class="blob b2"></div>
+  <div class="loader-brand">The <em>&nbsp;Nest</em> <span class="loader-dot"></span></div>
+  <div class="loader-sub">backstage entrance</div>
+  <div class="loader-bar-wrap"><div class="loader-bar"></div></div>
+</div>
+
+<script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+
+<script>
+  function dismissLoader() {
+    const loader = document.getElementById('nest-loader');
+    if (!loader) return;
+    loader.classList.add('done');
+    // Fully remove from DOM after fade so it can NEVER block clicks
+    setTimeout(() => loader.remove(), 600);
+  }
+
+  // Watch for Decap to render something real
+  function waitForCMS() {
+    const ready =
+      document.querySelector('.css-') ||
+      document.querySelector('[class*="AppHeader"]') ||
+      document.querySelector('#nc-root > div') ||
+      (document.body.children.length > 1 &&
+       document.getElementById('nest-loader') &&
+       document.body.children[1] !== document.getElementById('nest-loader'));
+
+    if (ready) {
+      dismissLoader();
+    } else {
+      requestAnimationFrame(waitForCMS);
+    }
+  }
+
+  // Start watching after bar animation finishes
+  setTimeout(waitForCMS, 2000);
+
+  // Hard fallback — remove no matter what after 5s
+  setTimeout(dismissLoader, 5000);
+</script>
+
 </body>
 </html>
