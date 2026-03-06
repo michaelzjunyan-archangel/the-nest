@@ -42,10 +42,6 @@ collections:
             name: portrait
             widget: image
             required: false
-          - label: Portrait Photo 2
-            name: portrait2
-            widget: image
-            required: false
   - name: essays
     label: Essays
     folder: content/essays
