@@ -610,12 +610,14 @@ function _doOpenPost(i){
   document.getElementById('posts-grid').classList.add('hide');
   document.getElementById('writing-sh').classList.add('hide');
   document.getElementById('post-view').classList.add('open');
+  document.title=p.title+' — The Nest';
   window.scrollTo(0,0);
 }
 function closePost(){
   document.getElementById('posts-grid').classList.remove('hide');
   document.getElementById('writing-sh').classList.remove('hide');
   document.getElementById('post-view').classList.remove('open');
+  document.title='The Nest';
 }
 function renderMarkdown(md){
   if(!md)return'';
@@ -915,37 +917,37 @@ document.addEventListener('click',function(e){
 const STARS_CONS=[
   // Big Dipper — iconic open ladle shape
   {name:"Ursa",symbol:"🐻",color:"#8b67cc",category:"biographical",
-   fact:"I let my incredibly disturbing intrusive thoughts win up until I was in fourth grade.",
+   fact:"I do my best creative work between midnight and 4am. The silence has a different texture then.",
    nodes:[[15,30],[22,28],[29,27],[36,29],[40,36],[33,40],[26,38]],
    edges:[[0,1],[1,2],[2,3],[3,4],[4,5],[5,6]]},
 
   // Orion's Belt — three in a row with shoulders and feet
   {name:"Orion",symbol:"⚔️",color:"#e07c52",category:"creative process",
-   fact:"I learned to code frontend when I was 5. It didn't give me joy until I typed in the first line of this website.",
+   fact:"I learned to code entirely by refusing to accept that something couldn't be done.",
    nodes:[[58,18],[64,22],[62,29],[60,36],[56,43],[68,43],[66,29]],
    edges:[[0,1],[1,2],[2,3],[3,4],[3,5],[2,6],[1,6]]},
 
   // Cassiopeia — W shape
-  {name:"Cassiopeia",symbol:"👑",color:"#c9a84c",category:"biographical",
+  {name:"Cassiopeia",symbol:"👑",color:"#c9a84c",category:"opinion",
    fact:"Every album I make is secretly about one specific feeling I couldn't say out loud.",
    nodes:[[42,12],[48,18],[54,12],[60,18],[66,12]],
    edges:[[0,1],[1,2],[2,3],[3,4]]},
 
   // Scorpius — curved hook with tail
   {name:"Scorpius",symbol:"🦂",color:"#cc6b8a",category:"opinion",
-   fact:"Overthinking is productive until you turn onto yourself. Then it rips things apart.",
+   fact:"I have strong opinions about things most people have never thought twice about.",
    nodes:[[72,28],[76,34],[74,40],[70,46],[68,52],[72,57],[78,60],[82,56]],
    edges:[[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,7]]},
 
   // Leo — backwards question mark + triangle
   {name:"Leo",symbol:"🦁",color:"#d4a843",category:"biographical",
-   fact:"I've never finished a TV Show but I will pretend to be passionate about it to not be a let-down to my friends.",
+   fact:"I've never finished a video game but I will passionately defend the lore of games I haven't played.",
    nodes:[[16,55],[20,49],[26,46],[32,49],[30,56],[24,60],[18,62],[22,55]],
    edges:[[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,0],[3,7],[7,0]]},
 
   // Lyra — small parallelogram with a top point
   {name:"Lyra",symbol:"🎵",color:"#50b893",category:"creative process",
-   fact:"Writing for me comes in drifts. Always. Every song, every essay. I'm floating in a sea of phrases, fragments, words, vibes, until I feel I must pull them together.",
+   fact:"I write the ending first. Always. Every song, every essay. I need to know where I'm going before I begin.",
    nodes:[[53,48],[56,53],[62,55],[65,50],[62,45],[56,47]],
    edges:[[0,1],[1,2],[2,3],[3,4],[4,5],[5,0],[0,3],[1,4]]},
 
@@ -957,26 +959,26 @@ const STARS_CONS=[
 
   // Aquarius — zigzag water-pourer
   {name:"Aquarius",symbol:"🌊",color:"#a0a8c0",category:"opinion",
-   fact:"I think we have no free will. Hormones, subconscious decision-making, and impulse is all it is. I let it run me over anyway.",
+   fact:"I think nostalgia is one of the most dangerous emotions. I feel it constantly anyway.",
    nodes:[[20,75],[27,70],[34,75],[41,70],[48,75],[44,82],[36,82]],
    edges:[[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,2]]},
 
   // Capricorn — sea-goat triangle with tail
   {name:"Capricorn",symbol:"🐐",color:"#8b67cc",category:"biographical",
-   fact:"I remember dreams in unreasonable detail. Some of my pieces started there, half-remembered.",
+   fact:"I remember dreams in unreasonable detail. Some of my songs started there, half-remembered.",
    nodes:[[60,70],[67,65],[74,70],[70,77],[63,79],[58,75],[55,68]],
    edges:[[0,1],[1,2],[2,3],[3,4],[4,5],[5,0],[5,6],[6,0]]},
 
   // Gemini — two parallel stick figures side by side
   {name:"Gemini",symbol:"♊",color:"#e07c52",category:"biographical",
-   fact:"I find rest tiring and nerve-racking after about three days. Sometimes two hours. I always need to get back into something. Anything.",
+   fact:"I find cities overwhelming after about three days. I always need somewhere quiet to return to.",
    nodes:[[30,14],[34,20],[34,28],[34,35],[38,14],[42,20],[42,28],[42,35]],
    edges:[[0,1],[1,2],[2,3],[4,5],[5,6],[6,7],[1,5],[2,6]]},
 
   // Virgo — irregular Y shape
   {name:"Virgo",symbol:"🌾",color:"#50b893",category:"opinion",
-   fact:"The best creative decision I ever made was deciding not to let my work be judged, not even by myself.",
-   nodes:[[76,46],[80,52],[84,58],[80,64],[76,70],[83,46],[86,46]],
+   fact:"The best creative decision I ever made was deciding not to explain myself.",
+   nodes:[[76,46],[80,52],[84,58],[80,64],[76,70],[80,52],[86,46]],
    edges:[[0,1],[1,2],[2,3],[3,4],[1,5],[5,6]]},
 
   // Aries — small curved horn shape
