@@ -24,7 +24,6 @@ lyrics: |-
 
   Jp Morgan can I say that on the beat
 
-
   My life is boring but my mind on fire
 
   Talk to myself I’m my supplier
@@ -40,6 +39,8 @@ lyrics: |-
   This lifestyle in front of me is all I see
 
   This too real it ain’t no make believe
+
+
 
   I’m saying this cause
 
@@ -70,6 +71,8 @@ lyrics: |-
   Feel so caught up but eventually you realize 
 
   There ain’t no other purpose except to live life
+
+
 
   Why they acting all so mad
 
