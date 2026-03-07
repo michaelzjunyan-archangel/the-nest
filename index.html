@@ -268,7 +268,7 @@ footer p{font-size:.75rem;color:var(--muted)}
 
 .lyrics-panel{display:none;margin:.8rem 0 0 2.5rem;padding:1.2rem 1.4rem;border-left:2px solid var(--a2);background:color-mix(in srgb,var(--a2) 5%,transparent);border-radius:0 8px 8px 0;max-height:320px;overflow-y:auto}
 .lyrics-panel.open{display:block}
-.lyrics-text{font-family:var(--sans);font-size:.88rem;line-height:1.6;color:var(--body);white-space:pre-wrap;--lh:1.6em}
+.lyrics-text{font-family:var(--sans);font-size:.88rem;line-height:1.6;color:var(--body)}
 .lyrics-toggle{background:none;border:none;cursor:pointer;font-family:var(--sans);font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;color:var(--a2);padding:0;margin:.5rem 0 0 2.5rem;opacity:.8;transition:opacity .2s;display:block}
 .lyrics-toggle:hover{opacity:1}
 
@@ -539,7 +539,7 @@ async function loadContent(){
   const rawAlbums=await fetchFolder('albums');
   albums=rawAlbums.map(a=>{const id=a._slug;if(a.art&&a.art.trim())albumArtMap[id]=a.art.trim();return{id,title:a.title||'Untitled',year:a.year||'',desc:a.desc||'',bio:a.bio||''};});
   const rawTracks=await fetchFolder('tracks');
-  tracksMeta=rawTracks.map(t=>{const id=t._slug;if(t.audio&&t.audio.trim())audioBlobMap[id]=t.audio.trim();return{id,albumId:t.albumSlug||'',title:t.title||'Untitled',track:parseInt(t.track)||99,desc:t.desc||'',lyrics:t.lyrics||''};}).sort((a,b)=>a.track-b.track);
+  tracksMeta=rawTracks.map(t=>{const id=t._slug;if(t.audio&&t.audio.trim())audioBlobMap[id]=t.audio.trim();return{id,albumId:t.albumSlug||'',title:t.title||'Untitled',track:parseInt(t.track)||99,desc:t.desc||'',lyrics:(t.lyrics||t._body||'').trim()};}).sort((a,b)=>a.track-b.track);
   const rawDrifts=await fetchFolder('drifts');
   driftMsgs=rawDrifts
     .filter(d=>d.message&&d.message.trim())
@@ -841,7 +841,24 @@ function fireMessage(text,isUser){
 
 /* ── LYRICS ── */
 function toggleLyrics(id){const panel=document.getElementById('lyr-'+id);const btn=panel.previousElementSibling;const open=panel.classList.toggle('open');btn.textContent=open?'⟡ hide lyrics':'⟡ lyrics';}
-function renderLyrics(raw){if(!raw)return'';return raw.replace(/\*\*(.+?)\*\*/g,'$1').replace(/\*(.+?)\*/g,'$1').replace(/^#{1,6}\s+/gm,'').replace(/\n{3,}/g,'\n\n').split('\n').map(l=>esc(l)).join('\n');}
+function renderLyrics(raw){
+  if(!raw)return'';
+  function escapeLine(l){
+    // extract italic/bold markers, escape rest, restore tags
+    const parts=[];let cursor=0;
+    const re=/\*\*(.+?)\*\*|\*(.+?)\*/g;let m;
+    while((m=re.exec(l))!==null){
+      parts.push(esc(l.slice(cursor,m.index)));
+      if(m[1]!==undefined)parts.push('<strong>'+esc(m[1])+'</strong>');
+      else parts.push('<em>'+esc(m[2])+'</em>');
+      cursor=m.index+m[0].length;
+    }
+    parts.push(esc(l.slice(cursor)));
+    return parts.join('');
+  }
+  return raw.replace(/\n{3,}/g,'\n\n').replace(/^#{1,6}\s+/gm,'')
+    .split('\n').map(l=>l.trim()===''?'<br>':escapeLine(l)+'<br>').join('');
+}
 
 /* ── EGG BADGES ── */
 function updateEggBadges(){
