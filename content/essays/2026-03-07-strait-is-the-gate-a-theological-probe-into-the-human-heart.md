@@ -4,9 +4,9 @@ date: 2026-03-07
 excerpt: Book Review, Ep. 1
 cover: https://m.media-amazon.com/images/I/71GcbeNUfUL._UF1000,1000_QL80_.jpg
 ---
-*La Porte Étroite* , one of André Gide’s monumental early works, translates directly to English as “the Narrow Door”. Dorothy Bussy, the translator of the work and close friend of Gide, chose to interpret it as it appears in Luke 13:24 (GNV), *Strait is the Gate.* The title itself is an allusion to the bible and, as the work revolves around this religious tension, appropriately so.
+*La Porte Étroite* , one of AndréGide’s monumental early works, translates directly to English as “the Narrow Door”. Dorothy Bussy, the translator of the work and close friend of Gide, chose to interpret it as it appears in Luke 13:24 (GNV), *Strait is the Gate.* The title itself is an allusion to the bible and, as the work revolves around this religious tension, appropriately so.
 
-André Paul Guillaume Gide was a prolific writer who was awarded the Nobel Prize in Literature in 1947. He was known for his candid and, at times, controversial stance on spirituality, sexuality, self-identity, and politics. Andre Gide and historical context, puritan education etc., nobel prize, inspiring
+André Paul Guillaume Gide was a prolific writer who was awarded the Nobel Prize in Literature in 1947. He was known for his candid and, at times, controversial stance on spirituality, sexuality, self-identity, and politics. Raised in a puritan family, his thoughts reflect both inkmarks of his own experiences but also ideas that clash and push back against it.
 
 Though often seen as a “100-page classic” on the TBRs of people who like to pretend that they like reading classics though really it’s just to make themselves feel better through literary elitism subconsciously (as in, me), the work has not received nearly as much attention as other contemporaries of his. Considered perhaps one of the dozen most influential writers in the 20th century, his work inspired the likes of Sartre and Camus along with playing a pivotal role in shaping the moral and philosophical atmosphere.
 
