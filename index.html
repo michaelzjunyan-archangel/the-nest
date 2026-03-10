@@ -443,7 +443,7 @@ footer p{font-size:.75rem;color:var(--muted)}
   <!-- top overlay -->
   <div style="position:absolute;top:0;left:0;right:0;z-index:10;display:flex;align-items:center;justify-content:space-between;padding:1.2rem 2rem;pointer-events:none">
     <div style="font-family:var(--sans);font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(160,168,192,.35)">Read the Stars</div>
-    <div style="font-family:var(--sans);font-size:.6rem;letter-spacing:.15em;color:rgba(160,168,192,.3)"><span id="stars-cnt-done" style="color:var(--a2)">0</span> / <span id="stars-cnt-total">0</span> discovered</div>
+    <div style="font-family:var(--sans);font-size:.6rem;letter-spacing:.15em;color:rgba(160,168,192,.3)"><span id="s-cnt-done" style="color:var(--a2)">0</span> / <span id="stars-cnt-total">0</span> discovered</div>
   </div>
 
   <!-- progress dots -->
@@ -934,13 +934,13 @@ document.addEventListener('click',function(e){
 const STARS_CONS=[
   // Big Dipper — iconic open ladle shape
   {name:"Ursa",symbol:"🐻",color:"#8b67cc",category:"biographical",
-   fact:"I do my best creative work between midnight and 4am. The silence has a different texture then.",
+   fact:"I do my best creative work between midnight and 4am. My bedtime's 11 though. Shh.",
    nodes:[[15,30],[22,28],[29,27],[36,29],[40,36],[33,40],[26,38]],
    edges:[[0,1],[1,2],[2,3],[3,4],[4,5],[5,6]]},
 
   // Orion's Belt — three in a row with shoulders and feet
   {name:"Orion",symbol:"⚔️",color:"#e07c52",category:"creative process",
-   fact:"I learned to code entirely by refusing to accept that something couldn't be done.",
+   fact:"This website was the first time coding brought me joy in a long time.",
    nodes:[[58,18],[64,22],[62,29],[60,36],[56,43],[68,43],[66,29]],
    edges:[[0,1],[1,2],[2,3],[3,4],[3,5],[2,6],[1,6]]},
 
@@ -963,8 +963,8 @@ const STARS_CONS=[
    edges:[[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,0],[3,7],[7,0]]},
 
   // Lyra — small parallelogram with a top point
-  {name:"Lyra",symbol:"🎵",color:"#50b893",category:"creative process",
-   fact:"I write the ending first. Always. Every song, every essay. I need to know where I'm going before I begin.",
+  {name:"Lyra",symbol:"",color:"#50b893",category:"creative process",
+   fact:"For me, writing comes in drifts. Phrases, words, scenes float suspended until I feel the need to pull them together.",
    nodes:[[53,48],[56,53],[62,55],[65,50],[62,45],[56,47]],
    edges:[[0,1],[1,2],[2,3],[3,4],[4,5],[5,0],[0,3],[1,4]]},
 
@@ -976,7 +976,7 @@ const STARS_CONS=[
 
   // Aquarius — zigzag water-pourer
   {name:"Aquarius",symbol:"🌊",color:"#a0a8c0",category:"opinion",
-   fact:"I think nostalgia is one of the most dangerous emotions. I feel it constantly anyway.",
+   fact:"The first thing memory smooths out is the flaws.",
    nodes:[[20,75],[27,70],[34,75],[41,70],[48,75],[44,82],[36,82]],
    edges:[[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,2]]},
 
@@ -988,7 +988,7 @@ const STARS_CONS=[
 
   // Gemini — two parallel stick figures side by side
   {name:"Gemini",symbol:"♊",color:"#e07c52",category:"biographical",
-   fact:"I find cities overwhelming after about three days. I always need somewhere quiet to return to.",
+   fact:"I find rest overwhelming after 3 days, sometimes 2 hours. It's more settling to be on the move.",
    nodes:[[30,14],[34,20],[34,28],[34,35],[38,14],[42,20],[42,28],[42,35]],
    edges:[[0,1],[1,2],[2,3],[4,5],[5,6],[6,7],[1,5],[2,6]]},
 
@@ -1000,7 +1000,7 @@ const STARS_CONS=[
 
   // Aries — small curved horn shape
   {name:"Aries",symbol:"🐏",color:"#cc6b8a",category:"creative process",
-   fact:"I believe most things take exactly as long as they need to. Rushing creative work is how you get something that sounds rushed.",
+   fact:"I believe most things take exactly as long as they need to.",
    nodes:[[14,42],[19,38],[25,36],[30,38],[28,44],[22,46]],
    edges:[[0,1],[1,2],[2,3],[3,4],[4,5],[5,0]]},
 ];
