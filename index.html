@@ -281,6 +281,18 @@ footer p{font-size:.75rem;color:var(--muted)}
   nav{overflow-x:auto}
   #mini-player{bottom:5rem;right:.75rem;min-width:200px}
 }
+@keyframes theme-radial-pulse{
+  0%  {opacity:0;background-size:0% 0%}
+  15% {opacity:.55}
+  60% {opacity:.3;background-size:220% 220%}
+  100%{opacity:0;background-size:320% 320%}
+}
+.theme-flood-anim{
+  animation:theme-radial-pulse 1.1s cubic-bezier(.2,0,.4,1) forwards;
+  background-position:center center;
+  background-repeat:no-repeat;
+}
+
 ::-webkit-scrollbar{width:5px}
 ::-webkit-scrollbar-track{background:var(--bg)}
 ::-webkit-scrollbar-thumb{background:var(--bdr);border-radius:3px}
@@ -336,6 +348,9 @@ footer p{font-size:.75rem;color:var(--muted)}
     <li><a href="#" onclick="go('stars');return false;"   id="nl-stars">Stars</a></li>
   </ul>
 </nav>
+
+<!-- theme flood overlay -->
+<div id="theme-flood" style="position:fixed;inset:0;pointer-events:none;z-index:9400;opacity:0"></div>
 
 <!-- hyperjump overlay -->
 <div id="hyperjump-overlay" style="position:fixed;inset:0;pointer-events:none;z-index:7999;opacity:0;transition:opacity .08s"></div>
@@ -899,7 +914,44 @@ function pickTheme(name){
   document.body.classList.add('theme-'+name);
   sessionStorage.setItem('tn_theme',name);
   ['void','parchment','moss'].forEach(t=>{const el=document.getElementById('tpopt-'+t);if(el)el.classList.toggle('active',t===name);});
-  document.getElementById('theme-picker-overlay').classList.add('compact');
+
+  // radial glow pulse from center — first visit only
+  const isFirstVisitFlood=!document.getElementById('theme-picker-overlay').classList.contains('compact');
+  const FLOOD_COLORS={void:'#8b67cc',parchment:'#a86248',moss:'#6a9e72'};
+  const flood=document.getElementById('theme-flood');
+  if(flood&&isFirstVisitFlood){
+    const c=FLOOD_COLORS[name]||'#8b67cc';
+    flood.style.background=`radial-gradient(ellipse at center, ${c} 0%, transparent 70%)`;
+    flood.style.backgroundSize='0% 0%';
+    flood.classList.remove('theme-flood-anim');
+    void flood.offsetWidth;
+    flood.classList.add('theme-flood-anim');
+    flood.addEventListener('animationend',()=>{
+      flood.classList.remove('theme-flood-anim');
+      flood.style.opacity='0';
+      flood.style.backgroundSize='';
+    },{once:true});
+  }
+
+  const overlay=document.getElementById('theme-picker-overlay');
+  const isFirstVisit=!overlay.classList.contains('compact');
+
+  // only do the color flood on first visit
+  if(!isFirstVisit){
+    const flood=document.getElementById('theme-flood');
+    if(flood){flood.classList.remove('theme-flood-anim');flood.style.opacity='0';}
+  }
+
+  if(isFirstVisit){
+    overlay.style.transition='opacity .5s ease';
+    overlay.style.opacity='0';
+    setTimeout(()=>{
+      overlay.style.opacity='';overlay.style.transition='';
+      overlay.classList.add('compact');
+    },500);
+  } else {
+    overlay.classList.add('compact');
+  }
   document.getElementById('tp-dropdown').classList.remove('open');
 }
 function tpToggleDropdown(){document.getElementById('tp-dropdown').classList.toggle('open');}
@@ -918,9 +970,9 @@ document.addEventListener('click',function(e){
     const el=document.getElementById('tpopt-'+saved);if(el)el.classList.add('active');
     pickTheme(saved);
   }else{
+    // first visit — show the choose your world screen
     document.body.classList.add('theme-void');
-    pickTheme('void');
-    overlay.addEventListener('click',function(e){if(e.target===overlay)pickTheme('void');});
+    // don't auto-pick, let user choose; overlay stays visible
   }
 })();
 
