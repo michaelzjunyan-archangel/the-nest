@@ -171,14 +171,14 @@ nav{display:flex;align-items:stretch;border-bottom:1px solid var(--bdr);backgrou
 .post-arrow{position:absolute;bottom:1.4rem;right:1.8rem;color:var(--a1);opacity:0;transform:translateX(-6px);transition:all .2s}
 .post-card:hover .post-arrow{opacity:1;transform:translateX(0)}
 .post-cover-banner{width:100%;max-height:420px;object-fit:cover;display:block}
-.post-view{display:none;max-width:720px;margin:0 auto;padding:0 0 4rem}
+.post-view{display:none;max-width:900px;margin:0 auto;padding:0 0 4rem}
 .post-view.open{display:block}
-.post-view-inner{padding:2.5rem 2rem 0}
+.post-view-inner{padding:2.5rem 1rem 0}
 .posts-grid.hide,.sh.hide{display:none}
 .back-btn{background:none;border:none;cursor:pointer;font-family:var(--sans);font-size:.73rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:.4rem;margin-bottom:3rem;transition:color .2s;padding:0}
 .back-btn:hover{color:var(--head)}
 .post-view h1{font-family:var(--serif);font-size:clamp(1.9rem,4vw,2.8rem);font-weight:300;color:var(--head);line-height:1.1;margin-bottom:2.5rem;padding-bottom:2rem;border-bottom:1px solid var(--bdr)}
-.post-body{font-size:1rem;line-height:1.9;color:var(--body);font-family:var(--prose)}
+.post-body{font-size:1.15rem;line-height:1.9;color:var(--body);font-family:var(--prose)}
 .post-body p{margin-bottom:1.4em}
 
 .albums-wrap{padding:2rem 2.5rem}
@@ -268,7 +268,7 @@ footer p{font-size:.75rem;color:var(--muted)}
 
 .lyrics-panel{display:none;margin:.8rem 0 0 2.5rem;padding:1.2rem 1.4rem;border-left:2px solid var(--a2);background:color-mix(in srgb,var(--a2) 5%,transparent);border-radius:0 8px 8px 0;max-height:320px;overflow-y:auto}
 .lyrics-panel.open{display:block}
-.lyrics-text{font-family:var(--sans);font-size:.88rem;line-height:1.6;color:var(--body)}
+.lyrics-text{font-family:var(--sans);font-size:.88rem;line-height:1.6;color:var(--body)}.lyr-line{min-height:1.4em}.lyr-gap{height:.8em}
 .lyrics-toggle{background:none;border:none;cursor:pointer;font-family:var(--sans);font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;color:var(--a2);padding:0;margin:.5rem 0 0 2.5rem;opacity:.8;transition:opacity .2s;display:block}
 .lyrics-toggle:hover{opacity:1}
 
@@ -443,7 +443,7 @@ footer p{font-size:.75rem;color:var(--muted)}
   <!-- top overlay -->
   <div style="position:absolute;top:0;left:0;right:0;z-index:10;display:flex;align-items:center;justify-content:space-between;padding:1.2rem 2rem;pointer-events:none">
     <div style="font-family:var(--sans);font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(160,168,192,.35)">Read the Stars</div>
-    <div style="font-family:var(--sans);font-size:.6rem;letter-spacing:.15em;color:rgba(160,168,192,.3)"><span id="s-cnt-done" style="color:var(--a2)">0</span> / <span id="stars-cnt-total">0</span> discovered</div>
+    <div style="font-family:var(--sans);font-size:.6rem;letter-spacing:.15em;color:rgba(160,168,192,.3)"><span id="stars-cnt-done" style="color:var(--a2)">0</span> / <span id="stars-cnt-total">0</span> discovered</div>
   </div>
 
   <!-- progress dots -->
@@ -843,8 +843,8 @@ function fireMessage(text,isUser){
 function toggleLyrics(id){const panel=document.getElementById('lyr-'+id);const btn=panel.previousElementSibling;const open=panel.classList.toggle('open');btn.textContent=open?'⟡ hide lyrics':'⟡ lyrics';}
 function renderLyrics(raw){
   if(!raw)return'';
+  raw=raw.replace(/^#{1,6}\s+/gm,'').replace(/\n{3,}/g,'\n\n');
   function escapeLine(l){
-    // extract italic/bold markers, escape rest, restore tags
     const parts=[];let cursor=0;
     const re=/\*\*(.+?)\*\*|\*(.+?)\*/g;let m;
     while((m=re.exec(l))!==null){
@@ -856,9 +856,9 @@ function renderLyrics(raw){
     parts.push(esc(l.slice(cursor)));
     return parts.join('');
   }
-  return raw.replace(/\n{3,}/g,'\n\n').replace(/^#{1,6}\s+/gm,'')
-    .split('\n').map(l=>l.trim()===''?'<br>':escapeLine(l)+'<br>').join('');
+  return raw.split('\n').map(l=>l.trim()===''?'<div class="lyr-gap"></div>':'<div class="lyr-line">'+escapeLine(l)+'</div>').join('');
 }
+
 
 /* ── EGG BADGES ── */
 function updateEggBadges(){
@@ -925,7 +925,7 @@ document.addEventListener('click',function(e){
 })();
 
 (function(){
-  const lines=["Warm. Strange. Alive.","come in. stay a while. or don't.","everything here is real. nothing here is permanent.","born in late nights and unfinished thoughts","somewhere between a diary and a broadcast service","words, sounds, and small strange things","you weren't supposed to find this","I'd tell my thoughts to stop if I could","a collection of things that refused to stay private","not a portfolio. something more embarrassing.","built slowly, with intention and procrastination","for the people who read the copyright information on the bottom","leave something in drift. it won't stay long.","the internet as it was meant to be: weird and personal","if you know, you know. if you don't — now you do.","a quiet corner of a loud world","a lot of feelings that are going to be numb later","some things are best said sideways","this site has no algorithm. just vibes.","still under construction. always will be."];
+  const lines=["Warm. Strange. Alive.","come in. stay a while. or don't.","everything here is real. nothing here is permanent.","made of late nights and unfinished thoughts","somewhere between a diary and a broadcast","words, sounds, and small strange things","you weren't supposed to find this","this is what the inside of a head looks like","a collection of things that refused to stay private","not a portfolio. something more embarrassing.","built slowly, with intention and procrastination","for the people who read the whole page","leave something in drift. it won't stay long.","the internet as it was meant to be: weird and personal","if you know, you know. if you don't — now you do.","a quiet corner of a loud world","made with too much coffee and a lot of feelings","some things are best said sideways","this site has no algorithm. just vibes.","still under construction. always will be."];
   const el=document.getElementById('hero-subtitle');
   if(el)el.textContent=lines[Math.floor(Math.random()*lines.length)];
 })();
@@ -963,41 +963,35 @@ const STARS_CONS=[
    edges:[[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,0],[3,7],[7,0]]},
 
   // Lyra — small parallelogram with a top point
-  {name:"Lyra",symbol:"",color:"#50b893",category:"creative process",
+  {name:"Lyra",symbol:"🎵",color:"#50b893",category:"creative process",
    fact:"For me, writing comes in drifts. Phrases, words, scenes float suspended until I feel the need to pull them together.",
    nodes:[[53,48],[56,53],[62,55],[65,50],[62,45],[56,47]],
    edges:[[0,1],[1,2],[2,3],[3,4],[4,5],[5,0],[0,3],[1,4]]},
-
   // Cygnus / Northern Cross — actual cross shape
   {name:"Cygnus",symbol:"🕊️",color:"#6bacc9",category:"biographical",
    fact:"I almost never sing in front of anyone. Everything I've recorded was done completely alone.",
    nodes:[[80,14],[80,22],[80,30],[80,38],[74,22],[86,22]],
    edges:[[0,1],[1,2],[2,3],[1,4],[1,5]]},
-
   // Aquarius — zigzag water-pourer
   {name:"Aquarius",symbol:"🌊",color:"#a0a8c0",category:"opinion",
    fact:"The first thing memory smooths out is the flaws.",
    nodes:[[20,75],[27,70],[34,75],[41,70],[48,75],[44,82],[36,82]],
    edges:[[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,2]]},
-
   // Capricorn — sea-goat triangle with tail
   {name:"Capricorn",symbol:"🐐",color:"#8b67cc",category:"biographical",
    fact:"I remember dreams in unreasonable detail. Some of my songs started there, half-remembered.",
    nodes:[[60,70],[67,65],[74,70],[70,77],[63,79],[58,75],[55,68]],
    edges:[[0,1],[1,2],[2,3],[3,4],[4,5],[5,0],[5,6],[6,0]]},
-
   // Gemini — two parallel stick figures side by side
   {name:"Gemini",symbol:"♊",color:"#e07c52",category:"biographical",
    fact:"I find rest overwhelming after 3 days, sometimes 2 hours. It's more settling to be on the move.",
    nodes:[[30,14],[34,20],[34,28],[34,35],[38,14],[42,20],[42,28],[42,35]],
    edges:[[0,1],[1,2],[2,3],[4,5],[5,6],[6,7],[1,5],[2,6]]},
-
-  // Virgo — irregular Y shape
+  // Virgo — irregular Y shape (node 5 fixed to unique position)
   {name:"Virgo",symbol:"🌾",color:"#50b893",category:"opinion",
    fact:"The best creative decision I ever made was deciding not to explain myself.",
-   nodes:[[76,46],[80,52],[84,58],[80,64],[76,70],[80,52],[86,46]],
-   edges:[[0,1],[1,2],[2,3],[3,4],[1,5],[5,6]]},
-
+   nodes:[[76,46],[80,52],[84,58],[80,64],[76,70],[83,46],[86,46]],
+   edges:[[0,1],[1,2],[2,3],[3,4],[0,5],[5,6],[1,5]]},
   // Aries — small curved horn shape
   {name:"Aries",symbol:"🐏",color:"#cc6b8a",category:"creative process",
    fact:"I believe most things take exactly as long as they need to.",
