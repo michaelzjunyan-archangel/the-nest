@@ -16,7 +16,7 @@
 }
 body.theme-void{--bg:#0c0b0f;--bg2:#131118;--bg3:#1b1823;--bdr:#272333;--muted:#5e596e;--body:#b8b2c8;--head:#e2ddf0;--a1:#c9896a;--a2:#8b7ab8;--a3:#62a88a;--a4:#c4a86a;}
 body.theme-parchment{--bg:#ede6d8;--bg2:#e4dac8;--bg3:#d8cdb8;--bdr:#c4b8a4;--muted:#7e7060;--body:#3e3228;--head:#1c1208;--a1:#a8624a;--a2:#6e5a98;--a3:#4a8a6a;--a4:#9a7e3a;}
-body.theme-moss{--bg:#0e1210;--bg2:#141a14;--bg3:#1a2318;--bdr:#253022;--muted:#546050;--body:#a8bea0;--head:#d8e8ce;--a1:#b89858;--a2:#6a9e72;--a3:#7ab090;--a4:#c8b060;}
+body.theme-moss{--bg:#151c14;--bg2:#1c2620;--bg3:#243028;--bdr:#2e3d2a;--muted:#6a7a64;--body:#b8ceae;--head:#e2f0d8;--a1:#c4a860;--a2:#7ab882;--a3:#8ac0a0;--a4:#d4c070;}
 
 /* ── THEME PICKER ── */
 #theme-picker-overlay{
@@ -457,19 +457,19 @@ footer p{font-size:.75rem;color:var(--muted)}
 
   <!-- top overlay -->
   <div style="position:absolute;top:0;left:0;right:0;z-index:10;display:flex;align-items:center;justify-content:space-between;padding:1.2rem 2rem;pointer-events:none">
-    <div style="font-family:var(--sans);font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(160,168,192,.35)">Read the Stars</div>
-    <div style="font-family:var(--sans);font-size:.6rem;letter-spacing:.15em;color:rgba(160,168,192,.3)"><span id="stars-cnt-done" style="color:var(--a2)">0</span> / <span id="stars-cnt-total">0</span> discovered</div>
+    <div style="font-family:var(--sans);font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)">Read the Stars</div>
+    <div style="font-family:var(--sans);font-size:.6rem;letter-spacing:.15em;color:var(--muted)"><span id="stars-cnt-done" style="color:var(--a2)">0</span> / <span id="stars-cnt-total">0</span> discovered</div>
   </div>
 
   <!-- progress dots -->
   <div id="stars-progress" style="position:absolute;bottom:2rem;right:2rem;z-index:10;display:flex;flex-direction:column;gap:.45rem;align-items:flex-end"></div>
-  <button onclick="starsReset()" style="position:absolute;bottom:2rem;left:2rem;z-index:10;background:none;border:none;cursor:pointer;font-family:var(--sans);font-size:.52rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(160,168,192,.2);transition:color .3s;padding:0" onmouseover="this.style.color='rgba(160,168,192,.6)'" onmouseout="this.style.color='rgba(160,168,192,.2)'">↺ reset stars</button>
+  <button onclick="starsReset()" style="position:absolute;bottom:2rem;left:2rem;z-index:10;background:none;border:none;cursor:pointer;font-family:var(--sans);font-size:.52rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);opacity:.5;transition:color .3s,opacity .3s;padding:0" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='.5'">↺ reset stars</button>
 
   <!-- hint -->
-  <div id="stars-hint" style="position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);z-index:10;font-family:var(--sans);font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(160,168,192,.22);white-space:nowrap;transition:opacity .8s;pointer-events:none">click bright stars · connect them all · unlock a secret</div>
+  <div id="stars-hint" style="position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);z-index:10;font-family:var(--sans);font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);white-space:nowrap;transition:opacity .8s;pointer-events:none">click bright stars · connect them all · unlock a secret</div>
 
   <!-- status -->
-  <div id="stars-status" style="position:absolute;top:3.8rem;left:50%;transform:translateX(-50%);z-index:10;font-family:var(--sans);font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(160,168,192,.3);white-space:nowrap;opacity:0;transition:opacity .4s;pointer-events:none"></div>
+  <div id="stars-status" style="position:absolute;top:3.8rem;left:50%;transform:translateX(-50%);z-index:10;font-family:var(--sans);font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);white-space:nowrap;opacity:0;transition:opacity .4s;pointer-events:none"></div>
 
   <!-- fact card -->
   <div id="stars-card" style="
@@ -563,7 +563,20 @@ async function loadContent(){
 }
 
 /* ── NAV ── */
+let _currentPage='home';
 function go(pg){
+  const alreadyHere=_currentPage===pg;
+  // if already on this page, reset it to its home state
+  if(alreadyHere){
+    if(pg==='writing'){
+      // close any open essay
+      const pv=document.getElementById('post-view');
+      if(pv&&pv.classList.contains('open'))closePost();
+    }
+    window.scrollTo({top:0,behavior:'smooth'});
+    return;
+  }
+  _currentPage=pg;
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-links a').forEach(a=>a.classList.remove('active'));
   document.getElementById('page-'+pg).classList.add('active');
@@ -1104,6 +1117,7 @@ function starsRgba(hex,a){
   return `rgba(${r},${g},${b},${a})`;
 }
 
+
 function starsEdgeLit(ci,a,b){
   const ia=starsNodes.findIndex(n=>n.ci===ci&&n.ni===a);
   const ib=starsNodes.findIndex(n=>n.ci===ci&&n.ni===b);
@@ -1112,22 +1126,43 @@ function starsEdgeLit(ci,a,b){
   return Math.abs(pa-pb)===1;
 }
 
+// ── STARS THEME PALETTES ──
+const STARS_THEMES={
+  void:{
+    grad0:'rgba(22,19,42,.7)',grad1:'rgba(6,5,12,1)',
+    starColor:'205,190,160',
+  },
+  parchment:{
+    grad0:'rgba(240,225,190,.95)',grad1:'rgba(228,210,170,.98)',
+    starColor:'120,90,50',
+  },
+  moss:{
+    grad0:'rgba(28,52,36,.65)',grad1:'rgba(12,24,16,.95)',
+    starColor:'190,225,185',
+  },
+};
+function starsTheme(){
+  const t=sessionStorage.getItem('tn_theme')||'void';
+  return STARS_THEMES[t]||STARS_THEMES.void;
+}
+
 function starsDrawLoop(){
   const canvas=document.getElementById('stars-canvas');
   if(!canvas){return;}
   const ctx=canvas.getContext('2d');
   ctx.clearRect(0,0,starsW,starsH);
 
-  // bg gradient
+  // bg gradient — themed
+  const th=starsTheme();
   const gr=ctx.createRadialGradient(starsW*.5,starsH*.4,0,starsW*.5,starsH*.45,starsW*.75);
-  gr.addColorStop(0,'rgba(22,19,42,.7)');gr.addColorStop(1,'rgba(6,5,12,1)');
+  gr.addColorStop(0,th.grad0);gr.addColorStop(1,th.grad1);
   ctx.fillStyle=gr;ctx.fillRect(0,0,starsW,starsH);
 
   // bg stars
   starsBg.forEach(s=>{
     s.p+=s.s;
     ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
-    ctx.fillStyle=`rgba(205,190,160,${s.o*(.65+.35*Math.sin(s.p))})`;ctx.fill();
+    ctx.fillStyle=`rgba(${th.starColor},${s.o*(.65+.35*Math.sin(s.p))})`;ctx.fill();
   });
 
   // edges
