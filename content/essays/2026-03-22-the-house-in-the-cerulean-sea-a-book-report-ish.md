@@ -2,9 +2,11 @@
 title: "The House in the Cerulean Sea: A Book Report-ish?"
 date: 2026-03-22
 excerpt: My new favorite comfort-fantasy!
-cover: https://cannonballread.com/2024/12/the-house-in-the-cerulean-sea-teresaelectro/
+cover: https://pbs.twimg.com/media/FPm0Qf5XMAIkibv?format=jpg&name=4096x4096
 ---
-*The House in the Cerulean Sea* 
+*The House in the Cerulean Sea*
+
+*Image Credit @Allesia Trunfio on X*
 
 If you are familiar with the internet phrase “This found me at a very \[insert thing] phase of my life,” this book found me at a very confused phase in my life. I had just started my second year in high school abroad, been in and out of different friend groups, and did not know what I was going to do with my time. I did not think (and I would not tell my counselor) that reading a comfortasy queer romance would help my situation, and yet it did.
 
