@@ -8,7 +8,7 @@ cover: https://pbs.twimg.com/media/FPm0Qf5XMAIkibv?format=jpg&name=4096x4096
 
 *Image Credit @Allesia Trunfio on X*
 
-If you are familiar with the internet phrase “This found me at a very \[insert thing] phase of my life,” this book found me at a very confused phase in my life. I had just started my second year in high school abroad, been in and out of different friend groups, and did not know what I was going to do with my time. I did not think (and I would not tell my counselor) that reading a comfortasy queer romance would help my situation, and yet it did.
+If you are familiar with the internet phrase “This found me at a very \[insert thing] phase of my life,” then suffice it to say, this book found me at a very confused phase in my life. I had just started my second year in high school abroad, been in and out of different friend groups, and did not know what I was going to do with my time. I did not think (and I would not tell my counselor) that reading a comfortasy queer romance would help my situation, and yet it did.
 
 The author of the work, TJ Klune,  is a self-taught American who has been prolific in the genre of LGBTQ+ Romance. In a word, the narrative of his award-winning work follows Linus Baker, an ordinary office worker who finds belonging in a magical orphanage that he is tasked with supervising.
 
