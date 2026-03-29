@@ -62,7 +62,9 @@ collections:
       - label: Category
         name: category
         widget: select
-        options: ["Opinion", "Book Review"]
+        options:
+          - { label: "Opinion", value: "Opinion" }
+          - { label: "Book Review", value: "Book Review" }
         default: "Opinion"
         required: false
       - label: Cover Image
