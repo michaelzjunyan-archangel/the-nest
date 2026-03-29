@@ -3,7 +3,7 @@ title: "I read COWS. Here's what I think. "
 date: 2026-03-28
 excerpt: A chilling tale about bovine companionship.
 category: Book Review
-cover: https://images2.pangobooks.com/images/c17ae5df-d9e6-4f78-959e-40b2aa03ae61?quality=85&width=1200&crop=1%3A1
+cover: /uploads/cows-matthew-stokoe.jpg
 ---
 WIth an unflattering 2.68/5 on Goodreads, this book might be the first (and perhaps last) experience I had with splatterpunk and extreme horror as a genre. While I have not considered myself an omnivorous reader for some time, I felt the need for a radical palette cleanser, so to speak in spite of the irony of the statement, from all my heartwarming fantasy and romance.
 
