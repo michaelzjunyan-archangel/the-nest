@@ -42,10 +42,6 @@ collections:
             name: portrait
             widget: image
             required: false
-          - label: Portrait Photo 2
-            name: portrait2
-            widget: image
-            required: false
   - name: essays
     label: Essays
     folder: content/essays
@@ -62,6 +58,12 @@ collections:
       - label: Excerpt
         name: excerpt
         widget: text
+        required: false
+      - label: Category
+        name: category
+        widget: select
+        options: ["Opinion", "Book Review"]
+        default: "Opinion"
         required: false
       - label: Cover Image
         name: cover
