@@ -2,6 +2,7 @@
 title: "Strait is the Gate: A Theological probe into the Human Heart"
 date: 2026-03-07
 excerpt: Book Review, Ep. 1
+category: Book Review
 cover: https://m.media-amazon.com/images/I/71GcbeNUfUL._UF1000,1000_QL80_.jpg
 ---
 *La Porte Étroite* , one of AndréGide’s monumental early works, translates directly to English as “the Narrow Door”. Dorothy Bussy, the translator of the work and close friend of Gide, chose to interpret it as it appears in Luke 13:24 (GNV), *Strait is the Gate.* The title itself is an allusion to the bible and, as the work revolves around this religious tension, appropriately so.
