@@ -2,6 +2,7 @@
 title: "The House in the Cerulean Sea: A Book Report-ish?"
 date: 2026-03-22
 excerpt: My new favorite comfort-fantasy!
+category: Book Review
 cover: https://pbs.twimg.com/media/FPm0Qf5XMAIkibv?format=jpg&name=4096x4096
 ---
 *The House in the Cerulean Sea*
