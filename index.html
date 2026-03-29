@@ -408,7 +408,21 @@ footer p{font-size:.75rem;color:var(--muted)}
 
 <div class="page" id="page-writing">
   <div class="sh" id="writing-sh"><h2>Writing</h2><span class="badge" id="post-count">0 essays</span></div>
-  <div class="posts-grid" id="posts-grid"><div class="empty" style="grid-column:1/-1"><p>No essays yet.</p></div></div>
+  <div id="writing-sections">
+    <div id="section-opinion" style="display:none">
+      <div style="padding:1.8rem 2.5rem .6rem;border-bottom:1px solid var(--bdr);display:flex;align-items:baseline;gap:1rem">
+        <span style="font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--a1)">Opinion</span>
+      </div>
+      <div class="posts-grid" id="grid-opinion"></div>
+    </div>
+    <div id="section-bookreview" style="display:none">
+      <div style="padding:1.8rem 2.5rem .6rem;border-bottom:1px solid var(--bdr);display:flex;align-items:baseline;gap:1rem">
+        <span style="font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--a4)">Book Reviews</span>
+      </div>
+      <div class="posts-grid" id="grid-bookreview"></div>
+    </div>
+    <div class="posts-grid" id="posts-grid" style="display:none"></div>
+  </div>
   <div class="post-view" id="post-view">
     <div class="post-view-inner">
       <button class="back-btn" onclick="closePost()">← All Writing</button>
@@ -555,7 +569,7 @@ async function loadContent(){
       if(d.portrait2&&d.portrait2.trim()){const img=document.getElementById('portrait-img-2'),ph=document.getElementById('portrait-ph-2');if(img){img.src=d.portrait2.trim();img.style.display='block';}if(ph)ph.style.display='none';}}
   }catch(e){}
   const rawEssays=await fetchFolder('essays');
-  posts=rawEssays.map(e=>{const id=e._slug;if(e.cover&&e.cover.trim())coverBlobMap[id]=e.cover.trim();return{id,title:e.title||'Untitled',date:(e.date||'').slice(0,10),excerpt:e.excerpt||'',body:e._body||'',coverId:(e.cover&&e.cover.trim())?id:null};}).sort((a,b)=>b.date>a.date?1:-1);
+  posts=rawEssays.map(e=>{const id=e._slug;if(e.cover&&e.cover.trim())coverBlobMap[id]=e.cover.trim();return{id,title:e.title||'Untitled',date:(e.date||'').slice(0,10),excerpt:e.excerpt||'',body:e._body||'',coverId:(e.cover&&e.cover.trim())?id:null,category:e.category||'Opinion'};}).sort((a,b)=>b.date>a.date?1:-1);
   const rawAlbums=await fetchFolder('albums');
   albums=rawAlbums.map(a=>{const id=a._slug;if(a.art&&a.art.trim())albumArtMap[id]=a.art.trim();return{id,title:a.title||'Untitled',year:a.year||'',desc:a.desc||'',bio:a.bio||''};});
   const rawTracks=await fetchFolder('tracks');
@@ -624,14 +638,25 @@ function fmtDate(d){if(!d)return'';return new Date(d+'T00:00:00').toLocaleDateSt
 function fmt(s){if(!s||isNaN(s))return'0:00';return Math.floor(s/60)+':'+String(Math.floor(s%60)).padStart(2,'0');}
 
 /* ── WRITING ── */
+function postCardHTML(p,i){
+  const coverUrl=p.coverId&&coverBlobMap[p.coverId];
+  return`<div class="post-card" onclick="openPost(${i},this)">${coverUrl?`<img class="post-card-cover" src="${coverUrl}" alt="">`:''}<div class="${coverUrl?'post-card-body':'post-card-body-nocover'}"><div class="pmeta">${fmtDate(p.date)}</div><div class="post-title">${esc(p.title)}</div><div class="post-exc">${esc(p.excerpt||'')}</div></div><span class="post-arrow">→</span></div>`;
+}
 function renderWriting(){
-  const grid=document.getElementById('posts-grid');
   document.getElementById('post-count').textContent=posts.length+(posts.length===1?' essay':' essays');
-  if(!posts.length){grid.innerHTML='<div class="empty" style="grid-column:1/-1"><p>No essays yet.</p></div>';return;}
-  grid.innerHTML=posts.map((p,i)=>{
-    const coverUrl=p.coverId&&coverBlobMap[p.coverId];
-    return`<div class="post-card" onclick="openPost(${i},this)">${coverUrl?`<img class="post-card-cover" src="${coverUrl}" alt="">`:''}<div class="${coverUrl?'post-card-body':'post-card-body-nocover'}"><div class="pmeta">${fmtDate(p.date)}</div><div class="post-title">${esc(p.title)}</div><div class="post-exc">${esc(p.excerpt||'')}</div></div><span class="post-arrow">→</span></div>`;
-  }).join('');
+  if(!posts.length){
+    document.getElementById('section-opinion').style.display='none';
+    document.getElementById('section-bookreview').style.display='none';
+    return;
+  }
+  const opinions=posts.filter(p=>p.category!=='Book Review');
+  const reviews=posts.filter(p=>p.category==='Book Review');
+  const secOp=document.getElementById('section-opinion');
+  const secBr=document.getElementById('section-bookreview');
+  secOp.style.display=opinions.length?'block':'none';
+  secBr.style.display=reviews.length?'block':'none';
+  document.getElementById('grid-opinion').innerHTML=opinions.map((p)=>postCardHTML(p,posts.indexOf(p))).join('');
+  document.getElementById('grid-bookreview').innerHTML=reviews.map((p)=>postCardHTML(p,posts.indexOf(p))).join('');
 }
 function openPost(i,cardEl){
   if(cardEl){
@@ -654,14 +679,14 @@ function _doOpenPost(i){
   document.getElementById('pv-meta').textContent=fmtDate(p.date);
   document.getElementById('pv-title').textContent=p.title;
   document.getElementById('pv-body').innerHTML=renderMarkdown(p.body);
-  document.getElementById('posts-grid').classList.add('hide');
+  document.getElementById('writing-sections').style.display='none';
   document.getElementById('writing-sh').classList.add('hide');
   document.getElementById('post-view').classList.add('open');
   document.title=p.title+' — The Nest';
   window.scrollTo(0,0);
 }
 function closePost(){
-  document.getElementById('posts-grid').classList.remove('hide');
+  document.getElementById('writing-sections').style.display='';
   document.getElementById('writing-sh').classList.remove('hide');
   document.getElementById('post-view').classList.remove('open');
   document.title='The Nest';
