@@ -698,7 +698,11 @@ function renderMarkdown(md){
     return`<p>${inlineMd(block)}</p>`;
   }).join('');
 }
-function inlineMd(s){return esc(s).replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/\*(.+?)\*/g,'<em>$1</em>').replace(/\[(.+?)\]\((.+?)\)/g,'<a href="$2" style="color:var(--a2)">$1</a>');}
+function inlineMd(s){
+  // strip markdown escape backslashes before escaping HTML
+  s=s.replace(/\\([\[\]\(\)\*\_\`\#\+\-\.\!\\])/g,'$1');
+  return esc(s).replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/\*(.+?)\*/g,'<em>$1</em>').replace(/\[(.+?)\]\((.+?)\)/g,'<a href="$2" style="color:var(--a2)">$1</a>');
+}
 
 /* ── MUSIC ── */
 function renderMusic(){
