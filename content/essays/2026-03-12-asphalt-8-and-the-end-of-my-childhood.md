@@ -2,7 +2,7 @@
 title: Asphalt 8 And the End of my Childhood
 date: 2026-03-12
 excerpt: "And I never stopped playing games, no. "
-cover: /uploads/img_0019.jpg
+cover: https://cdn.gsmarena.com/pics/13/08/airborne-review/gsmarena_001.jpg
 ---
 I went back to play Asphalt 8 today. Not much, and not for good, but just to relive a vestige and small part of who I used to be. I had forgotten about it for years. And I would've continued keeping it forgotten, I’m sure, if a classmate of mine had not been playing an emulated version of it on the computer during history class. 
 
