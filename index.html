@@ -157,8 +157,8 @@ nav{display:flex;align-items:stretch;border-bottom:1px solid var(--bdr);backgrou
   box-shadow:0 0 22px var(--card-glow-soft),0 0 6px var(--card-glow-soft);
   filter:brightness(1.04);
 }
-.post-card.clicked{animation:chest-open 0.75s cubic-bezier(.4,0,.2,1) forwards}
-.post-card.clicked .post-title{animation:chest-title 0.75s cubic-bezier(.4,0,.2,1) forwards}
+.post-card.clicked{animation:chest-open 0.41s cubic-bezier(.4,0,.2,1) forwards}
+.post-card.clicked .post-title{animation:chest-title 0.41s cubic-bezier(.4,0,.2,1) forwards}
 .post-card:hover{background:var(--bg2)}
 .post-card:hover .post-title{color:var(--a1)}
 .post-card-cover{width:100%;height:180px;object-fit:cover;display:block;filter:brightness(.85);transition:filter .3s,transform .4s}
@@ -413,12 +413,14 @@ footer p{font-size:.75rem;color:var(--muted)}
       <div style="padding:1.8rem 2.5rem .6rem;border-bottom:1px solid var(--bdr);display:flex;align-items:baseline;gap:1rem">
         <span style="font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--a1)">Opinion</span>
       </div>
+      <div style="height:1.6rem"></div>
       <div class="posts-grid" id="grid-opinion"></div>
     </div>
     <div id="section-bookreview" style="display:none">
       <div style="padding:1.8rem 2.5rem .6rem;border-bottom:1px solid var(--bdr);display:flex;align-items:baseline;gap:1rem">
         <span style="font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--a4)">Book Reviews</span>
       </div>
+      <div style="height:1.6rem"></div>
       <div class="posts-grid" id="grid-bookreview"></div>
     </div>
     <div class="posts-grid" id="posts-grid" style="display:none"></div>
@@ -664,8 +666,8 @@ function openPost(i,cardEl){
     setTimeout(()=>{
       _doOpenPost(i);
       // remove after animation fully completes
-      setTimeout(()=>cardEl.classList.remove('clicked'),400);
-    },750);
+      setTimeout(()=>cardEl.classList.remove('clicked'),220);
+    },412);
     return;
   }
   _doOpenPost(i);
@@ -1434,7 +1436,7 @@ function initHeroConstellation(){
       if(Math.hypot(n.xf*LW-mx,n.yf*LH-my)<28){
         n.clickTime=performance.now();
         startEdgeJump(n.color);
-        setTimeout(()=>go(n.page),700);
+        setTimeout(()=>go(n.page),385);
       }
     });
   });
@@ -1447,7 +1449,7 @@ function initHeroConstellation(){
   function runEdgeJump(){
     const el=document.getElementById('hyperjump-overlay');
     if(!el||edgeJump.start===null)return;
-    const et=Math.min((performance.now()-edgeJump.start)/900,1);
+    const et=Math.min((performance.now()-edgeJump.start)/495,1);
     const ease=Math.sin(et*Math.PI);
     const [er,eg,eb]=hex(edgeJump.color);
     const alpha=(ease*0.55).toFixed(3);
@@ -1586,7 +1588,7 @@ function initHeroConstellation(){
 
       // click glow — time-based, always fires reliably
       if(n.clickTime>0){
-        const ct=Math.min((performance.now()-n.clickTime)/650,1);
+        const ct=Math.min((performance.now()-n.clickTime)/358,1);
         const ease=Math.sin(ct*Math.PI); // bell: 0→peak→0
         if(ct<1){
           const gl=ctx.createRadialGradient(x,y,0,x,y,rad*4);
