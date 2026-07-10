@@ -1148,6 +1148,7 @@ const STARS_CONS=[
 const SKEY='nest_stars_v2';
 let starsUnlocked=new Set(),starsActive=null,starsSel=[],starsCardOpen=false;
 let starsNodes=[],starsBg=[],starsAnimId=null,starsW=0,starsH=0,starsHov=null;
+let starsEdgeLitTimes={};
 let starsReady=false;
 
 function starsLoadState(){try{starsUnlocked=new Set(JSON.parse(localStorage.getItem(SKEY)||'[]'));}catch(e){}}
@@ -1202,9 +1203,7 @@ function starsRgba(hex,a){
 function starsEdgeLit(ci,a,b){
   const ia=starsNodes.findIndex(n=>n.ci===ci&&n.ni===a);
   const ib=starsNodes.findIndex(n=>n.ci===ci&&n.ni===b);
-  const pa=starsSel.indexOf(ia),pb=starsSel.indexOf(ib);
-  if(pa===-1||pb===-1)return false;
-  return Math.abs(pa-pb)===1;
+  return starsSel.includes(ia)&&starsSel.includes(ib);
 }
 
 // ── STARS THEME PALETTES ──
@@ -1246,7 +1245,9 @@ function starsDrawLoop(){
     ctx.fillStyle=`rgba(${th.starColor},${s.o*(.65+.35*Math.sin(s.p))})`;ctx.fill();
   });
 
-  // edges
+  // edges — animated draw-on
+  const _now=performance.now();
+  const _iP=sessionStorage.getItem('tn_theme')==='parchment';
   STARS_CONS.forEach((con,ci)=>{
     const done=starsUnlocked.has(ci),active=starsActive===ci;
     if(!done&&!active)return;
@@ -1255,20 +1256,31 @@ function starsDrawLoop(){
       const nb=starsNodes.find(n=>n.ci===ci&&n.ni===b);
       if(!na||!nb)return;
       if(!done&&!starsEdgeLit(ci,a,b))return;
+      const ekey=`${ci}-${a}-${b}`;
+      if(!starsEdgeLitTimes[ekey])starsEdgeLitTimes[ekey]=_now;
+      const prog=Math.min((_now-starsEdgeLitTimes[ekey])/380,1);
+      const t=1-(1-prog)*(1-prog)*(1-prog); // ease out cubic
+      const len=Math.hypot(nb.cx-na.cx,nb.cy-na.cy);
       ctx.beginPath();ctx.moveTo(na.cx,na.cy);ctx.lineTo(nb.cx,nb.cy);
-      const iP=sessionStorage.getItem('tn_theme')==='parchment';
-      ctx.strokeStyle=starsRgba(con.color,done?(iP?.7:.45):(iP?.95:.8));
-      ctx.lineWidth=done?1:1.5;
-      ctx.shadowColor=con.color;ctx.shadowBlur=iP?0:(done?6:16);
-      ctx.stroke();ctx.shadowBlur=0;
+      ctx.setLineDash([len*1.05]);
+      ctx.lineDashOffset=len*(1-t);
+      ctx.strokeStyle=starsRgba(con.color,(done?(_iP?.85:.45):(_iP?.98:.8))*t);
+      ctx.lineWidth=done?(_iP?1.5:1):(_iP?2:1.5);
+      ctx.shadowColor=con.color;ctx.shadowBlur=_iP?0:(done?6:16)*t;
+      ctx.stroke();
+      ctx.setLineDash([]);ctx.lineDashOffset=0;ctx.shadowBlur=0;
     });
     if(done){
       const n0=starsNodes.find(n=>n.ci===ci&&n.ni===0);
       if(n0){
-        ctx.font="300 .5rem 'Montserrat',sans-serif";
-        ctx.fillStyle=starsRgba(con.color,.45);
-        ctx.textAlign='center';
-        ctx.fillText(con.name.toUpperCase(),n0.cx,n0.cy-14);
+        const fkey=con.edges[0]?`${ci}-${con.edges[0][0]}-${con.edges[0][1]}`:null;
+        const lp=fkey&&starsEdgeLitTimes[fkey]?Math.min((_now-starsEdgeLitTimes[fkey]-280)/250,1):0;
+        if(lp>0){
+          ctx.font="300 .5rem 'Montserrat',sans-serif";
+          ctx.fillStyle=starsRgba(con.color,(_iP?.8:.45)*Math.max(0,lp));
+          ctx.textAlign='center';
+          ctx.fillText(con.name.toUpperCase(),n0.cx,n0.cy-14);
+        }
       }
     }
   });
@@ -1281,7 +1293,7 @@ function starsDrawLoop(){
     const done=starsUnlocked.has(node.ci);
     const isSel=starsSel.includes(i),isHov=starsHov===i;
     const g=.65+.35*Math.sin(node.pulse);
-    const r=(done?3:4.5)*(1+.12*Math.sin(node.pulse));
+    const r=4.5*(1+.12*Math.sin(node.pulse));
     if(!done){
       ctx.beginPath();ctx.arc(node.cx,node.cy,r+5+2*Math.sin(node.pulse),0,Math.PI*2);
       ctx.strokeStyle=starsRgba(con.color,isParchment?.18*g:.12*g);ctx.lineWidth=1;ctx.stroke();
@@ -1307,7 +1319,7 @@ function starsClick(e){
   if(starsCardOpen)return;
   const r=e.currentTarget.getBoundingClientRect();
   const ni=starsHitNode(e.clientX-r.left,e.clientY-r.top);
-  if(ni===null){starsSel=[];starsActive=null;starsUpdateStatus();return;}
+  if(ni===null){starsSel=[];starsActive=null;starsEdgeLitTimes={};starsUpdateStatus();return;}
   const node=starsNodes[ni],ci=node.ci;
   document.getElementById('stars-hint').style.opacity='0';
   if(starsUnlocked.has(ci)){starsShowCard(ci);return;}
@@ -1353,7 +1365,7 @@ function starsCloseCard(){
 function starsReset(){
   starsUnlocked=new Set();
   starsSaveState();
-  starsSel=[];starsActive=null;starsCardOpen=false;
+  starsSel=[];starsActive=null;starsCardOpen=false;starsEdgeLitTimes={};
   starsCloseCard();
   starsUpdateUI();
   starsUpdateStatus();
