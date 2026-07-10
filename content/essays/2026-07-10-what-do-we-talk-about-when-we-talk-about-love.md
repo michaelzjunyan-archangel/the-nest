@@ -1,6 +1,7 @@
 ---
 title: what do we talk about when we talk about love?
 date: 2026-07-10
+excerpt: Alcohol and the Pacific Northwest, apparently
 category: Book Review
 cover: https://m.media-amazon.com/images/I/81ccTJ4APmL._AC_UF1000,1000_QL80_.jpg
 ---
