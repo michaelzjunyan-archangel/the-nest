@@ -6,7 +6,7 @@ cover: https://m.media-amazon.com/images/I/81ccTJ4APmL._AC_UF1000,1000_QL80_.jpg
 ---
 The Review of** *What we talk about when we talk about Love***
 
-
+*photo credit: https://www.amazon.com/What-Talk-About-When-Love/dp/0679723056*
 
 Raymond Carver is one of those writers who leaves a lot of readers feeling slightly stranded when they finish him. What We Talk About When We Talk About Love doesn't really reward the usual reading habits we bring to novels and stories. There is rarely a revelation, a satisfying emotional climax, or a clear statement of what the author wants you to think.
 
