@@ -3,7 +3,7 @@ title: The Perks of being a Wallflower, read with a bit of somber.
 date: 2026-04-16
 excerpt: this book has not much to do with wallflowers.
 category: Book Review
-cover: https://uk.pinterest.com/pin/42080577758887181/
+cover: https://m.media-amazon.com/images/M/MV5BNTY0ZTI2NzQtYWI1YS00ZWM3LWFmMjMtZWYxNmNmOTI0MGJjXkEyXkFqcGc@._V1_.jpg
 ---
 I’ve held off on talking about this one. But there are certain qualities that this book masters quietly, that make it less of a novel and more of a glimpse into a parallel world where the story actually happened. And no, I had not watched the motion picture. Yet.  
 
