@@ -1,6 +1,7 @@
 ---
 title: my ardent defense for latesummer
 date: 2026-09-13
+excerpt: close to heaven, closer to hell
 category: Opinion
 cover: /uploads/latesummer.jpg
 ---
