@@ -4,6 +4,17 @@
       "type": "essay",
       "slug": "2026-04-07-entropy-determinism-and-one-hundred-years-of-solitude",
       "why": "this book changed my life"
+    },
+    {
+      "type": "album",
+      "slug": "unrequited",
+      "why": "my best album"
+    },
+    {
+      "type": "page",
+      "page": "writing",
+      "label": "see more writing",
+      "why": "111"
     }
   ],
   "title": "what??????",
