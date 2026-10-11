@@ -1,0 +1,151 @@
+backend:
+  name: git-gateway
+  branch: main
+media_folder: uploads
+public_folder: /uploads
+collections:
+  - name: drifts
+    label: Drifts
+    folder: content/drifts
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - label: Message
+        name: message
+        widget: string
+      - label: Name
+        name: name
+        widget: string
+        required: false
+  - name: settings
+    label: Site Settings
+    files:
+      - name: bio
+        label: Bio and Description
+        file: content/settings/bio.json
+        fields:
+          - label: Your Name
+            name: name
+            widget: string
+          - label: Bio
+            name: HeroBio
+            widget: text
+          - label: Hero Description
+            name: description
+            widget: text
+          - label: Why the Nest
+            name: why
+            widget: text
+            required: false
+            hint: "Shows above your bio on the home page."
+          - label: Portrait Photo
+            name: portrait
+            widget: image
+            required: false
+          - label: Portrait Photo 2
+            name: portrait2
+            widget: image
+            required: false
+          - label: Email
+            name: email
+            widget: string
+            required: false
+            hint: "Shown as a contact link on the About page."
+          - label: Instagram Handle
+            name: instagram
+            widget: string
+            required: false
+            hint: "Just the handle, no @ — e.g. junyan.zhang"
+  - name: essays
+    label: Essays
+    folder: content/essays
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - label: Title
+        name: title
+        widget: string
+      - label: Date
+        name: date
+        widget: datetime
+        format: "YYYY-MM-DD"
+      - label: Excerpt
+        name: excerpt
+        widget: text
+        required: false
+      - label: Category
+        name: category
+        widget: select
+        options:
+          - { label: "— none —", value: "" }
+          - { label: "Opinion", value: "Opinion" }
+          - { label: "Book Review", value: "Book Review" }
+          - { label: "Minor Attachments", value: "Minor Attachments" }
+        required: false
+      - label: Cover Image
+        name: cover
+        widget: image
+        required: false
+      - label: Body
+        name: body
+        widget: markdown
+  - name: albums
+    label: Albums
+    folder: content/albums
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - label: Album Title
+        name: title
+        widget: string
+      - label: Year
+        name: year
+        widget: string
+        required: false
+      - label: Album Subtitle
+        name: desc
+        widget: string
+        pattern: ['^.{0,500}$', "Max 500 characters"]
+        required: false
+      - label: Album Bio
+        name: bio
+        widget: text
+        hint: "Longer description shown in the 'About this album' dropdown"
+        required: false
+      - label: Album Art
+        name: art
+        widget: image
+        required: false
+  - name: tracks
+    label: Tracks
+    folder: content/tracks
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - label: Album
+        name: albumSlug
+        widget: relation
+        collection: albums
+        search_fields:
+          - title
+        value_field: "{{slug}}"
+        display_fields:
+          - title
+      - label: Track Title
+        name: title
+        widget: string
+      - label: Track Number
+        name: track
+        widget: number
+        required: false
+      - label: Notes
+        name: desc
+        widget: text
+        required: false
+      - label: Lyrics
+        name: lyrics
+        widget: markdown
+        required: false
+      - label: MP3 File
+        name: audio
+        widget: file

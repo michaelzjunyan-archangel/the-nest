@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>The Nest</title>
 <link rel="icon" type="image/png" href="/favicon.png">
-<link href="https://fonts.loli.net/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,800;1,9..144,300;1,9..144,500&family=Montserrat:wght@300;400;500;600&family=Lora:ital,wght@0,400;0,500;1,400&family=Caveat:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.loli.net/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,800;1,9..144,300;1,9..144,500&family=Montserrat:wght@300;400;500;600&family=Lora:ital,wght@0,400;0,500;1,400&family=Caveat:wght@400;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -204,8 +204,14 @@ nav{display:flex;align-items:stretch;border-bottom:1px solid var(--bdr);backgrou
 .about-section{border-top:1px solid var(--bdr);display:grid;grid-template-columns:1fr 1fr}
 .about-left{padding:0;order:1;overflow:hidden;display:flex;flex-direction:column}
 .about-label{font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--a3);margin-bottom:1.2rem}
-.about-name{font-family:var(--serif);font-size:clamp(2rem,4vw,3.2rem);font-weight:300;color:var(--head);letter-spacing:-.02em;margin-bottom:1.5rem}
+.about-name{font-family:'Instrument Serif',Georgia,serif;font-size:clamp(2.4rem,4.6vw,3.8rem);font-weight:400;line-height:1.05;color:var(--head);letter-spacing:-.01em;margin-bottom:1.5rem}
 .about-body{font-size:.97rem;line-height:1.85;color:var(--body);font-family:var(--prose)}
+.about-socials{display:none;flex-wrap:wrap;gap:.7rem;margin-top:2rem}
+.about-social{display:inline-flex;align-items:center;gap:.55rem;padding:.55rem 1.05rem;border:1px solid var(--bdr);border-radius:999px;color:var(--body);text-decoration:none;font-family:var(--sans);font-size:.74rem;letter-spacing:.06em;transition:border-color .2s,color .2s,background .2s}
+.about-social svg{width:15px;height:15px;flex-shrink:0;opacity:.75}
+.about-social:hover{border-color:var(--a1);color:var(--a1);background:color-mix(in srgb,var(--a1) 8%,transparent)}
+.scroll-cue.to-about{cursor:pointer;text-decoration:none}
+.scroll-cue.to-about:hover{color:var(--a1)}
 .about-right{padding:4rem 3rem;order:2;display:flex;flex-direction:column;border-left:1px solid var(--bdr)}
 
 .portrait-slot{position:relative;overflow:hidden;background:var(--bg3);display:flex;align-items:center;justify-content:center;transition:filter .3s}
@@ -364,7 +370,7 @@ footer p{font-size:.75rem;color:var(--muted)}
 
 @media(max-width:700px){.hero-right-panel{display:none!important}.home-hero{grid-template-columns:1fr!important}
   .about-section{grid-template-columns:1fr}
-  .about-right{display:none}
+  .about-right{border-left:none;border-top:1px solid var(--bdr);padding:3rem 1.6rem}
   .albums-wrap{padding:1.5rem}
   .album-head{grid-template-columns:100px 1fr}
   .album-art,.album-art-ph{width:100px;height:100px}
@@ -452,6 +458,7 @@ footer p{font-size:.75rem;color:var(--muted)}
     <li><a href="#" onclick="go('music');return false;"   id="nl-music">Music</a></li>
     <li><a href="#" onclick="go('drift');return false;"   id="nl-drift">Drift</a></li>
     <li><a href="#" onclick="go('stars');return false;"   id="nl-stars">Stars</a></li>
+    <li><a href="#" onclick="go('about');return false;"   id="nl-about">About</a></li>
   </ul>
 </nav>
 
@@ -480,8 +487,12 @@ footer p{font-size:.75rem;color:var(--muted)}
       <canvas id="hero-constellation"></canvas>
       <div id="hnav-labels"></div>
     </div>
-    <div class="scroll-cue">↓ scroll</div>
+    <a class="scroll-cue to-about" href="#" onclick="go('about');return false;">about me →</a>
   </div>
+</div>
+
+<div class="page" id="page-about">
+  <div class="sh"><h2>About</h2></div>
   <div class="about-section">
     <div class="about-left">
       <!-- portrait1: cover fill -->
@@ -504,6 +515,10 @@ footer p{font-size:.75rem;color:var(--muted)}
         <div class="about-label">the person behind this</div>
         <div class="about-name" id="about-name-display">Your Name</div>
         <div class="about-body" id="about-bio-display"></div>
+        <div class="about-socials" id="about-socials">
+          <a class="about-social" id="about-email" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg><span id="about-email-text"></span></a>
+          <a class="about-social" id="about-instagram" href="#" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".8" fill="currentColor"/></svg><span id="about-instagram-text"></span></a>
+        </div>
       </div>
       <div class="portrait-slot ps-secondary" style="height:auto;margin-top:auto">
         <img id="portrait-img-2" style="display:none;width:100%;height:auto;position:relative;" alt="">
@@ -644,7 +659,7 @@ footer p{font-size:.75rem;color:var(--muted)}
 document.getElementById('yr').textContent = new Date().getFullYear();
 
 let posts=[], albums=[], tracksMeta=[], driftMsgs=[];
-let bioData={name:'',text:'',desc:''};
+let bioData={name:'',text:'',desc:'',why:'',email:'',instagram:''};
 const audioBlobMap={}, albumArtMap={}, coverBlobMap={};
 let audioInst={}, curAudio=null, curId=null;
 
@@ -689,7 +704,7 @@ async function fetchFolder(folder){
 async function loadContent(){
   try{
     const r=await fetch('/content/settings/bio.json');
-    if(r.ok){const d=await r.json();bioData={name:d.name||'',text:d.HeroBio||d.bio||'',desc:d.description||'',why:d.why||''};
+    if(r.ok){const d=await r.json();bioData={name:d.name||'',text:d.HeroBio||d.bio||'',desc:d.description||'',why:d.why||'',email:(d.email||'').trim(),instagram:(d.instagram||'').trim()};
       if(d.portrait&&d.portrait.trim()){const img=document.getElementById('portrait-img'),ph=document.getElementById('portrait-ph');if(img){img.src=d.portrait.trim();img.style.display='block';}if(ph)ph.style.display='none';}
       if(d.portrait2&&d.portrait2.trim()){const img=document.getElementById('portrait-img-2'),ph=document.getElementById('portrait-ph-2');if(img){img.src=d.portrait2.trim();img.style.display='block';}if(ph)ph.style.display='none';}}
   }catch(e){}
@@ -729,7 +744,7 @@ function go(pg){
   if(pg==='music')renderMusic();
   if(pg==='drift'){renderDriftCount();if(window.updateConstellationCounts)window.updateConstellationCounts();startDanmaku();} else{stopDanmaku();}
   if(pg==='stars')requestAnimationFrame(()=>requestAnimationFrame(starsInit));
-  if(pg==='home')renderBio();
+  if(pg==='home'||pg==='about')renderBio();
   window.scrollTo(0,0);
 }
 
@@ -741,6 +756,12 @@ function renderBio(){
   const wb=document.getElementById('why-block');
   const wd=document.getElementById('why-display');
   if(wb&&wd){wd.innerHTML=bioData.why?bioData.why.replace(/\n/g,'<br>'):'';wb.style.display=bioData.why?'block':'none';}
+  // socials
+  const em=bioData.email, ig=(bioData.instagram||'').replace(/^@/,'').replace(/^https?:\/\/(www\.)?instagram\.com\//,'').replace(/\/$/,'');
+  const emA=document.getElementById('about-email'), igA=document.getElementById('about-instagram');
+  if(emA){emA.style.display=em?'inline-flex':'none';if(em){emA.href='mailto:'+em;document.getElementById('about-email-text').textContent=em;}}
+  if(igA){igA.style.display=ig?'inline-flex':'none';if(ig){igA.href='https://instagram.com/'+encodeURIComponent(ig);document.getElementById('about-instagram-text').textContent='@'+ig;}}
+  const soc=document.getElementById('about-socials');if(soc)soc.style.display=(em||ig)?'flex':'none';
   // sync portrait-slot-1 height to the right column content above bio
   requestAnimationFrame(()=>{
     const right=document.querySelector('.about-right');
