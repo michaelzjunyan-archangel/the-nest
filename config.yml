@@ -56,6 +56,86 @@ collections:
             widget: string
             required: false
             hint: "Just the handle, no @ — e.g. junyan.zhang"
+      - name: tenminutes
+        label: Ten Minutes (start here page)
+        file: content/settings/start.json
+        fields:
+          - label: Page title
+            name: title
+            widget: string
+            default: "If you only have ten minutes"
+          - label: Intro
+            name: intro
+            widget: text
+            required: false
+            hint: "A short note to the reader: who you are and what to look for."
+          - label: Picks (in order)
+            name: picks
+            widget: list
+            required: false
+            types:
+              - label: Essay
+                name: essay
+                widget: object
+                summary: "Essay: {{fields.slug}}"
+                fields:
+                  - label: Essay
+                    name: slug
+                    widget: relation
+                    collection: essays
+                    search_fields: ["title"]
+                    value_field: "{{slug}}"
+                    display_fields: ["title"]
+                  - label: Why this one
+                    name: why
+                    widget: string
+                    required: false
+                  - label: Title override
+                    name: label
+                    widget: string
+                    required: false
+                    hint: "Leave empty to use the essay's own title."
+              - label: Album
+                name: album
+                widget: object
+                summary: "Album: {{fields.slug}}"
+                fields:
+                  - label: Album
+                    name: slug
+                    widget: relation
+                    collection: albums
+                    search_fields: ["title"]
+                    value_field: "{{slug}}"
+                    display_fields: ["title"]
+                  - label: Why this one
+                    name: why
+                    widget: string
+                    required: false
+                  - label: Title override
+                    name: label
+                    widget: string
+                    required: false
+              - label: Page
+                name: page
+                widget: object
+                summary: "Page: {{fields.page}}"
+                fields:
+                  - label: Page
+                    name: page
+                    widget: select
+                    options:
+                      - { label: "About me", value: "about" }
+                      - { label: "All writing", value: "writing" }
+                      - { label: "Music", value: "music" }
+                      - { label: "Play", value: "play" }
+                  - label: Why this one
+                    name: why
+                    widget: string
+                    required: false
+                  - label: Title override
+                    name: label
+                    widget: string
+                    required: false
   - name: essays
     label: Essays
     folder: content/essays
@@ -82,6 +162,19 @@ collections:
           - { label: "Book Review", value: "Book Review" }
           - { label: "Minor Attachments", value: "Minor Attachments" }
         required: false
+      - label: Reading time override (minutes)
+        name: readtime
+        widget: number
+        value_type: int
+        min: 1
+        required: false
+        hint: "Leave empty to use the automatic estimate."
+      - label: Pin to top
+        name: pinned
+        widget: boolean
+        default: false
+        required: false
+        hint: "Keeps this essay first in its section, regardless of date."
       - label: Cover Image
         name: cover
         widget: image
