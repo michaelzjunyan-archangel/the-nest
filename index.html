@@ -454,6 +454,14 @@ footer p{font-size:.75rem;color:var(--muted)}
       <div style="height:1.2rem"></div>
       <div class="posts-grid" id="grid-bookreview"></div>
     </div>
+    <div id="section-minorattachments" style="display:none">
+      <div style="padding:2.2rem 2.5rem 0;display:flex;align-items:center;gap:1.2rem">
+        <span style="font-size:.62rem;letter-spacing:.22em;text-transform:uppercase;color:var(--a2)">Minor Attachments</span>
+        <div style="flex:1;height:1px;background:linear-gradient(90deg,var(--a2),transparent);opacity:.2"></div>
+      </div>
+      <div style="height:1.2rem"></div>
+      <div class="posts-grid" id="grid-minorattachments"></div>
+    </div>
     <div class="posts-grid" id="posts-grid" style="display:none"></div>
   </div>
   <div class="post-view" id="post-view">
@@ -680,9 +688,11 @@ function renderWriting(){
   if(!posts.length){
     document.getElementById('section-opinion').style.display='none';
     document.getElementById('section-bookreview').style.display='none';
+    document.getElementById('section-minorattachments').style.display='none';
     return;
   }
-  const opinions=posts.filter(p=>p.category!=='Book Review');
+  const opinions=posts.filter(p=>p.category!=='Book Review'&&p.category!=='Minor Attachments');
+  const minors=posts.filter(p=>p.category==='Minor Attachments');
   const reviews=posts.filter(p=>p.category==='Book Review');
   const secOp=document.getElementById('section-opinion');
   const secBr=document.getElementById('section-bookreview');
@@ -690,6 +700,8 @@ function renderWriting(){
   secBr.style.display=reviews.length?'block':'none';
   document.getElementById('grid-opinion').innerHTML=opinions.map((p)=>postCardHTML(p,posts.indexOf(p))).join('');
   document.getElementById('grid-bookreview').innerHTML=reviews.map((p)=>postCardHTML(p,posts.indexOf(p))).join('');
+  document.getElementById('section-minorattachments').style.display=minors.length?'block':'none';
+  document.getElementById('grid-minorattachments').innerHTML=minors.map((p)=>postCardHTML(p,posts.indexOf(p))).join('');
 }
 function openPost(i,cardEl){
   if(cardEl){
