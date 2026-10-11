@@ -42,6 +42,20 @@ collections:
             name: portrait
             widget: image
             required: false
+          - label: Portrait Photo 2
+            name: portrait2
+            widget: image
+            required: false
+          - label: Email
+            name: email
+            widget: string
+            required: false
+            hint: "Shown as a contact link on the About page."
+          - label: Instagram Handle
+            name: instagram
+            widget: string
+            required: false
+            hint: "Just the handle, no @ — e.g. junyan.zhang"
   - name: essays
     label: Essays
     folder: content/essays
@@ -63,9 +77,10 @@ collections:
         name: category
         widget: select
         options:
+          - { label: "— none —", value: "" }
           - { label: "Opinion", value: "Opinion" }
           - { label: "Book Review", value: "Book Review" }
-        default: "Opinion"
+          - { label: "Minor Attachments", value: "Minor Attachments" }
         required: false
       - label: Cover Image
         name: cover
