@@ -1,6 +1,6 @@
 [build]
   publish = "."
-  command = ""
+  command = "node scripts/build-content.mjs"
 
 [[headers]]
   for = "/*"
@@ -16,3 +16,8 @@
   from = "/uploads/*"
   to = "/public/uploads/:splat"
   status = 200
+
+[[headers]]
+  for = "/content/bundle.json"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
