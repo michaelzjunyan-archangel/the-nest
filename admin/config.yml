@@ -42,10 +42,56 @@ collections:
             name: portrait
             widget: image
             required: false
+          - label: "Photo 1: height (%)"
+            name: portrait_height
+            widget: number
+            value_type: int
+            default: 100
+            min: 40
+            max: 250
+            step: 5
+            required: false
+            hint: "100 = automatic (matches the text beside it). Lower is shorter, higher is taller."
+          - label: "Photo 1: zoom (%)"
+            name: portrait_zoom
+            widget: number
+            value_type: int
+            default: 100
+            min: 100
+            max: 300
+            step: 5
+            required: false
+            hint: "100 = no zoom. Zooms in toward the focus point."
+          - label: "Photo 1: focus point"
+            name: portrait_focus
+            widget: select
+            default: "center"
+            required: false
+            hint: "Which part of the photo stays in view when it's cropped."
+            options:
+              - { label: "Center", value: "center" }
+              - { label: "Top", value: "top" }
+              - { label: "Bottom", value: "bottom" }
+              - { label: "Left", value: "left" }
+              - { label: "Right", value: "right" }
+              - { label: "Top left", value: "top left" }
+              - { label: "Top right", value: "top right" }
+              - { label: "Bottom left", value: "bottom left" }
+              - { label: "Bottom right", value: "bottom right" }
           - label: Portrait Photo 2
             name: portrait2
             widget: image
             required: false
+          - label: "Photo 2: width (%)"
+            name: portrait2_width
+            widget: number
+            value_type: int
+            default: 100
+            min: 20
+            max: 100
+            step: 5
+            required: false
+            hint: "100 = full column width. The photo keeps its shape and sits on the right."
           - label: Email
             name: email
             widget: string
@@ -179,9 +225,44 @@ collections:
         name: cover
         widget: image
         required: false
+      - label: "Cover: height in the essay"
+        name: cover_height
+        widget: select
+        default: "medium"
+        required: false
+        options:
+          - { label: "Short", value: "short" }
+          - { label: "Medium", value: "medium" }
+          - { label: "Tall", value: "tall" }
+          - { label: "Whole photo, no cropping", value: "full" }
+      - label: "Cover: focus point"
+        name: cover_focus
+        widget: select
+        default: "center"
+        required: false
+        hint: "Which part stays in view when the cover is cropped (on the card and in the essay)."
+        options:
+          - { label: "Center", value: "center" }
+          - { label: "Top", value: "top" }
+          - { label: "Bottom", value: "bottom" }
+          - { label: "Left", value: "left" }
+          - { label: "Right", value: "right" }
+          - { label: "Top left", value: "top left" }
+          - { label: "Top right", value: "top right" }
+          - { label: "Bottom left", value: "bottom left" }
+          - { label: "Bottom right", value: "bottom right" }
+      - label: Paragraph style
+        name: paragraphs
+        widget: select
+        default: "spaced"
+        required: false
+        options:
+          - { label: "Spaced (gap between paragraphs)", value: "spaced" }
+          - { label: "Book style (first line indented, no gap)", value: "indented" }
       - label: Body
         name: body
         widget: markdown
+        hint: "Type -- (two hyphens) for an em dash —. To size a photo, add | and a size to its caption, e.g. ![sunset at the pier|60%](...) or ![me|small](...). Sizes: xs, small, medium, large, full, or any %."
   - name: albums
     label: Albums
     folder: content/albums
